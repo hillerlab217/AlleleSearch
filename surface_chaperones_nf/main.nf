@@ -1,0 +1,137 @@
+#!/usr/bin/env nextflow
+nextflow.enable.dsl=2
+
+// ──────────────────────────────────────────────────────────────
+// Surface Chaperones Allele Discovery Pipeline
+// ──────────────────────────────────────────────────────────────
+
+include { MAKE_BLAST_DB; COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
+include { FILTER_BLAST }                             from './modules/filter'
+include { CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
+include { TRANSLATE }                                from './modules/translate'
+include { ALLELE_QUERY_REF; ALLELE_SELF_REF }        from './modules/allele'
+include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; TCOFFEE_ALIGN } from './modules/quality'
+
+// ──────────────────────────────────────────────────────────────
+// Help message
+// ──────────────────────────────────────────────────────────────
+if (params.help) {
+    log.info """
+    =========================================
+    Surface Chaperones Allele Pipeline
+    =========================================
+    Usage:
+      nextflow run main.nf --query_dir <path> --genome_dir <path>
+
+    Required:
+      --query_dir       Directory with query .fasta files
+      --genome_dir      Directory with genome .fasta files
+      --genome_ref_dir  Directory with full genomes for upstream/downstream extension
+
+    Optional:
+      --code_dir        Path to code/ scripts (default: ../surface_chaperones/code)
+      --outdir          Output directory (default: results)
+      --blast_type      blastn or tblastn (default: blastn)
+      --max_evalue      E-value cutoff (default: 0.00001)
+      --similarity      Similarity % cutoff (default: 80)
+      --length_percentage  Length % cutoff (default: 80)
+      --extension_codons   Codons to extend (default: 10)
+      --species_threshold  Min species % for filtering (default: 1)
+      --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
+      --skip_tcoffee    Skip T-Coffee alignment (default: false)
+    =========================================
+    """.stripIndent()
+    exit 0
+}
+
+// ──────────────────────────────────────────────────────────────
+// Input channels
+// ──────────────────────────────────────────────────────────────
+ch_queries = Channel.fromPath("${params.query_dir}/*.fasta")
+ch_genomes = Channel.fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
+ch_genome_ref = Channel.fromPath(params.genome_ref_dir)
+
+// ──────────────────────────────────────────────────────────────
+// Workflow
+// ──────────────────────────────────────────────────────────────
+workflow {
+
+    // Step 1: Build or collect BLAST databases
+    if (params.make_blastdb) {
+        MAKE_BLAST_DB(ch_genomes)
+        ch_db = MAKE_BLAST_DB.out
+    } else {
+        COLLECT_BLAST_DB(ch_genomes)
+        ch_db = COLLECT_BLAST_DB.out
+    }
+
+    // Step 2: Run BLAST — each query × each genome
+    ch_blast_input = ch_queries
+        .combine(ch_db)  // [query, genome, db_files]
+
+    BLAST_SEARCH(ch_blast_input)
+
+    // Step 3: Parse BLAST results (group .out files by query name)
+    ch_blast_grouped = BLAST_SEARCH.out
+        .groupTuple()  // [query_name, [out_files]]
+
+    PARSE_BLAST(ch_blast_grouped)
+
+    // Step 4: Filter BLAST results with strict cutoffs
+    // Join query FASTA back for length calculation
+    ch_query_map = ch_queries.map { q -> [q.baseName, q] }
+    ch_filter_input = BLAST_SEARCH.out
+        .groupTuple()
+        .join(ch_query_map)  // [query_name, [blast_files], query_fasta]
+
+    FILTER_BLAST(ch_filter_input)
+
+    // Step 5: CSV to FASTA
+    CSV_TO_FASTA(FILTER_BLAST.out)
+
+    // Step 6: Check start/stop codons (10-codon window)
+    ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
+    CODON_CHECK_10(ch_codon10_in)
+
+    // Step 7: Extend sequences ±10 codons from genome
+    EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
+
+    // Step 8: Re-check with 20-codon window
+    ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
+    CODON_CHECK_20(ch_codon20_in)
+
+    // Step 9: Collect standard sequences from both rounds
+    ch_standard = CODON_CHECK_10.out.standard
+        .join(CODON_CHECK_20.out.standard)  // [query_name, std_10, std_20]
+
+    COLLECT_STANDARD(ch_standard)
+
+    // Step 10: Translate DNA to protein
+    TRANSLATE(COLLECT_STANDARD.out)
+
+    // Step 11: Allele analysis — query reference
+    ch_allele_qref = TRANSLATE.out.inframe
+        .join(ch_query_map)  // [query_name, protein_fasta, query_fasta]
+
+    ALLELE_QUERY_REF(ch_allele_qref)
+
+    // Step 12: Allele analysis — self reference
+    ALLELE_SELF_REF(TRANSLATE.out.inframe)
+
+    // Step 13: Filter alleles by species percentage
+    ch_allele_fasta = ALLELE_SELF_REF.out.results
+        .map { name, csv, fasta -> [name, fasta] }
+
+    FILTER_ALLELES(ch_allele_fasta)
+
+    // Step 14: MAFFT alignment
+    MAFFT_ALIGN(FILTER_ALLELES.out)
+
+    // Step 15: WebLogo
+    WEBLOGO(MAFFT_ALIGN.out)
+
+    // Step 16: T-Coffee (optional)
+    if (!params.skip_tcoffee) {
+        TCOFFEE_ALIGN(FILTER_ALLELES.out)
+    }
+}

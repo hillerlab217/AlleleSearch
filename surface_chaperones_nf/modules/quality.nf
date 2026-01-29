@@ -1,0 +1,114 @@
+process FILTER_ALLELES {
+    tag "${query_name}"
+    publishDir "${params.outdir}/allele_seq_filtered", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(allele_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_filtered.fasta")
+
+    script:
+    """
+    awk -v threshold=${params.species_threshold} '
+        /^>/ {
+            keep=0
+            if (match(\$0,/species_percentage=([0-9.]+)/,m))
+                if (m[1] >= threshold) keep=1
+        }
+        { if (keep) print }
+    ' ${allele_fasta} > ${query_name}_filtered.fasta
+
+    # Check we have at least 2 sequences
+    seq_cnt=\$(grep -c '^>' ${query_name}_filtered.fasta || true)
+    if [ "\$seq_cnt" -lt 2 ]; then
+        echo "WARNING: Only \$seq_cnt sequence(s) after filtering for ${query_name}" >&2
+    fi
+    """
+}
+
+process MAFFT_ALIGN {
+    tag "${query_name}"
+    publishDir "${params.outdir}/allele_seq", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(filtered_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_aligned.fasta"), optional: true
+
+    script:
+    """
+    seq_cnt=\$(grep -c '^>' ${filtered_fasta} || true)
+    if [ "\$seq_cnt" -ge 2 ]; then
+        mafft --auto ${filtered_fasta} > ${query_name}_aligned.fasta
+    else
+        echo "Skipping MAFFT: only \$seq_cnt sequence(s)" >&2
+    fi
+    """
+}
+
+process WEBLOGO {
+    tag "${query_name}"
+    publishDir "${params.outdir}/logo", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(aligned_fasta)
+
+    output:
+    path "${query_name}_logo.eps"
+
+    script:
+    """
+    # Expand sequences by species weight
+    awk -v wrap=60 '
+        BEGIN { RS=">"; ORS=""; }
+        NR > 1 {
+            n = split(\$0, L, "\\n")
+            header = L[1]
+            seq = ""
+            for (i = 2; i <= n; i++) seq = seq L[i]
+
+            dup = 1
+            if (match(header, /species_number=([0-9]+)/, m)) dup = m[1] + 0
+            else if (match(header, /species_percentage=([0-9.]+)/, m))
+                dup = int(m[1] + 0.5)
+
+            for (d = 1; d <= dup; d++) {
+                printf(">%s_%d\\n", header, d)
+                for (p = 1; p <= length(seq); p += wrap)
+                    printf("%s\\n", substr(seq, p, wrap))
+            }
+        }
+    ' ${aligned_fasta} > expanded.fasta
+
+    weblogo \
+        --fin expanded.fasta \
+        --fout ${query_name}_logo.eps \
+        --format eps \
+        --datatype fasta \
+        --title "${query_name}" \
+        --units probability \
+        --color-scheme chemistry
+    """
+}
+
+process TCOFFEE_ALIGN {
+    tag "${query_name}"
+    publishDir "${params.outdir}/allele_tcoffee/${query_name}", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(filtered_fasta)
+
+    output:
+    tuple path("${query_name}_aligned_tcoffee.aln"), path("${query_name}_aligned_tcoffee.fasta")
+
+    script:
+    """
+    t_coffee ${filtered_fasta} \
+        -output clustalw_aln,fasta_aln \
+        -outfile ${query_name}_aligned_tcoffee.aln
+
+    mv ${query_name}_aligned_tcoffee.fasta_aln ${query_name}_aligned_tcoffee.fasta
+    """
+}
