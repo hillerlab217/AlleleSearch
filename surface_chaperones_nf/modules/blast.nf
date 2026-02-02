@@ -34,7 +34,6 @@ process COLLECT_BLAST_DB {
 
 process BLAST_SEARCH {
     tag "${query.baseName}_vs_${genome.baseName}"
-    publishDir "${params.outdir}/blast_raw", mode: 'copy'
     cpus 4
 
     input:
@@ -58,36 +57,6 @@ process BLAST_SEARCH {
         -out ${query.baseName}_vs_${genome.baseName}.out \
         -evalue 1e-5 \
         -num_threads ${task.cpus}
-    """
-}
-
-process BLAST_SEARCH_BATCHED {
-    tag "${query.baseName}_batch"
-    publishDir "${params.outdir}/blast_raw", mode: 'copy'
-    cpus 4
-
-    input:
-    tuple path(query), val(genomes)
-
-    output:
-    tuple val("${query.baseName}"), path("*.out")
-
-    script:
-    def blast_cmd = params.blast_type ?: 'blastn'
-    def genome_paths = genomes.collect{ "\"${it.toRealPath()}\"" }.join('\n')
-    """
-    cat <<'GENOME_LIST' > genome_paths.txt
-${genome_paths}
-GENOME_LIST
-
-    while IFS= read -r genome; do
-        GNAME=\$(basename "\$genome" | sed 's/\\.[^.]*\$//')
-        ${blast_cmd} -query ${query} \\
-            -db "\$genome" \\
-            -out ${query.baseName}_vs_\${GNAME}.out \\
-            -evalue 1e-5 \\
-            -num_threads ${task.cpus}
-    done < genome_paths.txt
     """
 }
 
