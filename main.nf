@@ -21,12 +21,11 @@ if (params.help) {
     Allele Search Pipeline
     =========================================
     Usage:
-      nextflow run main.nf --query_dir <path> --genome_dir <path> --genome_ref_dir <path>
+      nextflow run main.nf --query_dir <path> --genome_dir <path>
 
     Required:
       --query_dir       Directory with query .fasta files
-      --genome_dir      Directory with genome .fasta files
-      --genome_ref_dir  Directory with full genomes for upstream/downstream extension
+      --genome_dir      Directory with genome .fasta files (also used for sequence extension)
 
     Optional:
       --code_dir        Path to code/ scripts (default: ./code)
@@ -49,14 +48,13 @@ if (params.help) {
 // ──────────────────────────────────────────────────────────────
 if (!params.query_dir)      { error "ERROR: --query_dir is required" }
 if (!params.genome_dir)     { error "ERROR: --genome_dir is required" }
-if (!params.genome_ref_dir) { error "ERROR: --genome_ref_dir is required" }
 
 // ──────────────────────────────────────────────────────────────
 // Input channels
 // ──────────────────────────────────────────────────────────────
 ch_queries = Channel.fromPath("${params.query_dir}/*.fasta")
 ch_genomes = Channel.fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
-ch_genome_ref = Channel.fromPath(params.genome_ref_dir)
+ch_genome_ref = Channel.fromPath(params.genome_dir)
 
 // ──────────────────────────────────────────────────────────────
 // Workflow

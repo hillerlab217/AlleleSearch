@@ -47,8 +47,24 @@ Query sequences + Genomes
 ```bash
 nextflow run main.nf \
   --query_dir <path/to/query/fastas> \
-  --genome_dir <path/to/genome/fastas> \
-  --genome_ref_dir <path/to/reference/genomes>
+  --genome_dir <path/to/genome/fastas>
+```
+
+Example with all optional parameters:
+
+```bash
+nextflow run main.nf \
+  --query_dir ./queries \
+  --genome_dir ./genomes \
+  --outdir ./my_results \
+  --blast_type tblastn \
+  --make_blastdb true \
+  --max_evalue 1e-10 \
+  --similarity 90 \
+  --length_percentage 85 \
+  --extension_codons 20 \
+  --species_threshold 5 \
+  --skip_tcoffee true
 ```
 
 Show all options:
@@ -62,8 +78,7 @@ nextflow run main.nf --help
 | Parameter | Description |
 |---|---|
 | `--query_dir` | Directory containing query `.fasta` files |
-| `--genome_dir` | Directory containing genome files (`.fasta`, `.fa`, `.fna`, `.ffn`) |
-| `--genome_ref_dir` | Directory with full reference genomes (used for sequence extension) |
+| `--genome_dir` | Directory containing genome files (`.fasta`, `.fa`, `.fna`, `.ffn`). Also used for sequence extension |
 
 ### Optional Parameters
 
