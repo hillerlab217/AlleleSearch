@@ -1,0 +1,174 @@
+BLASTN 2.17.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/33348_VICE0921.fasta
+           220 sequences; 2,117,043 total letters
+
+
+
+Query= SPV_0112-genomic D39V:112,681-113,544(-)
+
+Length=864
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR470154_A120257_NODE_134_COV_18.159620                              1229    0.0   
+ERR470154_A120257_NODE_133_COV_20.789091                              411     3e-115
+ERR470154_A120257_NODE_126_COV_35.934578                              355     2e-98 
+ERR470154_A120257_NODE_129_COV_39.073864                              259     1e-69 
+
+
+>ERR470154_A120257_NODE_134_COV_18.159620
+Length=35313
+
+ Score = 1229 bits (665),  Expect = 0.0
+ Identities = 689/701 (98%), Gaps = 0/701 (0%)
+ Strand=Plus/Minus
+
+Query  1    ATGCGTTATGATTTCGGAAAGGTCTATAAAGAAATACGTGAGTCAAAGGGGCTGACCCAA  60
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  701  ATGCGTTATGATTTCGGAAAGGTCTATAAAGAAATACGTGAGTCAAAGGGGCTGACCCAA  642
+
+Query  61   GAAGAGGTCTGTGGGGGTGTTCTCTCAAGAACCAGCTTATCAAAAATCGAAAGTGGCAAG  120
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  641  GAAGAGGTCTGTGGGGGTGTTCTCTCAAGAACCAGCTTATCAAAAATCGAAAGTGGCAAG  582
+
+Query  121  ACAACCCCAAAATATGAAAATATGGAATTTCTTCTCCGTCAAATCAATATGAGTTTTGAA  180
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  581  ACAACCCCAAAATATGAAAATATGGAATTTCTTCTCCGTCAAATCAATATGAGTTTTGAA  522
+
+Query  181  GAGTTTGAATATATCTGTCAACTTTATCAACCAAGTCAACGCACAGAGATTATGCAAACC  240
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  521  GAGTTTGAATATATCTGTCAACTTTATCAACCAAGTCAACGCACAGAGATTATGCAAACC  462
+
+Query  241  TATCTCAATATGCGTTCCATTATCGGGACCAGCGATCTTGTCAATTTATTTCAAAAATGC  300
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  461  TATCTCAATATGCGTTCCATTATCGGGACCAGCGATCTTGTCAATTTATTTCAAAAATGC  402
+
+Query  301  CAAGACTACCTCAAGACCCACCACGATCTCCCTATAGAAGAAATCAGAGATATGCTTGAA  360
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  401  CAAGACTACCTCAAGACCCACCACGATCTCCCTATAGAAGAAATCAGAGATATGCTTGAA  342
+
+Query  361  GTTGTTATTTATCTCCGTCAACACGGGGCAGGGGAACTATCAAAACACGCAGAACAGGTT  420
+            ||||| |||||| ||||||||||||||||||||||||||||| | |||||||||||||||
+Sbjct  341  GTTGTCATTTATATCCGTCAACACGGGGCAGGGGAACTATCAGATCACGCAGAACAGGTT  282
+
+Query  421  GTCaaaaaactttggaaaaaaattgaaaaaCAAGATACATGGTATGAGAGTGATCTAAAA  480
+            |||||||||||||||| |||||||||||||||||||||||||||||||||||||||||||
+Sbjct  281  GTCAAAAAACTTTGGAGAAAAATTGAAAAACAAGATACATGGTATGAGAGTGATCTAAAA  222
+
+Query  481  ATCCTCAATACCATTCTTTTCAGTTTTCCCATTGAATACCTCCATCTCATCACTGGAAAA  540
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  221  ATCCTCAATACCATTCTTTTCAGTTTTCCCATTGAATACCTCCATCTCATCACTGGAAAA  162
+
+Query  541  ATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATGACA  600
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ||
+Sbjct  161  ATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATAGCA  102
+
+Query  601  ATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAA  660
+            || ||  | |||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  101  ATCCTGCTCAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAA  42
+
+Query  661  ATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAG  701
+            ||||||||||||||||| |||||||||||||||||||||||
+Sbjct  41   ATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAG  1
+
+
+>ERR470154_A120257_NODE_133_COV_20.789091
+Length=367
+
+ Score = 411 bits (222),  Expect = 3e-115
+ Identities = 236/243 (97%), Gaps = 0/243 (0%)
+ Strand=Plus/Minus
+
+Query  622  CTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAAATCTGCTACACTTTACTAGAG  681
+            |||||||||||||||||||||||||||||||||||||||||||||||||||||||| |||
+Sbjct  367  CTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAAATCTGCTACACTTTACTGGAG  308
+
+Query  682  GACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCTATCTGCTATGTCCGTATTGGGATT  741
+            |||||||||||||||||||||||||||||||||||||||||||||||||| |||||||||
+Sbjct  307  GACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCTATCTGCTATGTCCGCATTGGGATT  248
+
+Query  742  TGTACAGACGATTCTAAACTTATCCAAAAAGGGTTCTCCCTTCTGGAGCTAACCGAGGAA  801
+            |||||||||||||||||||||||||||||||| ||||| || || ||||| |||||||||
+Sbjct  247  TGTACAGACGATTCTAAACTTATCCAAAAAGGTTTCTCACTCCTAGAGCTGACCGAGGAA  188
+
+Query  802  ACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAGATCTATTACCAAGCGAAGGAAAGA  861
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  187  ACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAGATCTATTACCAAGCGAAGGAAAGA  128
+
+Query  862  TAA  864
+            |||
+Sbjct  127  TAA  125
+
+
+>ERR470154_A120257_NODE_126_COV_35.934578
+Length=306
+
+ Score = 355 bits (192),  Expect = 2e-98
+ Identities = 223/238 (94%), Gaps = 1/238 (0%)
+ Strand=Plus/Minus
+
+Query  622  CTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAAATCTGCTACACTTTACTAGAG  681
+            |||||||||||||||||||||||||||||||||||||||||||||||||||||||| |||
+Sbjct  306  CTCTATCTATACAATCAAGATAAAAACATGTGTAAGCAAATCTGCTACACTTTACTGGAG  247
+
+Query  682  GACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCTATCTGCTATGTCCGTATTGGGATT  741
+            |||||||||||||||||||||||||||||||| |||||||||||||||| ||||||||||
+Sbjct  246  GACGCCAAGAATAAGAAAAGCTACGATAGGCTTGCTATCTGCTATGTCCCTATTGGGATT  187
+
+Query  742  TGTACAGACGATTCTAAACTTATCCAAAAAGGGTTCTCCCTTCTGGAGCTAACCGAGGAA  801
+            ||||||||  || ||||||||||||||||||| ||||| ||||||||||| |||||||||
+Sbjct  186  TGTACAGATAATGCTAAACTTATCCAAAAAGGTTTCTCACTTCTGGAGCTGACCGAGGAA  127
+
+Query  802  ACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAGATCTATTACCAAGCGAAGGAAA  859
+            ||||||||||||||||||||||||||||||||||||| | |||| ||| | ||| |||
+Sbjct  126  ACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAGACCCATTATCAACCAAAG-AAA  70
+
+
+>ERR470154_A120257_NODE_129_COV_39.073864
+Length=268
+
+ Score = 259 bits (140),  Expect = 1e-69
+ Identities = 156/164 (95%), Gaps = 0/164 (0%)
+ Strand=Plus/Minus
+
+Query  538  AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+            ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  164  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATA  105
+
+Query  598  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+             |||| ||  ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  104  GCAATCCTGCTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  45
+
+Query  658  CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAG  701
+            |||||||||||||||||||| |||||||||||||||||||||||
+Sbjct  44   CAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAG  1
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 1778474926
+
+
+  Database: data/GoldenSet_7548Genomes_2023/33348_VICE0921.fasta
+    Posted date:  Apr 24, 2025  5:30 PM
+  Number of letters in database: 2,117,043
+  Number of sequences in database:  220
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

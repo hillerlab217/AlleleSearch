@@ -1,0 +1,75 @@
+BLASTN 2.17.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/33765_UoS2076.fasta
+           81 sequences; 2,060,687 total letters
+
+
+
+Query= SPV_0112-genomic D39V:112,681-113,544(-)
+
+Length=864
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR044991_A143033_NODE_105_COV_39.482361                              494     3e-140
+
+
+>ERR044991_A143033_NODE_105_COV_39.482361
+Length=259520
+
+ Score = 494 bits (267),  Expect = 3e-140
+ Identities = 304/322 (94%), Gaps = 1/322 (0%)
+ Strand=Plus/Plus
+
+Query  538     AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+               ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  177966  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  178025
+
+Query  598     ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+               ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  178026  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  178085
+
+Query  658     CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  717
+               |||||||||||||||||||| |||||||||||||||||||||||||||||||||||||||
+Sbjct  178086  CAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  178145
+
+Query  718     ATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGGGTTC  777
+               ||||||||||||||||||||||||||||  || ||| | |||||||||||||||||||||
+Sbjct  178146  ATCTGCTATGTCCGTATTGGGATTTGTAGGGATGATGCGAAACTTATCCAAAAAGGGTTC  178205
+
+Query  778     TCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  837
+               || || || ||||| |||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  178206  TCACTCCTAGAGCTGACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  178265
+
+Query  838     ATCTATTACCAAGCGAAGGAAA  859
+               | | |||| ||| | ||| |||
+Sbjct  178266  ACCCATTATCAACCAAAG-AAA  178286
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 1733598010
+
+
+  Database: data/GoldenSet_7548Genomes_2023/33765_UoS2076.fasta
+    Posted date:  Apr 24, 2025  5:31 PM
+  Number of letters in database: 2,060,687
+  Number of sequences in database:  81
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

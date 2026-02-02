@@ -1,0 +1,108 @@
+BLASTN 2.17.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/48956_VICE1163a.fasta
+           22 sequences; 1,979,110 total letters
+
+
+
+Query= SPV_0112-genomic D39V:112,681-113,544(-)
+
+Length=864
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR925607.16404_8_55.4                                                510     3e-145
+ERR925607.16404_8_55.9                                                494     3e-140
+
+
+>ERR925607.16404_8_55.4
+Length=195137
+
+ Score = 510 bits (276),  Expect = 3e-145
+ Identities = 310/327 (95%), Gaps = 0/327 (0%)
+ Strand=Plus/Plus
+
+Query  538     AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+               ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  194246  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATA  194305
+
+Query  598     ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+                |||| ||  | ||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  194306  GCAATCCTGCTCAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  194365
+
+Query  658     CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  717
+               |||||||||||||||||||| |||||||||||||||||||||||||||||||||||||||
+Sbjct  194366  CAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  194425
+
+Query  718     ATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGGGTTC  777
+               ||||||||||||||||||||||||||||||||  || ||||||||||||||||||| |||
+Sbjct  194426  ATCTGCTATGTCCGTATTGGGATTTGTACAGATAATGCTAAACTTATCCAAAAAGGTTTC  194485
+
+Query  778     TCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  837
+               || || || ||||| |||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  194486  TCACTCCTAGAGCTGACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  194545
+
+Query  838     ATCTATTACCAAGCGAAGGAAAGATAA  864
+               |||||||||||||||||||||||||||
+Sbjct  194546  ATCTATTACCAAGCGAAGGAAAGATAA  194572
+
+
+>ERR925607.16404_8_55.9
+Length=90126
+
+ Score = 494 bits (267),  Expect = 3e-140
+ Identities = 307/327 (94%), Gaps = 0/327 (0%)
+ Strand=Plus/Plus
+
+Query  538   AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+             ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  7382  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATA  7441
+
+Query  598   ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+              |||| ||  | ||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  7442  GCAATCCTGCTCAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  7501
+
+Query  658   CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  717
+             |||||||||||||||||||| |||||||||||||||||||||||||||||||||||||||
+Sbjct  7502  CAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  7561
+
+Query  718   ATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGGGTTC  777
+             ||||||||||||| ||||||||||||||  ||  || | ||||||||||||||||| |||
+Sbjct  7562  ATCTGCTATGTCCCTATTGGGATTTGTAGGGATAATGCGAAACTTATCCAAAAAGGTTTC  7621
+
+Query  778   TCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  837
+             || || || |||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  7622  TCACTCCTAGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  7681
+
+Query  838   ATCTATTACCAAGCGAAGGAAAGATAA  864
+             |||||||||||||||||||||||||||
+Sbjct  7682  ATCTATTACCAAGCGAAGGAAAGATAA  7708
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 1668000264
+
+
+  Database: data/GoldenSet_7548Genomes_2023/48956_VICE1163a.fasta
+    Posted date:  Apr 24, 2025  5:41 PM
+  Number of letters in database: 1,979,110
+  Number of sequences in database:  22
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

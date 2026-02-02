@@ -1,0 +1,113 @@
+BLASTN 2.17.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/26824_SMRU3155.fasta
+           181 sequences; 2,072,491 total letters
+
+
+
+Query= SPV_0112-genomic D39V:112,681-113,544(-)
+
+Length=864
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR064060_A114001_NODE_224_COV_48.731991                              329     9e-91
+ERR064060_A114001_NODE_317_COV_77.596413                              276     1e-74
+ERR064060_A114001_NODE_142_COV_36.950233                              274     4e-74
+
+
+>ERR064060_A114001_NODE_224_COV_48.731991
+Length=3586
+
+ Score = 329 bits (178),  Expect = 9e-91
+ Identities = 200/211 (95%), Gaps = 0/211 (0%)
+ Strand=Plus/Plus
+
+Query  654  TAAGCAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  713
+            |||||||||||||||||||||||| |||||||||||||||||||||||||||||||||||
+Sbjct  1    TAAGCAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  60
+
+Query  714  GGCTATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGG  773
+            ||||||||||||||||| ||||||||||||||  || ||| | |||||||||||||||||
+Sbjct  61   GGCTATCTGCTATGTCCCTATTGGGATTTGTAGGGATGATGCGAAACTTATCCAAAAAGG  120
+
+Query  774  GTTCTCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGT  833
+             ||||| || || |||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  121  TTTCTCACTCCTAGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGT  180
+
+Query  834  AGAGATCTATTACCAAGCGAAGGAAAGATAA  864
+            |||||||||||||||||||||||||||||||
+Sbjct  181  AGAGATCTATTACCAAGCGAAGGAAAGATAA  211
+
+
+>ERR064060_A114001_NODE_317_COV_77.596413
+Length=283
+
+ Score = 276 bits (149),  Expect = 1e-74
+ Identities = 167/176 (95%), Gaps = 0/176 (0%)
+ Strand=Plus/Plus
+
+Query  538  AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+            ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  108  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATA  167
+
+Query  598  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+             |||| ||  | ||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  168  GCAATCCTGCTCAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  227
+
+Query  658  CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  713
+            |||||||||||||||||||| |||||||||||||||||||||||||||||||||||
+Sbjct  228  CAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  283
+
+
+>ERR064060_A114001_NODE_142_COV_36.950233
+Length=5405
+
+ Score = 274 bits (148),  Expect = 4e-74
+ Identities = 187/206 (91%), Gaps = 1/206 (0%)
+ Strand=Plus/Plus
+
+Query  654  TAAGCAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  713
+            |||||||||||||||||||||||| |||||||||||||||||||||||||||||||||||
+Sbjct  1    TAAGCAAATCTGCTACACTTTACTGGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCT  60
+
+Query  714  GGCTATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGG  773
+             |||||||||||||| ||||||||||||||||  ||  || |||||||||||||||||||
+Sbjct  61   TGCTATCTGCTATGTTCGTATTGGGATTTGTAGGGATAATGCTAAACTTATCCAAAAAGG  120
+
+Query  774  GTTCTCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGT  833
+             ||||| || || ||||| |||||||||||||||||||||||||||||||||||||||||
+Sbjct  121  TTTCTCACTCCTAGAGCTGACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGT  180
+
+Query  834  AGAGATCTATTACCAAGCGAAGGAAA  859
+            ||||| | |||| ||| | ||| |||
+Sbjct  181  AGAGACCCATTATCAACCAAAG-AAA  205
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 1741684578
+
+
+  Database: data/GoldenSet_7548Genomes_2023/26824_SMRU3155.fasta
+    Posted date:  Apr 24, 2025  5:25 PM
+  Number of letters in database: 2,072,491
+  Number of sequences in database:  181
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

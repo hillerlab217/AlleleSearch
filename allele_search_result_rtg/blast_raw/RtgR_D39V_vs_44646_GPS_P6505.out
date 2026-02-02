@@ -1,0 +1,113 @@
+BLASTN 2.17.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/44646_GPS_P6505.fasta
+           91 sequences; 2,055,665 total letters
+
+
+
+Query= SPV_0112-genomic D39V:112,681-113,544(-)
+
+Length=864
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR876664_A165784_NODE_65_COV_45.366413                               494     3e-140
+ERR876664_A165784_NODE_67_COV_22.640512                               270     5e-73 
+ERR876664_A165784_NODE_66_COV_23.881554                               270     5e-73 
+
+
+>ERR876664_A165784_NODE_65_COV_45.366413
+Length=354
+
+ Score = 494 bits (267),  Expect = 3e-140
+ Identities = 267/267 (100%), Gaps = 0/267 (0%)
+ Strand=Plus/Plus
+
+Query  598  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  1    ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  60
+
+Query  658  CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  717
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  61   CAAATCTGCTACACTTTACTAGAGGACGCCAAGAATAAGAAAAGCTACGATAGGCTGGCT  120
+
+Query  718  ATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGGGTTC  777
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  121  ATCTGCTATGTCCGTATTGGGATTTGTACAGACGATTCTAAACTTATCCAAAAAGGGTTC  180
+
+Query  778  TCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  837
+            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  181  TCCCTTCTGGAGCTAACCGAGGAAACTTCTATGCTGTCTCATCTCAAAAAAGAAGTAGAG  240
+
+Query  838  ATCTATTACCAAGCGAAGGAAAGATAA  864
+            |||||||||||||||||||||||||||
+Sbjct  241  ATCTATTACCAAGCGAAGGAAAGATAA  267
+
+
+>ERR876664_A165784_NODE_67_COV_22.640512
+Length=7586
+
+ Score = 270 bits (146),  Expect = 5e-73
+ Identities = 150/152 (99%), Gaps = 0/152 (0%)
+ Strand=Plus/Plus
+
+Query  538   AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+             ||||| ||||||||||||||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  7435  AAAATCTTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATT  7494
+
+Query  598   ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+             ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  7495  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  7554
+
+Query  658   CAAATCTGCTACACTTTACTAGAGGACGCCAA  689
+             ||||||||||||||||||||||||||||||||
+Sbjct  7555  CAAATCTGCTACACTTTACTAGAGGACGCCAA  7586
+
+
+>ERR876664_A165784_NODE_66_COV_23.881554
+Length=11059
+
+ Score = 270 bits (146),  Expect = 5e-73
+ Identities = 150/152 (99%), Gaps = 0/152 (0%)
+ Strand=Plus/Plus
+
+Query  538    AAAATATTGCAACGCCTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  597
+              ||||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  10908  AAAATCTTGCAACGCTTAGAAGTCTATAAAAACTATCAACATTTATATGACTTGCGAATG  10967
+
+Query  598    ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  657
+              ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  10968  ACAATTCTATTAAACCTTTCCACACTCTATCTATACAATCAAGATAAAAACATGTGTAAG  11027
+
+Query  658    CAAATCTGCTACACTTTACTAGAGGACGCCAA  689
+              ||||||||||||||||||||||||||||||||
+Sbjct  11028  CAAATCTGCTACACTTTACTAGAGGACGCCAA  11059
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 1729184246
+
+
+  Database: data/GoldenSet_7548Genomes_2023/44646_GPS_P6505.fasta
+    Posted date:  Apr 24, 2025  5:40 PM
+  Number of letters in database: 2,055,665
+  Number of sequences in database:  91
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5
