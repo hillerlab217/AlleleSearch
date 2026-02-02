@@ -2,7 +2,7 @@
 nextflow.enable.dsl=2
 
 // ──────────────────────────────────────────────────────────────
-// Surface Chaperones Allele Discovery Pipeline
+// Allele Search Pipeline
 // ──────────────────────────────────────────────────────────────
 
 include { MAKE_BLAST_DB; COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
@@ -18,10 +18,10 @@ include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; TCOFFEE_ALIGN } from './modules/
 if (params.help) {
     log.info """
     =========================================
-    Surface Chaperones Allele Pipeline
+    Allele Search Pipeline
     =========================================
     Usage:
-      nextflow run main.nf --query_dir <path> --genome_dir <path>
+      nextflow run main.nf --query_dir <path> --genome_dir <path> --genome_ref_dir <path>
 
     Required:
       --query_dir       Directory with query .fasta files
@@ -29,8 +29,8 @@ if (params.help) {
       --genome_ref_dir  Directory with full genomes for upstream/downstream extension
 
     Optional:
-      --code_dir        Path to code/ scripts (default: ../surface_chaperones/code)
-      --outdir          Output directory (default: results)
+      --code_dir        Path to code/ scripts (default: ./code)
+      --outdir          Output directory (default: ./results)
       --blast_type      blastn or tblastn (default: blastn)
       --max_evalue      E-value cutoff (default: 0.00001)
       --similarity      Similarity % cutoff (default: 80)
@@ -43,6 +43,13 @@ if (params.help) {
     """.stripIndent()
     exit 0
 }
+
+// ──────────────────────────────────────────────────────────────
+// Parameter validation
+// ──────────────────────────────────────────────────────────────
+if (!params.query_dir)      { error "ERROR: --query_dir is required" }
+if (!params.genome_dir)     { error "ERROR: --genome_dir is required" }
+if (!params.genome_ref_dir) { error "ERROR: --genome_ref_dir is required" }
 
 // ──────────────────────────────────────────────────────────────
 // Input channels
@@ -78,7 +85,6 @@ workflow {
     PARSE_BLAST(ch_blast_grouped)
 
     // Step 4: Filter BLAST results with strict cutoffs
-    // Join query FASTA back for length calculation
     ch_query_map = ch_queries.map { q -> [q.baseName, q] }
     ch_filter_input = BLAST_SEARCH.out
         .groupTuple()

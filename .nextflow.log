@@ -1,0 +1,177 @@
+Feb-02 13:31:28.689 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --query_dir /home/xinruoz/Document/Hiller/allele_search/allele_search_result_rtg/allele_seq --genome_dir /home/xinruoz/Document/Hiller/allele_search/temp/surface_chaperones/data/genome_sequence --genome_ref_dir /home/xinruoz/Document/Hiller/allele_search/temp/surface_chaperones/data/genome_sequence --skip_tcoffee -preview
+Feb-02 13:31:28.833 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
+Feb-02 13:31:28.867 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
+Feb-02 13:31:28.898 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Feb-02 13:31:28.900 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Feb-02 13:31:28.903 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Feb-02 13:31:28.923 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Feb-02 13:31:29.104 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Feb-02 13:31:29.145 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-02 13:31:29.149 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-02 13:31:29.184 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Feb-02 13:31:29.810 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Feb-02 13:31:29.811 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Feb-02 13:31:29.831 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
+Feb-02 13:31:29.835 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@3f362135] - activable => nextflow.secret.LocalSecretsProvider@3f362135
+Feb-02 13:31:29.837 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Feb-02 13:31:29.859 [main] DEBUG nextflow.cli.CmdRun - * PREVIEW * null [irreverent_laplace] DSL2 - revision: 0c3f64c8a3
+Feb-02 13:31:29.924 [main] DEBUG nextflow.Session - Session UUID: f31071dc-bc7b-496a-872a-cd434083dd2e
+Feb-02 13:31:29.924 [main] DEBUG nextflow.Session - Run name: irreverent_laplace
+Feb-02 13:31:29.925 [main] DEBUG nextflow.Session - Executor pool size: 14
+Feb-02 13:31:29.935 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Feb-02 13:31:29.942 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-02 13:31:29.965 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.3 build 10983
+  Created: 22-01-2026 15:34 UTC (10:34 EDT)
+  System: Linux 5.15.167.4-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
+  Encoding: UTF-8 (UTF-8)
+  Process: 21564@rock1 [127.0.1.1]
+  CPUs: 14 - Mem: 7.8 GB (1.1 GB) - Swap: 2 GB (2 GB)
+Feb-02 13:31:29.989 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
+Feb-02 13:31:29.989 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
+Feb-02 13:31:30.000 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Feb-02 13:31:30.011 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Feb-02 13:31:30.015 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Feb-02 13:31:30.093 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Feb-02 13:31:30.107 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
+Feb-02 13:31:30.198 [main] DEBUG nextflow.Session - Session start
+Feb-02 13:31:30.208 [main] DEBUG nextflow.Session - Report file already exists: /home/xinruoz/Document/Hiller/allele_search/results/report.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+nextflow.exception.AbortOperationException: Report file already exists: /home/xinruoz/Document/Hiller/allele_search/results/report.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.ReportObserver.onFlowCreate(ReportObserver.groovy:119)
+	at nextflow.Session$_notifyFlowCreate_lambda34.doCall(Session.groovy:1107)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowCreate(Session.groovy:1107)
+	at nextflow.Session.start(Session.groovy:596)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:133)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Feb-02 13:31:30.210 [main] DEBUG nextflow.Session - Timeline file already exists: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+nextflow.exception.AbortOperationException: Timeline file already exists: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TimelineObserver.onFlowCreate(TimelineObserver.groovy:80)
+	at nextflow.Session$_notifyFlowCreate_lambda34.doCall(Session.groovy:1107)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowCreate(Session.groovy:1107)
+	at nextflow.Session.start(Session.groovy:596)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:133)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Feb-02 13:31:30.534 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Feb-02 13:31:31.368 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.369 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.383 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Feb-02 13:31:31.395 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=14; memory=7.8 GB; capacity=14; pollInterval=100ms; dumpInterval=5m
+Feb-02 13:31:31.399 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Feb-02 13:31:31.433 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_BLAST_DB': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.522 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:BLAST_SEARCH` matches process BLAST_SEARCH
+Feb-02 13:31:31.524 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.525 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.526 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BLAST_SEARCH': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.550 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.550 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.551 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'PARSE_BLAST': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.585 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.585 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.586 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_BLAST': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.594 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.594 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.596 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CSV_TO_FASTA': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.605 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.606 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.607 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_10': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.614 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.614 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.615 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTEND_SEQUENCES': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.621 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.622 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.622 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_20': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.631 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.631 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.632 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_STANDARD': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.635 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.636 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.637 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'TRANSLATE': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.645 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.645 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.646 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_QUERY_REF': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.651 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.652 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.652 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_SELF_REF': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.659 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.659 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.660 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_ALLELES': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.664 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MAFFT_ALIGN` matches process MAFFT_ALIGN
+Feb-02 13:31:31.665 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.665 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.665 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_ALIGN': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.669 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-02 13:31:31.670 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-02 13:31:31.671 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'WEBLOGO': maxForks=0; fair=false; array=0
+Feb-02 13:31:31.674 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, BLAST_SEARCH, FILTER_ALLELES, ALLELE_QUERY_REF, TCOFFEE_ALIGN, COLLECT_STANDARD, FILTER_BLAST, MAFFT_ALIGN, ALLELE_SELF_REF, MAKE_BLAST_DB, PARSE_BLAST, TRANSLATE, CODON_CHECK_20, CODON_CHECK_10, COLLECT_BLAST_DB, WEBLOGO
+Feb-02 13:31:31.678 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_3a54fa0151a14f5a: /home/xinruoz/Document/Hiller/allele_search/modules/quality.nf
+  Script_4329441ff216f3f3: /home/xinruoz/Document/Hiller/allele_search/modules/blast.nf
+  Script_b7ee15f4583a0882: /home/xinruoz/Document/Hiller/allele_search/modules/translate.nf
+  Script_8cbf0c1112866315: /home/xinruoz/Document/Hiller/allele_search/modules/filter.nf
+  Script_0a58798e270414dd: /home/xinruoz/Document/Hiller/allele_search/main.nf
+  Script_f0c68d9726e1441b: /home/xinruoz/Document/Hiller/allele_search/modules/orf.nf
+  Script_0f40325c6f6bf6c7: /home/xinruoz/Document/Hiller/allele_search/modules/allele.nf
+Feb-02 13:31:31.686 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=0; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=0ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=0; peakCpus=0; peakMemory=0; ]
+Feb-02 13:31:31.707 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Feb-02 13:31:31.845 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Feb-02 13:31:32.590 [main] WARN  nextflow.trace.ReportObserver - Failed to render execution report -- see the log file for details
+nextflow.exception.AbortOperationException: Report file already exists: /home/xinruoz/Document/Hiller/allele_search/results/report.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.ReportObserver.renderHtml(ReportObserver.groovy:243)
+	at nextflow.trace.ReportObserver.onFlowComplete(ReportObserver.groovy:129)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /home/xinruoz/Document/Hiller/allele_search/results/report.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:262)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:482)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3012)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Feb-02 13:31:32.591 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Feb-02 13:31:32.653 [main] WARN  nextflow.trace.TimelineObserver - Failed to render execution timeline -- see the log file for details
+nextflow.exception.AbortOperationException: Timeline file already exists: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.TimelineObserver.renderHtml(TimelineObserver.groovy:164)
+	at nextflow.trace.TimelineObserver.onFlowComplete(TimelineObserver.groovy:91)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:262)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:482)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3012)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Feb-02 13:31:32.660 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Feb-02 13:31:32.678 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Feb-02 13:31:32.678 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
