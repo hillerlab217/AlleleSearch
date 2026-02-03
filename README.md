@@ -23,6 +23,41 @@ Query sequences + Genomes
    Alignment & Visualization ──► MAFFT, WebLogo, T-Coffee
 ```
 
+## Installation
+
+The pipeline requires macOS or Linux terminal to run, miniconda/conda to help install and manage software packages.
+
+### Step 1: Download This Pipeline
+
+**Option A: Download as ZIP**
+1. Go to the repository page on GitHub
+2. Click the green "Code" button
+3. Click "Download ZIP"
+4. Extract the ZIP file and navigate to the folder in terminal
+
+**Option B: Clone with Git**
+```bash
+git clone <repository-url> allele_search
+cd allele_search
+```
+
+### Step 2: Set Up the Environment
+
+```bash
+conda env create -f environment.yml
+conda activate allele_search
+```
+
+**Note:** Run `conda activate allele_search` every time you open a new terminal before using the pipeline.
+
+### Step 3: Verify Installation
+
+```bash
+nextflow run main.nf --help
+```
+
+You should see a help message listing all available options.
+
 ### Steps in Detail
 
 1. **BLAST Search** — Runs each query against each genome (blastn or tblastn). Parses results to CSV.
