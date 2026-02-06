@@ -1,0 +1,85 @@
+Feb-06 16:40:30.501 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --help
+Feb-06 16:40:30.843 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
+Feb-06 16:40:30.960 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
+Feb-06 16:40:31.065 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Feb-06 16:40:31.068 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Feb-06 16:40:31.078 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Feb-06 16:40:31.133 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Feb-06 16:40:31.698 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Feb-06 16:40:31.799 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-06 16:40:31.810 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-06 16:40:31.895 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Feb-06 16:40:33.636 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Feb-06 16:40:33.638 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Feb-06 16:40:33.697 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
+Feb-06 16:40:33.708 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@101a461c] - activable => nextflow.secret.LocalSecretsProvider@101a461c
+Feb-06 16:40:33.715 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Feb-06 16:40:33.801 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [silly_einstein] DSL2 - revision: 0a0b3f4ab3
+Feb-06 16:40:34.000 [main] DEBUG nextflow.Session - Session UUID: afcc9ff2-5313-4389-acb7-41bc64192fa4
+Feb-06 16:40:34.002 [main] DEBUG nextflow.Session - Run name: silly_einstein
+Feb-06 16:40:34.006 [main] DEBUG nextflow.Session - Executor pool size: 14
+Feb-06 16:40:34.042 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Feb-06 16:40:34.066 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-06 16:40:34.176 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.3 build 10983
+  Created: 22-01-2026 15:34 UTC (10:34 EDT)
+  System: Linux 5.15.167.4-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
+  Encoding: UTF-8 (UTF-8)
+  Process: 432018@rock1 [127.0.1.1]
+  CPUs: 14 - Mem: 7.8 GB (125.1 MB) - Swap: 2 GB (1.1 GB)
+Feb-06 16:40:34.248 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
+Feb-06 16:40:34.249 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
+Feb-06 16:40:34.327 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Feb-06 16:40:34.357 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Feb-06 16:40:34.366 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Feb-06 16:40:34.516 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Feb-06 16:40:34.557 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
+Feb-06 16:40:34.836 [main] DEBUG nextflow.Session - Session start
+Feb-06 16:40:34.862 [main] DEBUG nextflow.Session - Report file already exists: /home/xinruoz/Document/Hiller/allele_search/results/report.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+nextflow.exception.AbortOperationException: Report file already exists: /home/xinruoz/Document/Hiller/allele_search/results/report.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.ReportObserver.onFlowCreate(ReportObserver.groovy:119)
+	at nextflow.Session$_notifyFlowCreate_lambda34.doCall(Session.groovy:1107)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowCreate(Session.groovy:1107)
+	at nextflow.Session.start(Session.groovy:596)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:133)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Feb-06 16:40:34.867 [main] DEBUG nextflow.Session - Timeline file already exists: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+nextflow.exception.AbortOperationException: Timeline file already exists: /home/xinruoz/Document/Hiller/allele_search/results/timeline.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TimelineObserver.onFlowCreate(TimelineObserver.groovy:80)
+	at nextflow.Session$_notifyFlowCreate_lambda34.doCall(Session.groovy:1107)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowCreate(Session.groovy:1107)
+	at nextflow.Session.start(Session.groovy:596)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:133)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Feb-06 16:40:35.892 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Feb-06 16:40:38.082 [main] INFO  nextflow.Nextflow - 
+=========================================
+Allele Search Pipeline
+=========================================
+Usage:
+  nextflow run main.nf --query_dir <path> --genome_dir <path>
+
+Required:
+  --query_dir       Directory with query .fasta files
+  --genome_dir      Directory with genome .fasta files (also used for sequence extension)
+
+Optional:
+  --code_dir        Path to code/ scripts (default: ./code)
+  --outdir          Output directory (default: ./results)
+  --blast_type      blastn or tblastn (default: blastn)
+  --max_evalue      E-value cutoff (default: 0.00001)
+  --similarity      Similarity % cutoff (default: 80)
+  --length_percentage  Length % cutoff (default: 80)
+  --extension_codons   Codons to extend (default: 10)
+  --species_threshold  Min species % for filtering (default: 1)
+  --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
+  --skip_tcoffee    Skip T-Coffee alignment (default: false)
+=========================================
+

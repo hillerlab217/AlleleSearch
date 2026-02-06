@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioinformatics Pipeline Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f8f9fc;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    padding: 40px 20px;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    max-width: 780px;
+    width: 100%;
+  }
+
+  .pipeline-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .pipeline-title span { color: #475569; }
+
+  .stage-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .stage-row:nth-child(2)  { animation-delay: 0.1s; }
+  .stage-row:nth-child(4)  { animation-delay: 0.25s; }
+  .stage-row:nth-child(6)  { animation-delay: 0.4s; }
+  .stage-row:nth-child(8)  { animation-delay: 0.55s; }
+  .stage-row:nth-child(10) { animation-delay: 0.7s; }
+
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 15px; flex-shrink: 0; margin-right: 18px;
+  }
+
+  .main-node {
+    flex-shrink: 0; width: 220px; padding: 18px 22px; border-radius: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; font-size: 14px; text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default;
+  }
+
+  .main-node:hover { transform: translateY(-2px) scale(1.02); }
+
+  .arrow-horiz {
+    width: 48px; height: 2px; position: relative; flex-shrink: 0;
+  }
+
+  .arrow-horiz::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 10px; height: 2px;
+    background: linear-gradient(90deg, var(--clr), rgba(0,0,0,0.06));
+  }
+
+  .arrow-horiz::after {
+    content: ''; position: absolute; right: 4px; top: -4px;
+    width: 0; height: 0;
+    border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+    border-left: 8px solid rgba(0,0,0,0.1);
+  }
+
+  .sub-nodes { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+  .sub-node {
+    padding: 10px 16px; border-radius: 10px;
+    background: #ffffff; border: 1px solid #e8ecf1;
+    font-size: 13px; color: #475569; font-weight: 500;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: default; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .sub-node:hover {
+    border-color: #cbd5e1; color: #1e293b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+
+  .sub-node .icon { margin-right: 6px; opacity: 0.7; }
+
+  .connector {
+    display: flex; flex-direction: column; align-items: center;
+    height: 40px; width: 100%;
+    padding-left: calc(22px + 44px + 18px + 110px);
+    opacity: 0; animation: fadeUp 0.3s ease forwards;
+  }
+  .connector:nth-child(3)  { animation-delay: 0.18s; }
+  .connector:nth-child(5)  { animation-delay: 0.33s; }
+  .connector:nth-child(7)  { animation-delay: 0.48s; }
+  .connector:nth-child(9)  { animation-delay: 0.63s; }
+
+  .connector .line {
+    width: 2px; flex: 1;
+    background: linear-gradient(180deg, var(--clr-from, #d1d5db), var(--clr-to, #d1d5db));
+  }
+
+  .connector .chevron {
+    width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 7px solid var(--clr-to, #cbd5e1);
+  }
+
+  /* ── Light Color Themes ── */
+  .theme-cyan .step-num    { background: #e0f7fa; color: #0891b2; border: 1.5px solid #a5f3fc; }
+  .theme-cyan .main-node   { background: linear-gradient(135deg, #ecfeff, #e0f7fa); border: 1.5px solid #a5f3fc; color: #0e7490; box-shadow: 0 2px 12px rgba(8,145,178,0.08); }
+  .theme-cyan .main-node:hover { box-shadow: 0 4px 20px rgba(8,145,178,0.14); }
+
+  .theme-emerald .step-num  { background: #d1fae5; color: #059669; border: 1.5px solid #6ee7b7; }
+  .theme-emerald .main-node { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1.5px solid #6ee7b7; color: #047857; box-shadow: 0 2px 12px rgba(5,150,105,0.08); }
+  .theme-emerald .main-node:hover { box-shadow: 0 4px 20px rgba(5,150,105,0.14); }
+
+  .theme-amber .step-num   { background: #fef3c7; color: #d97706; border: 1.5px solid #fcd34d; }
+  .theme-amber .main-node  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1.5px solid #fcd34d; color: #b45309; box-shadow: 0 2px 12px rgba(217,119,6,0.08); }
+  .theme-amber .main-node:hover { box-shadow: 0 4px 20px rgba(217,119,6,0.14); }
+
+  .theme-violet .step-num  { background: #ede9fe; color: #7c3aed; border: 1.5px solid #c4b5fd; }
+  .theme-violet .main-node { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1.5px solid #c4b5fd; color: #6d28d9; box-shadow: 0 2px 12px rgba(124,58,237,0.08); }
+  .theme-violet .main-node:hover { box-shadow: 0 4px 20px rgba(124,58,237,0.14); }
+
+  .theme-rose .step-num    { background: #ffe4e6; color: #e11d48; border: 1.5px solid #fda4af; }
+  .theme-rose .main-node   { background: linear-gradient(135deg, #fff1f2, #ffe4e6); border: 1.5px solid #fda4af; color: #be123c; box-shadow: 0 2px 12px rgba(225,29,72,0.08); }
+  .theme-rose .main-node:hover { box-shadow: 0 4px 20px rgba(225,29,72,0.14); }
+
+  /* ── Input badges ── */
+  .input-badges {
+    display: flex; gap: 10px; justify-content: center;
+    margin-bottom: 24px; opacity: 0;
+    animation: fadeUp 0.5s ease 0.05s forwards;
+  }
+
+  .badge {
+    padding: 8px 18px; border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  .badge-query { background: #ecfeff; border: 1px solid #a5f3fc; color: #0891b2; }
+  .badge-genome { background: #ecfdf5; border: 1px solid #6ee7b7; color: #059669; }
+
+  .input-arrow {
+    display: flex; flex-direction: column; align-items: center;
+    height: 28px; margin-bottom: 8px; opacity: 0;
+    animation: fadeUp 0.4s ease 0.08s forwards;
+  }
+
+  .input-arrow .line { width: 2px; flex: 1; background: #d1d5db; }
+
+  .input-arrow .chevron {
+    width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 7px solid #cbd5e1;
+  }
+</style>
+</head>
+<body>
+
+<div class="pipeline">
+  <div class="pipeline-title"><span>⬡</span> &nbsp;Bioinformatics Analysis <span>Pipeline</span></div>
+
+  <div class="input-badges">
+    <div class="badge badge-query">🧬 Query Sequences</div>
+    <div class="badge badge-genome">🗂️ Genomes</div>
+  </div>
+  <div class="input-arrow"><div class="line"></div><div class="chevron"></div></div>
+
+  <!-- Stage 1 -->
+  <div class="stage-row theme-cyan">
+    <div class="step-num">01</div>
+    <div class="main-node">BLAST Search</div>
+    <div class="arrow-horiz" style="--clr: rgba(8,145,178,0.25);"></div>
+    <div class="sub-nodes">
+      <div class="sub-node"><span class="icon">⚙️</span>Parse &amp; filter hits</div>
+      <div class="sub-node"><span class="icon">📊</span>Score &amp; E-value filtering</div>
+    </div>
+  </div>
+
+  <div class="connector" style="--clr-from: #a5f3fc; --clr-to: #6ee7b7;">
+    <div class="line"></div><div class="chevron"></div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage-row theme-emerald">
+    <div class="step-num">02</div>
+    <div class="main-node">ORF Finding</div>
+    <div class="arrow-horiz" style="--clr: rgba(5,150,105,0.25);"></div>
+    <div class="sub-nodes">
+      <div class="sub-node"><span class="icon">🔍</span>Check start / stop codons</div>
+      <div class="sub-node"><span class="icon">🔗</span>Extend incomplete sequences</div>
+    </div>
+  </div>
+
+  <div class="connector" style="--clr-from: #6ee7b7; --clr-to: #fcd34d;">
+    <div class="line"></div><div class="chevron"></div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage-row theme-amber">
+    <div class="step-num">03</div>
+    <div class="main-node">Translation</div>
+    <div class="arrow-horiz" style="--clr: rgba(217,119,6,0.25);"></div>
+    <div class="sub-nodes">
+      <div class="sub-node"><span class="icon">🔄</span>Translate all 3 reading frames</div>
+      <div class="sub-node"><span class="icon">📏</span>Keep longest ORF</div>
+    </div>
+  </div>
+
+  <div class="connector" style="--clr-from: #fcd34d; --clr-to: #c4b5fd;">
+    <div class="line"></div><div class="chevron"></div>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="stage-row theme-violet">
+    <div class="step-num">04</div>
+    <div class="main-node">Allele Analysis</div>
+    <div class="arrow-horiz" style="--clr: rgba(124,58,237,0.25);"></div>
+    <div class="sub-nodes">
+      <div class="sub-node"><span class="icon">📦</span>Group identical proteins</div>
+      <div class="sub-node"><span class="icon">🧩</span>Identify variants</div>
+    </div>
+  </div>
+
+  <div class="connector" style="--clr-from: #c4b5fd; --clr-to: #fda4af;">
+    <div class="line"></div><div class="chevron"></div>
+  </div>
+
+  <!-- Stage 5 -->
+  <div class="stage-row theme-rose">
+    <div class="step-num">05</div>
+    <div class="main-node">Alignment &amp; Visualization</div>
+    <div class="arrow-horiz" style="--clr: rgba(225,29,72,0.25);"></div>
+    <div class="sub-nodes">
+      <div class="sub-node"><span class="icon">📐</span>MAFFT multiple alignment</div>
+      <div class="sub-node"><span class="icon">🎨</span>WebLogo sequence logos</div>
+      <div class="sub-node"><span class="icon">☕</span>T-Coffee consistency scoring</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

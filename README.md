@@ -23,6 +23,10 @@ Query sequences + Genomes
    Alignment & Visualization ──► MAFFT, WebLogo, T-Coffee
 ```
 
+## Core outputs
+
+
+
 ## Installation
 
 The pipeline requires macOS or Linux terminal to run, miniconda/conda to help install and manage software packages.
@@ -141,10 +145,16 @@ results/
 ├── protein_seq/
 │   ├── inframe/                # Longest ORF protein sequences
 │   └── others/                 # Alternative reading frames
-├── allele_info/
+├── allele_info/                # KEY OUTPUT: per-query allele variant analysis
 │   └── <query_name>/
-│       ├── query_reference/    # Alleles compared to original query
-│       └── self_reference/     # Alleles identified by self-comparison
+│       ├── query_reference/    # Variants compared to the original query sequence
+│       │   ├── allele_info_with_strain_name.csv
+│       │   ├── allele_info_no_strain_name.csv
+│       │   └── allele_sequence_output.fasta
+│       └── self_reference/     # Variants compared to the most abundant allele found
+│           ├── allele_info_with_strain_name.csv
+│           ├── allele_info_no_strain_name.csv
+│           └── allele_sequence_output.fasta
 ├── allele_seq_filtered/        # Alleles passing species threshold
 ├── allele_seq/                 # MAFFT-aligned allele sequences
 ├── logo/                       # WebLogo sequence logos (.eps)
@@ -152,6 +162,25 @@ results/
 ├── timeline.html               # Nextflow execution timeline
 └── report.html                 # Nextflow execution report
 ```
+
+### `allele_info/` — Key Output Details
+
+Each CSV row represents one allele (a group of identical protein sequences) and includes:
+
+| Column | Description |
+|--------|-------------|
+| `allele_name` | Allele ID, numbered by frequency (1 = most common) |
+| `species_count` | Number of species carrying this allele |
+| `species_percentage` | Percentage of all searched species with this allele |
+| `variant_position_count` | Number of amino acid positions differing from reference |
+| `variant_percentage` | Percentage of positions that are variants |
+| `variant_positions` | Specific amino acid changes, e.g. `90:K→T; 93:Q→K` |
+| `allele_sequence` | Full protein sequence of the allele |
+| `strain_names` | Strain list (only in `_with_strain_name.csv`) |
+
+- **`query_reference/`** uses the original query as the reference for variant calling.
+- **`self_reference/`** uses the most abundant allele found as the reference.
+- **`allele_sequence_output.fasta`** contains the protein sequence of each allele, with species count in the header.
 
 ## Project Structure
 

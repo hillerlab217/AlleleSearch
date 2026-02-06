@@ -10,7 +10,7 @@ include { FILTER_BLAST }                             from './modules/filter'
 include { CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_QUERY_REF; ALLELE_SELF_REF }        from './modules/allele'
-include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; TCOFFEE_ALIGN } from './modules/quality'
+include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; TCOFFEE_ALIGN } from './modules/quality'
 
 // ──────────────────────────────────────────────────────────────
 // Help message
@@ -128,13 +128,21 @@ workflow {
 
     FILTER_ALLELES(ch_allele_fasta)
 
-    // Step 14: MAFFT alignment
+    // Step 14: Alignment variant figures (both reference types)
+    ch_figure_self = ALLELE_SELF_REF.out.results
+        .map { name, csvs, fasta -> [name, "self_reference", csvs] }
+    ch_figure_query = ALLELE_QUERY_REF.out
+        .map { name, csvs, fasta -> [name, "query_reference", csvs] }
+
+    ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
+
+    // Step 15: MAFFT alignment
     MAFFT_ALIGN(FILTER_ALLELES.out)
 
-    // Step 15: WebLogo
+    // Step 16: WebLogo
     WEBLOGO(MAFFT_ALIGN.out)
 
-    // Step 16: T-Coffee (optional)
+    // Step 17: T-Coffee (optional)
     if (!params.skip_tcoffee) {
         TCOFFEE_ALIGN(FILTER_ALLELES.out)
     }
