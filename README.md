@@ -1,6 +1,6 @@
 # Allele Search Pipeline
 
-A Nextflow pipeline for identifying protein allele variants from genomic sequences. It searches for query protein/DNA sequences across multiple genomes using BLAST, identifies open reading frames, translates them to protein, and clusters identical proteins into allele groups with variant annotation.
+A Nextflow pipeline for identifying protein allele variants from genomic sequences. It searches for query protein/DNA sequences across multiple genomes using BLAST, screens proteins according to the quality of BLAST results, and ensures start and stop codons are present, no stop codons are in between, identifies open reading frames, translates them into proteins, and clusters identical proteins into allele groups with variant annotations.
 
 ## Pipeline Overview
 
@@ -8,7 +8,7 @@ A Nextflow pipeline for identifying protein allele variants from genomic sequenc
 Query sequences + Genomes
         │
         ▼
-   BLAST Search ──► Parse & Filter hits
+   BLAST Search ──► Blast, Parse Filter hits
         │
         ▼
    ORF Finding ──► Check start/stop codons ──► Extend incomplete sequences
@@ -17,10 +17,10 @@ Query sequences + Genomes
    Translation ──► All 3 reading frames, keep longest ORF
         │
         ▼
-   Allele Analysis ──► Group identical proteins, identify variants
+   Allele Alignment ──► Group identical proteins, identify variants
         │
         ▼
-   Alignment & Visualization ──► MAFFT, WebLogo, T-Coffee
+   Visualization ──► WebLogo, T-Coffee
 ```
 
 ## Core outputs
@@ -202,3 +202,6 @@ Each CSV row represents one allele (a group of identical protein sequences) and 
     ├── translate.py                  # DNA to protein translator
     └── protein_allele_variant.py     # Allele grouping and variant caller
 ```
+
+
+
