@@ -17,10 +17,10 @@ Query sequences + Genomes
    Translation ──► All 3 reading frames, keep longest ORF
         │
         ▼
-   Allele Analysis ──► Group identical proteins, identify variants
+   Allele Alignment ──► Group identical proteins, identify variants
         │
         ▼
-   Alignment & Visualization ──► MAFFT, WebLogo, T-Coffee
+   Visualization ──► WebLogo, T-Coffee
 ```
 
 ## Installation
@@ -173,5 +173,6 @@ results/
     ├── translate.py                  # DNA to protein translator
     └── protein_allele_variant.py     # Allele grouping and variant caller
 ```
+
 
 
