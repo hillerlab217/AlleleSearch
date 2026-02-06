@@ -8,7 +8,7 @@ A Nextflow pipeline for identifying protein allele variants from genomic sequenc
 Query sequences + Genomes
         │
         ▼
-   BLAST Search ──► Parse & Filter hits
+   BLAST Search ──► Blast, Parse Filter hits
         │
         ▼
    ORF Finding ──► Check start/stop codons ──► Extend incomplete sequences
@@ -173,4 +173,5 @@ results/
     ├── translate.py                  # DNA to protein translator
     └── protein_allele_variant.py     # Allele grouping and variant caller
 ```
+
 
