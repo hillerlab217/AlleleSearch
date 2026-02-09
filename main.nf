@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 // Allele Search Pipeline
 // ──────────────────────────────────────────────────────────────
 
-include { MAKE_BLAST_DB; COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
+include { COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
 include { FILTER_BLAST }                             from './modules/filter'
 include { CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
@@ -52,7 +52,7 @@ if (!params.genome_dir)     { error "ERROR: --genome_dir is required" }
 // ──────────────────────────────────────────────────────────────
 // Input channels
 // ──────────────────────────────────────────────────────────────
-ch_queries = Channel.fromPath("${params.query_dir}/*.fasta")
+ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
 ch_genomes = Channel.fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
 ch_genome_ref = Channel.fromPath(params.genome_dir)
 
@@ -61,14 +61,9 @@ ch_genome_ref = Channel.fromPath(params.genome_dir)
 // ──────────────────────────────────────────────────────────────
 workflow {
 
-    // Step 1: Build or collect BLAST databases
-    if (params.make_blastdb) {
-        MAKE_BLAST_DB(ch_genomes)
-        ch_db = MAKE_BLAST_DB.out
-    } else {
-        COLLECT_BLAST_DB(ch_genomes)
-        ch_db = COLLECT_BLAST_DB.out
-    }
+    // Step 1: Collect pre-built BLAST databases or build them on-the-fly
+    COLLECT_BLAST_DB(ch_genomes)
+    ch_db = COLLECT_BLAST_DB.out
 
     // Step 2: Run BLAST — each query × each genome
     ch_blast_input = ch_queries

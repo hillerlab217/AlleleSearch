@@ -1,30 +1,23 @@
-# Data directories (too large for git)
-surface_chaperones/data/
-surface_chaperones/envs/
-
-# Results and output
-surface_chaperones/output/
-surface_chaperones/results/
-surface_chaperones/test_output/
-surface_chaperones_rep_result/
-
 # Nextflow work directory and logs
-surface_chaperones_nf/work/
-surface_chaperones_nf/results/
-surface_chaperones_nf/.nextflow/
-surface_chaperones_nf/.nextflow.log*
+work/
+.nextflow/
+.nextflow.log*
 
-# Log files
-surface_chaperones/log/
+# Pipeline results/output directories
+results/
+murM/
+murM_2/
 
-# Binary/large files
-*.pptx
-*.pub
+# Test data
+test_query/
 
-# SSH keys and secrets
-surface_chaperones/chaperon
-surface_chaperones/chaperon.pub
+# Run logs
+run_command.log
 
 # Python cache
 __pycache__/
 *.pyc
+
+# Binary/large files
+*.pptx
+*.pub

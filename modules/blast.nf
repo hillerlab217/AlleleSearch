@@ -21,14 +21,19 @@ process COLLECT_BLAST_DB {
     path genome
 
     output:
-    tuple path(genome), path("${genome}.n*")
+    tuple path(genome), path("*.n*")
 
     script:
     """
-    # DB files already exist alongside the genome; just symlink them into the work dir
+    # Try to symlink pre-built DB files; if none exist, build the database
+    FOUND=false
     for f in ${genome.toRealPath()}.n*; do
-        ln -s "\$f" . 2>/dev/null || true
+        [ -e "\$f" ] && ln -s "\$f" . && FOUND=true
     done
+
+    if [ "\$FOUND" = false ]; then
+        makeblastdb -in ${genome} -dbtype nucl -out ${genome.baseName} -parse_seqids
+    fi
     """
 }
 

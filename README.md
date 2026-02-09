@@ -20,7 +20,7 @@ Query sequences + Genomes
    Allele Alignment ──► Group identical proteins, identify variants
         │
         ▼
-   Visualization ──► WebLogo, T-Coffee
+   Visualization ──► Alignment Figures, WebLogo, T-Coffee
 ```
 
 ## Core outputs
@@ -69,7 +69,7 @@ You should see a help message listing all available options.
 3. **ORF Finding** — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window.
 4. **Translation** — Translates DNA to protein in all 3 frames. The longest ORF (M to stop) is kept.
 5. **Allele Identification** — Groups identical protein sequences into alleles. Variant positions are identified by aligning each allele to a reference using BLOSUM62.
-6. **Quality & Visualization** — Filters alleles by species representation, generates MAFFT alignments, WebLogo sequence logos, and optionally T-Coffee alignments.
+6. **Quality & Visualization** — Filters alleles by species representation, generates coloured variant alignment figures, MAFFT alignments, WebLogo sequence logos, and optionally T-Coffee alignments.
 
 ## Requirements
 
@@ -133,6 +133,8 @@ nextflow run main.nf --help
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
 | `--skip_tcoffee` | `false` | Skip T-Coffee alignment step |
 
+
+
 ## Output
 
 Results are written to `--outdir` (default `./results/`):
@@ -155,6 +157,10 @@ results/
 │           ├── allele_info_with_strain_name.csv
 │           ├── allele_info_no_strain_name.csv
 │           └── allele_sequence_output.fasta
+├── alignment_figures/           # Coloured variant alignment figures (PDF)
+│   └── <query_name>/
+│       ├── self_reference/     # Figures using most abundant allele as reference
+│       └── query_reference/    # Figures using original query as reference
 ├── allele_seq_filtered/        # Alleles passing species threshold
 ├── allele_seq/                 # MAFFT-aligned allele sequences
 ├── logo/                       # WebLogo sequence logos (.eps)
@@ -200,8 +206,7 @@ Each CSV row represents one allele (a group of identical protein sequences) and 
     ├── start_stop_codon_dna_seq.py   # Start/stop codon classifier
     ├── up_down_stream.py             # Sequence extension from reference genomes
     ├── translate.py                  # DNA to protein translator
-    └── protein_allele_variant.py     # Allele grouping and variant caller
+    ├── protein_allele_variant.py     # Allele grouping and variant caller
+    └── alignment_figure.py           # Variant alignment figure generator
 ```
-
-
 
