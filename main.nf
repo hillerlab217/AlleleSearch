@@ -7,7 +7,7 @@ nextflow.enable.dsl=2
 
 include { COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
 include { FILTER_BLAST }                             from './modules/filter'
-include { CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
+include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_QUERY_REF; ALLELE_SELF_REF }        from './modules/allele'
 include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; TCOFFEE_ALIGN } from './modules/quality'
@@ -85,8 +85,16 @@ workflow {
 
     FILTER_BLAST(ch_filter_input)
 
-    // Step 5: CSV to FASTA
-    CSV_TO_FASTA(FILTER_BLAST.out)
+    // Step 5: For tblastn, extract DNA from genomes using subject coordinates
+    if (params.blast_type == 'tblastn') {
+        EXTRACT_DNA(FILTER_BLAST.out, ch_genome_ref.first())
+        ch_csv_for_fasta = EXTRACT_DNA.out
+    } else {
+        ch_csv_for_fasta = FILTER_BLAST.out
+    }
+
+    // Step 6: CSV to FASTA
+    CSV_TO_FASTA(ch_csv_for_fasta)
 
     // Step 6: Check start/stop codons (10-codon window)
     ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }

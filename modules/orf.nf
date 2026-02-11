@@ -1,3 +1,20 @@
+process EXTRACT_DNA {
+    tag "${query_name}"
+
+    input:
+    tuple val(query_name), path(csv_file)
+    path genome_dir
+
+    output:
+    tuple val(query_name), path("${query_name}_dna.csv")
+
+    script:
+    """
+    python ${params.code_dir}/extract_dna_from_blast_csv.py \
+        ${csv_file} ${query_name}_dna.csv ${genome_dir}
+    """
+}
+
 process CSV_TO_FASTA {
     tag "${query_name}"
 
