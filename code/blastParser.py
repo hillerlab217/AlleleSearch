@@ -9,7 +9,7 @@ made the script runable with one line
 """
 
 # Run example
-# python code/blastParser.py --directory output/blast --querys 1 --blast_type blastn --max_Eval 10 --similarity 0 --min_length 0 --file_name output/blast_summary_all.csv
+# python code/blastParser.py --directory output/blast --querys 1 --blast_type blastn --max_Eval 10 --sequence_identity 0 --min_length 0 --file_name output/blast_summary_all.csv
 
 def is_tabular_fmt(lines):
     # Heuristic: a non-empty, non-comment line with >=12 tab-separated fields and no "Query=" token
@@ -21,7 +21,7 @@ def is_tabular_fmt(lines):
         break
     return False
 
-def parseDir(directory, querys, blast_type, max_Eval, similarity, min_length):
+def parseDir(directory, querys, blast_type, max_Eval, sequence_identity, min_length):
     listOfInputs = []
     for file in os.listdir(directory):
         if file.endswith(".out"):
@@ -37,23 +37,23 @@ def parseDir(directory, querys, blast_type, max_Eval, similarity, min_length):
             if is_tabular_fmt(inputString):
                 # implement parseBLAST_single_query_tabular similarly, grouping by contig
                 dataParsed = parseBLAST_single_query_tabular(inputName, inputString, dataParsed,
-                                                             blast_type, max_Eval, similarity, min_length)
+                                                             blast_type, max_Eval, sequence_identity, min_length)
             else:
                 dataParsed = parseBLAST(inputName, inputString, dataParsed,
-                                        blast_type, max_Eval, similarity, min_length)
+                                        blast_type, max_Eval, sequence_identity, min_length)
         else:
             if is_tabular_fmt(inputString):
                 dataParsed = parseBLAST_multi_query_tabular(inputName, inputString, dataParsed,
-                                                            blast_type, max_Eval, similarity, min_length)
+                                                            blast_type, max_Eval, sequence_identity, min_length)
             else:
                 dataParsed = parseBLAST_multi_query(inputName, inputString, dataParsed,
-                                                    blast_type, max_Eval, similarity, min_length)
+                                                    blast_type, max_Eval, sequence_identity, min_length)
     return dataParsed
 
 
 #parseBLAST takes the contents of the BLAST file and outputs a dictionary
-#which contains ID, contig, eval, alignment length and percentage, query start, subject start and end
-def parseBLAST(entryName, inputString, dataParsed, blast_type, max_Eval, similarity, min_length):
+#which contains ID, contig, eval, alignment length and sequence identity, query start, subject start and end
+def parseBLAST(entryName, inputString, dataParsed, blast_type, max_Eval, sequence_identity, min_length):
     out = dict()
     contigParsedLines = [[]] #create a list of lists currently size 1
     i = 0
@@ -89,7 +89,7 @@ def parseBLAST(entryName, inputString, dataParsed, blast_type, max_Eval, similar
         elif blast_type == 'tblastn':
             Eval = float(item[1].split("=")[-1].split()[0].strip(','))
             strand = item[3].split("=")[-1]
-        percentage = int(item[2].split("/")[1].split("(")[1].split("%")[0]) #percentage similarity
+        identity = int(item[2].split("/")[1].split("(")[1].split("%")[0]) #sequence identity
         queryStart = int(item[5].split()[1]) #start position of query
         subStart = int(item[7].split()[1]) #start position of subject
         sequences = item[7:]
@@ -110,18 +110,18 @@ def parseBLAST(entryName, inputString, dataParsed, blast_type, max_Eval, similar
             else:
                 subEnd = subStart + (alignlen * 3) - 1
 
-        if Eval < max_Eval and percentage >= similarity and alignlen >= min_length:
+        if Eval < max_Eval and identity >= sequence_identity and alignlen >= min_length:
             if contig in out:
-                out[contig].append((Eval, alignlen, percentage, queryStart, subStart, subEnd, seq))
+                out[contig].append((Eval, alignlen, identity, queryStart, subStart, subEnd, seq))
             else:
                 out[contig] = []
-                out[contig].append((Eval, alignlen, percentage, queryStart, subStart, subEnd, seq))
+                out[contig].append((Eval, alignlen, identity, queryStart, subStart, subEnd, seq))
 
     dataParsed[entryName] = out
     return dataParsed
 
 def parseBLAST_single_query_tabular(entryName, inputString, dataParsed,
-                                    blast_type, max_Eval, similarity, min_length):
+                                    blast_type, max_Eval, sequence_identity, min_length):
     """
     Parse BLAST outfmt 6 (tabular) for the single-query case.
 
@@ -130,7 +130,7 @@ def parseBLAST_single_query_tabular(entryName, inputString, dataParsed,
 
     Produces:
       dataParsed[entryName][<query_key>] = list of
-        (contig, Eval, alignlen, percentage, queryStart, subStart, subEnd, seq)
+        (contig, Eval, alignlen, identity, queryStart, subStart, subEnd, seq)
     """
     hits_by_q = {}
 
@@ -149,7 +149,7 @@ def parseBLAST_single_query_tabular(entryName, inputString, dataParsed,
         try:
             Eval       = float(evalue.replace('e', 'E'))
             alignlen   = int(length)
-            percentage = float(pident)
+            identity   = float(pident)
             qstart     = int(qstart)
             sstart     = int(sstart)
             send       = int(send)
@@ -157,10 +157,10 @@ def parseBLAST_single_query_tabular(entryName, inputString, dataParsed,
             continue
 
         # Apply thresholds (min_length treated as absolute bases/aa)
-        if (Eval < max_Eval) and (percentage >= similarity) and (alignlen >= min_length):
+        if (Eval < max_Eval) and (identity >= sequence_identity) and (alignlen >= min_length):
             seq = ""  # outfmt 6 has no aligned sequence text
             hits_by_q.setdefault(qseqid, []).append(
-                (sseqid, Eval, alignlen, percentage, qstart, sstart, send, seq)
+                (sseqid, Eval, alignlen, identity, qstart, sstart, send, seq)
             )
 
     # For single-query workflows, many downstream writers expect the inner key
@@ -175,12 +175,12 @@ def parseBLAST_single_query_tabular(entryName, inputString, dataParsed,
     return dataParsed
 
 
-def parseBLAST_multi_query_tabular(entryName, inputString, dataParsed, blast_type, max_Eval, similarity, min_length):
+def parseBLAST_multi_query_tabular(entryName, inputString, dataParsed, blast_type, max_Eval, sequence_identity, min_length):
     """
     Parse BLAST outfmt 6 (tabular):
     qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
     Produces: dataParsed[entryName][query] = list of
-      (contig, Eval, alignlen, percentage, queryStart, subStart, subEnd, seq)
+      (contig, Eval, alignlen, identity, queryStart, subStart, subEnd, seq)
     """
     out = {}
     for raw in inputString:
@@ -198,16 +198,16 @@ def parseBLAST_multi_query_tabular(entryName, inputString, dataParsed, blast_typ
         except ValueError:
             continue
         alignlen   = int(length)
-        percentage = float(pident)
+        identity   = float(pident)
         qstart     = int(qstart)
         sstart     = int(sstart)
         send       = int(send)
 
         # thresholds (treat min_length as an absolute length here)
-        if Eval < max_Eval and percentage >= similarity and alignlen >= min_length:
+        if Eval < max_Eval and identity >= sequence_identity and alignlen >= min_length:
             seq = ""  # outfmt 6 doesn't include aligned sequence text
             out.setdefault(qseqid, []).append(
-                (sseqid, Eval, alignlen, percentage, qstart, sstart, send, seq)
+                (sseqid, Eval, alignlen, identity, qstart, sstart, send, seq)
             )
 
     dataParsed[entryName] = out
@@ -216,8 +216,8 @@ def parseBLAST_multi_query_tabular(entryName, inputString, dataParsed, blast_typ
 
 #same as parseBlast but with multiple queries
 #final dictionary contains:
-# ID, query, contig, eval, alignment length and percentage, query start, subject start and end
-def parseBLAST_multi_query(entryName, inputString, dataParsed, blast_type, max_Eval, similarity, min_length):
+# ID, query, contig, eval, alignment length and sequence identity, query start, subject start and end
+def parseBLAST_multi_query(entryName, inputString, dataParsed, blast_type, max_Eval, sequence_identity, min_length):
     out = dict()
     queryParsedLines = [[]] #create a list of lists currently size 1
     i = 0
@@ -269,7 +269,7 @@ def parseBLAST_multi_query(entryName, inputString, dataParsed, blast_type, max_E
         elif blast_type == 'tblastn':
             Eval = float(item[2].split("=")[-1].split()[0].strip(','))
             strand = item[4].split("=")[-1]
-        percentage = int(item[3].split("/")[1].split("(")[1].split("%")[0]) #percentage similarity
+        identity = int(item[3].split("/")[1].split("(")[1].split("%")[0]) #sequence identity
         subStart = int(item[8].split()[1]) #starting position of subject
         sequences = item[8:]
         seq = ''
@@ -290,12 +290,12 @@ def parseBLAST_multi_query(entryName, inputString, dataParsed, blast_type, max_E
             else:
                 subEnd = subStart + (alignlen * 3) - 1
 
-        if Eval < max_Eval and percentage >= similarity and alignlen >= min_length:
+        if Eval < max_Eval and identity >= sequence_identity and alignlen >= min_length:
             if query in out:
-                out[query].append((contig, Eval, alignlen, percentage, queryStart, subStart, subEnd, seq))
+                out[query].append((contig, Eval, alignlen, identity, queryStart, subStart, subEnd, seq))
             else:
                 out[query] = []
-                out[query].append((contig, Eval, alignlen, percentage, queryStart, subStart, subEnd, seq))
+                out[query].append((contig, Eval, alignlen, identity, queryStart, subStart, subEnd, seq))
 
     dataParsed[entryName] = out
     return dataParsed
@@ -308,7 +308,7 @@ def output_csv(output, querys, file_name):
 
         if querys == 1:
             # Write header
-            titles = ['ID', 'Contig', 'E-value', 'Alignment Length', 'Alignment Percentage', 
+            titles = ['ID', 'Contig', 'E-value', 'Alignment Length', 'Sequence Identity', 
                       'Query Start', 'Subject Start', 'Subject End', 'Sequence']
             writer.writerow(titles)
 
@@ -319,7 +319,7 @@ def output_csv(output, querys, file_name):
                         writer.writerow(row)
         else:
             # Write header
-            titles = ['ID', 'Query', 'Contig', 'E-value', 'Alignment Length', 'Alignment Percentage', 
+            titles = ['ID', 'Query', 'Contig', 'E-value', 'Alignment Length', 'Sequence Identity', 
                       'Query Start', 'Subject Start', 'Subject End', 'Sequence']
             writer.writerow(titles)
 
@@ -336,7 +336,7 @@ if __name__ == '__main__':
     parser.add_argument('--querys', type=int, required=True, help='Number of queries (1 or multiple)')
     parser.add_argument('--blast_type', type=str, choices=['blastn', 'tblastn'], required=True, help='BLAST type: blastn or tblastn')
     parser.add_argument('--max_Eval', type=float, default=10.0, help='Maximum E-value threshold')
-    parser.add_argument('--similarity', type=int, default=0, help='Minimum similarity percentage')
+    parser.add_argument('--sequence_identity', type=int, default=0, help='Minimum sequence identity percentage')
     parser.add_argument('--min_length', type=int, default=0, help='Minimum alignment length as a percentage of query length')
     parser.add_argument('--file_name', type=str, required=True, help='Output CSV file name (without extension)')
 
@@ -346,5 +346,5 @@ if __name__ == '__main__':
     if not args.directory.endswith("/"):
         args.directory += "/"
 
-    output = parseDir(args.directory, args.querys, args.blast_type, args.max_Eval, args.similarity, args.min_length)
+    output = parseDir(args.directory, args.querys, args.blast_type, args.max_Eval, args.sequence_identity, args.min_length)
     output_csv(output, args.querys, args.file_name)

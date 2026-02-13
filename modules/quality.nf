@@ -56,7 +56,7 @@ process WEBLOGO {
     tuple val(query_name), path(aligned_fasta)
 
     output:
-    path "${query_name}_logo.eps"
+    path "${query_name}_logo.${params.weblogo_format}"
 
     script:
     """
@@ -84,12 +84,14 @@ process WEBLOGO {
 
     weblogo \
         --fin expanded.fasta \
-        --fout ${query_name}_logo.eps \
-        --format eps \
+        --fout ${query_name}_logo.${params.weblogo_format} \
+        --format ${params.weblogo_format} \
         --datatype fasta \
         --title "${query_name}" \
-        --units probability \
-        --color-scheme chemistry
+        --units ${params.weblogo_units} \
+        --color-scheme ${params.weblogo_color_scheme} \
+        --size ${params.weblogo_size} \
+        --resolution ${params.weblogo_resolution}
     """
 }
 
@@ -117,25 +119,5 @@ process ALIGNMENT_FIGURE {
         ${params.species_threshold} \
         --gap \
     || echo "Skipping gap figure for ${query_name}" >&2
-    """
-}
-
-process TCOFFEE_ALIGN {
-    tag "${query_name}"
-    publishDir "${params.outdir}/allele_tcoffee/${query_name}", mode: 'copy'
-
-    input:
-    tuple val(query_name), path(filtered_fasta)
-
-    output:
-    tuple path("${query_name}_aligned_tcoffee.aln"), path("${query_name}_aligned_tcoffee.fasta")
-
-    script:
-    """
-    t_coffee ${filtered_fasta} \
-        -output clustalw_aln,fasta_aln \
-        -outfile ${query_name}_aligned_tcoffee.aln
-
-    mv ${query_name}_aligned_tcoffee.fasta_aln ${query_name}_aligned_tcoffee.fasta
     """
 }

@@ -20,7 +20,7 @@ Query sequences + Genomes
    Allele Alignment ──► Group identical proteins, identify variants
         │
         ▼
-   Visualization ──► Alignment Figures, WebLogo, T-Coffee
+   Visualization ──► Alignment Figures, WebLogo
 ```
 
 ## Core outputs
@@ -65,11 +65,11 @@ You should see a help message listing all available options.
 ### Steps in Detail
 
 1. **BLAST Search** — Runs each query against each genome (blastn or tblastn). Parses results to CSV.
-2. **Filtering** — Keeps hits passing e-value, similarity %, and alignment length thresholds.
+2. **Filtering** — Keeps hits passing e-value, sequence identity %, and alignment length thresholds.
 3. **ORF Finding** — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window.
 4. **Translation** — Translates DNA to protein in all 3 frames. The longest ORF (M to stop) is kept.
 5. **Allele Identification** — Groups identical protein sequences into alleles. Variant positions are identified by aligning each allele to a reference using BLOSUM62.
-6. **Quality & Visualization** — Filters alleles by species representation, generates coloured variant alignment figures, MAFFT alignments, WebLogo sequence logos, and optionally T-Coffee alignments.
+6. **Quality & Visualization** — Filters alleles by species representation, generates coloured variant alignment figures, MAFFT alignments, and WebLogo sequence logos.
 
 ## Requirements
 
@@ -79,7 +79,6 @@ You should see a help message listing all available options.
 - Python 3 with BioPython
 - MAFFT
 - WebLogo
-- T-Coffee (optional)
 
 ## Usage
 
@@ -99,11 +98,10 @@ nextflow run main.nf \
   --blast_type tblastn \
   --make_blastdb true \
   --max_evalue 1e-10 \
-  --similarity 90 \
+  --sequence_identity 90 \
   --length_percentage 85 \
   --extension_codons 20 \
-  --species_threshold 5 \
-  --skip_tcoffee true
+  --species_threshold 5
 ```
 
 Show all options:
@@ -127,11 +125,47 @@ nextflow run main.nf --help
 | `--blast_type` | `blastn` | BLAST program (`blastn` or `tblastn`) |
 | `--make_blastdb` | `false` | Build new BLAST databases. If `false`, uses existing `.n*` DB files |
 | `--max_evalue` | `0.00001` | E-value threshold |
-| `--similarity` | `80` | Minimum similarity percentage |
+| `--sequence_identity` | `80` | Minimum sequence identity percentage |
 | `--length_percentage` | `80` | Minimum alignment length as percentage of query length |
 | `--extension_codons` | `10` | Number of codons to extend incomplete sequences |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
-| `--skip_tcoffee` | `false` | Skip T-Coffee alignment step |
+
+### Step Modes
+
+Run a specific stage of the pipeline instead of the full workflow. Useful for re-running parts with different parameters or resuming from intermediate results.
+
+| Flag | Description |
+|---|---|
+| `--blast` | Run BLAST search + parse + filter only |
+| `--filter` | Re-filter existing BLAST results (requires prior `--blast` run) |
+| `--orf` | Run ORF finding + translation on existing filtered results |
+| `--visual` | Run visualization (MAFFT, WebLogo, alignment figures) on existing allele results |
+| `--step <name>` | Alternative syntax: `blast`, `filter`, `orf`, `visual` |
+
+Examples:
+
+```bash
+# Run only BLAST search
+nextflow run main.nf --blast --query_dir ./queries --genome_dir ./genomes --outdir ./results
+
+# Re-filter with stricter thresholds (reuses existing BLAST .out files)
+nextflow run main.nf --filter --query_dir ./queries --outdir ./results --sequence_identity 95
+
+# Re-run visualization with different WebLogo settings
+nextflow run main.nf --visual --outdir ./results --weblogo_format png --weblogo_units bits
+```
+
+**Note:** Step modes require that previous stages have already been run with the same `--outdir`. Each step reads intermediate files from the output directory.
+
+### WebLogo Parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `--weblogo_format` | `eps` | Output format: `eps`, `png`, `pdf`, `svg`, `jpeg` |
+| `--weblogo_units` | `probability` | Y-axis units: `probability`, `bits`, `nats` |
+| `--weblogo_color_scheme` | `chemistry` | Color scheme: `chemistry`, `hydrophobicity`, `charge`, `classic`, `monochrome` |
+| `--weblogo_size` | `medium` | Logo size: `small`, `medium`, `large` |
+| `--weblogo_resolution` | `96` | Resolution in DPI (for bitmap formats) |
 
 
 
@@ -163,8 +197,8 @@ results/
 │       └── query_reference/    # Figures using original query as reference
 ├── allele_seq_filtered/        # Alleles passing species threshold
 ├── allele_seq/                 # MAFFT-aligned allele sequences
-├── logo/                       # WebLogo sequence logos (.eps)
-├── allele_tcoffee/             # T-Coffee alignments (if enabled)
+├── logo/                       # WebLogo sequence logos
+├── blast_raw/                  # Raw BLAST output files (for --filter mode)
 ├── timeline.html               # Nextflow execution timeline
 └── report.html                 # Nextflow execution report
 ```

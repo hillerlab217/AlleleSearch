@@ -1,67 +1,61 @@
-process MAKE_BLAST_DB {
-    tag "${genome.baseName}"
+process COLLECT_ALL_BLAST_DBS {
+    tag "all_genomes"
 
     input:
-    path genome
+    path genome_dir
 
     output:
-    tuple path(genome), path("${genome.baseName}.*")
-
-    script:
-    def prefix = genome.baseName
-    """
-    makeblastdb -in ${genome} -dbtype nucl -out ${prefix} -parse_seqids
-    """
-}
-
-process COLLECT_BLAST_DB {
-    tag "${genome.baseName}"
-
-    input:
-    path genome
-
-    output:
-    tuple path(genome), path("*.n*")
+    path genome_dir
 
     script:
     """
-    # Try to symlink pre-built DB files; if none exist, build the database
-    FOUND=false
-    for f in ${genome.toRealPath()}.n*; do
-        [ -e "\$f" ] && ln -s "\$f" . && FOUND=true
-    done
+    # Find genomes missing BLAST DBs (directory-level diff, not per-file ls)
+    MISSING=\$(comm -23 \
+        <(ls ${genome_dir}/*.fasta ${genome_dir}/*.fa ${genome_dir}/*.fna ${genome_dir}/*.ffn 2>/dev/null | sort) \
+        <(ls ${genome_dir}/*.nin 2>/dev/null | sed 's/\\.nin\$//' | sort))
 
-    if [ "\$FOUND" = false ]; then
-        makeblastdb -in ${genome} -dbtype nucl -out ${genome.baseName} -parse_seqids
+    if [ -n "\$MISSING" ]; then
+        echo "Building BLAST DBs for \$(echo "\$MISSING" | wc -l) genomes..."
+        for genome in \$MISSING; do
+            makeblastdb -in "\$genome" -dbtype nucl -out "\$genome" -parse_seqids
+        done
+    else
+        echo "All BLAST DBs already exist, skipping."
     fi
     """
 }
 
 process BLAST_SEARCH {
-    tag "${query.baseName}_vs_${genome.baseName}"
-    cpus 4
+    tag "${query.baseName}_batch"
+    cpus 2
+    publishDir "${params.outdir}/blast_raw", mode: 'copy'
 
     input:
-    tuple path(query), path(genome), path(db_files)
+    tuple path(query), val(genome_names_csv), path(genome_dir)
 
     output:
-    tuple val("${query.baseName}"), path("${query.baseName}_vs_${genome.baseName}.out")
+    tuple val("${query.baseName}"), path("*.out")
 
     script:
     def blast_cmd = params.blast_type ?: 'blastn'
     """
-    # Determine DB prefix: makeblastdb creates <baseName>.n*, pre-built uses <filename>.n*
-    if [ -f "${genome.baseName}.nin" ] || [ -f "${genome.baseName}.nsq" ]; then
-        DB_PREFIX="${genome.baseName}"
-    else
-        DB_PREFIX="${genome.name}"
-    fi
+    for gname in \$(echo '${genome_names_csv}' | tr ',' ' '); do
+        genome="${genome_dir}/\${gname}"
+        [ ! -e "\$genome" ] && continue
+        base=\$(echo "\$gname" | sed 's/\\.[^.]*\$//')
 
-    ${blast_cmd} -query ${query} \
-        -db \${DB_PREFIX} \
-        -out ${query.baseName}_vs_${genome.baseName}.out \
-        -evalue 1e-5 \
-        -num_threads ${task.cpus}
+        if [ -f "\${genome}.nin" ] || [ -f "\${genome}.nsq" ]; then
+            DB_PREFIX="\${genome}"
+        else
+            DB_PREFIX="\${genome%.*}"
+        fi
+
+        ${blast_cmd} -query ${query} \
+            -db \${DB_PREFIX} \
+            -out ${query.baseName}_vs_\${base}.out \
+            -evalue 1e-5 \
+            -num_threads ${task.cpus}
+    done
     """
 }
 
@@ -84,7 +78,7 @@ process PARSE_BLAST {
         --querys 1 \
         --blast_type ${params.blast_type ?: 'blastn'} \
         --max_Eval 10 \
-        --similarity 0 \
+        --sequence_identity 0 \
         --min_length 0 \
         --file_name ${query_name}
     """

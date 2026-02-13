@@ -5,12 +5,39 @@ nextflow.enable.dsl=2
 // Allele Search Pipeline
 // ──────────────────────────────────────────────────────────────
 
-include { COLLECT_BLAST_DB; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
+include { COLLECT_ALL_BLAST_DBS; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
 include { FILTER_BLAST }                             from './modules/filter'
 include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_QUERY_REF; ALLELE_SELF_REF }        from './modules/allele'
-include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; TCOFFEE_ALIGN } from './modules/quality'
+include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE } from './modules/quality'
+
+// ──────────────────────────────────────────────────────────────
+// Resolve step mode
+// ──────────────────────────────────────────────────────────────
+def resolveStep() {
+    if (params.step)   return params.step
+    if (params.blast)  return 'blast'
+    if (params.filter) return 'filter'
+    if (params.orf)    return 'orf'
+    if (params.visual) return 'visual'
+    return 'full'
+}
+
+def run_step = resolveStep()
+
+def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual']
+if (!(run_step in valid_steps)) {
+    error "ERROR: Invalid --step '${run_step}'. Valid options: ${valid_steps.join(', ')}"
+}
+
+// Check that at most one boolean step flag is set
+def step_count = [params.blast, params.filter, params.orf, params.visual].count { it }
+if (step_count > 1) {
+    error "ERROR: Only one step mode can be specified at a time. Use --blast, --filter, --orf, or --visual."
+}
+
+log.info "Running in '${run_step}' mode"
 
 // ──────────────────────────────────────────────────────────────
 // Help message
@@ -27,126 +54,271 @@ if (params.help) {
       --query_dir       Directory with query .fasta files
       --genome_dir      Directory with genome .fasta files (also used for sequence extension)
 
+    Step modes (run a specific stage only):
+      --blast           Run BLAST search + parse + filter
+      --filter          Re-filter existing BLAST results (requires prior --blast run)
+      --orf             Run ORF finding + translation on existing filtered results
+      --visual          Run visualization on existing allele results
+      --step <name>     Alternative syntax: blast, filter, orf, visual
+
     Optional:
       --code_dir        Path to code/ scripts (default: ./code)
       --outdir          Output directory (default: ./results)
       --blast_type      blastn or tblastn (default: blastn)
       --max_evalue      E-value cutoff (default: 0.00001)
-      --similarity      Similarity % cutoff (default: 80)
+      --sequence_identity  Sequence identity % cutoff (default: 80)
       --length_percentage  Length % cutoff (default: 80)
       --extension_codons   Codons to extend (default: 10)
       --species_threshold  Min species % for filtering (default: 1)
       --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
-      --skip_tcoffee    Skip T-Coffee alignment (default: false)
+
+    WebLogo:
+      --weblogo_format       Output format: eps, png, pdf, svg, jpeg (default: eps)
+      --weblogo_units        Unit type: probability, bits, nats (default: probability)
+      --weblogo_color_scheme Color scheme: chemistry, hydrophobicity, charge, classic (default: chemistry)
+      --weblogo_size         Logo size: small, medium, large (default: medium)
+      --weblogo_resolution   Resolution in DPI (default: 96)
     =========================================
     """.stripIndent()
     exit 0
 }
 
 // ──────────────────────────────────────────────────────────────
-// Parameter validation
+// Parameter validation (context-dependent)
 // ──────────────────────────────────────────────────────────────
-if (!params.query_dir)      { error "ERROR: --query_dir is required" }
-if (!params.genome_dir)     { error "ERROR: --genome_dir is required" }
+if (run_step in ['full', 'blast']) {
+    if (!params.query_dir)  { error "ERROR: --query_dir is required for '${run_step}' mode" }
+    if (!params.genome_dir) { error "ERROR: --genome_dir is required for '${run_step}' mode" }
+}
 
-// ──────────────────────────────────────────────────────────────
-// Input channels
-// ──────────────────────────────────────────────────────────────
-ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
-ch_genomes = Channel.fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
-ch_genome_ref = Channel.fromPath(params.genome_dir)
+if (run_step == 'filter') {
+    if (!params.query_dir) { error "ERROR: --query_dir is required for 'filter' mode (needed for length calculation)" }
+    def blast_summary_dir = file("${params.outdir}/blast_summary")
+    if (!blast_summary_dir.isDirectory()) {
+        error "ERROR: --filter mode requires existing parsed results in ${params.outdir}/blast_summary/. Run --blast first."
+    }
+}
+
+if (run_step == 'orf') {
+    def filtered_dir = file("${params.outdir}/blast_summary_filtered")
+    if (!filtered_dir.isDirectory()) {
+        error "ERROR: --orf mode requires existing filtered results in ${params.outdir}/blast_summary_filtered/. Run --blast or --filter first."
+    }
+    if (!params.genome_dir) { error "ERROR: --genome_dir is required for 'orf' mode (needed for sequence extension)" }
+}
+
+if (run_step == 'visual') {
+    def allele_filt_dir = file("${params.outdir}/allele_seq_filtered")
+    if (!allele_filt_dir.isDirectory()) {
+        error "ERROR: --visual mode requires existing allele results in ${params.outdir}/allele_seq_filtered/. Run the full pipeline first."
+    }
+    def allele_info_dir = file("${params.outdir}/allele_info")
+    if (!allele_info_dir.isDirectory()) {
+        error "ERROR: --visual mode requires existing allele info in ${params.outdir}/allele_info/. Run the full pipeline first."
+    }
+}
 
 // ──────────────────────────────────────────────────────────────
 // Workflow
 // ──────────────────────────────────────────────────────────────
 workflow {
 
-    // Step 1: Collect pre-built BLAST databases or build them on-the-fly
-    COLLECT_BLAST_DB(ch_genomes)
-    ch_db = COLLECT_BLAST_DB.out
+    if (run_step == 'blast') {
+        // =============================================================
+        // BLAST-only mode: DB creation + search + parse + filter
+        // =============================================================
+        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_genome_dir = Channel.fromPath(params.genome_dir)
 
-    // Step 2: Run BLAST — each query × each genome
-    ch_blast_input = ch_queries
-        .combine(ch_db)  // [query, genome, db_files]
+        COLLECT_ALL_BLAST_DBS(ch_genome_dir)
 
-    BLAST_SEARCH(ch_blast_input)
+        ch_genome_batches = Channel
+            .fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
+            .map { it.name }
+            .collate(params.blast_batch_size)
+            .map { batch -> batch.join(',') }
 
-    // Step 3: Parse BLAST results (group .out files by query name)
-    ch_blast_grouped = BLAST_SEARCH.out
-        .groupTuple()  // [query_name, [out_files]]
+        ch_blast_input = ch_queries
+            .combine(ch_genome_batches)
+            .combine(COLLECT_ALL_BLAST_DBS.out)
+        BLAST_SEARCH(ch_blast_input)
 
-    PARSE_BLAST(ch_blast_grouped)
+        ch_grouped_blast = BLAST_SEARCH.out.groupTuple().map { name, files -> [name, files.flatten()] }
+        PARSE_BLAST(ch_grouped_blast)
 
-    // Step 4: Filter BLAST results with strict cutoffs
-    ch_query_map = ch_queries.map { q -> [q.baseName, q] }
-    ch_filter_input = BLAST_SEARCH.out
-        .groupTuple()
-        .join(ch_query_map)  // [query_name, [blast_files], query_fasta]
+        ch_query_map = ch_queries.map { q -> [q.baseName, q] }
+        ch_filter_input = PARSE_BLAST.out.join(ch_query_map)
+        FILTER_BLAST(ch_filter_input)
 
-    FILTER_BLAST(ch_filter_input)
+    } else if (run_step == 'filter') {
+        // =============================================================
+        // Filter-only mode: re-filter existing parsed BLAST CSVs
+        // =============================================================
+        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_query_map = ch_queries.map { q -> [q.baseName, q] }
 
-    // Step 5: For tblastn, extract DNA from genomes using subject coordinates
-    if (params.blast_type == 'tblastn') {
-        EXTRACT_DNA(FILTER_BLAST.out, ch_genome_ref.first())
-        ch_csv_for_fasta = EXTRACT_DNA.out
+        ch_parsed_csv = Channel
+            .fromPath("${params.outdir}/blast_summary/*.csv")
+            .map { f -> [f.baseName, f] }
+
+        ch_filter_input = ch_parsed_csv.join(ch_query_map)
+        FILTER_BLAST(ch_filter_input)
+
+    } else if (run_step == 'orf') {
+        // =============================================================
+        // ORF-only mode: ORF finding + translation from existing filtered CSVs
+        // =============================================================
+        ch_genome_ref = Channel.fromPath(params.genome_dir)
+
+        ch_csv_input = Channel
+            .fromPath("${params.outdir}/blast_summary_filtered/*.csv")
+            .map { f -> [f.baseName, f] }
+
+        if (params.blast_type == 'tblastn') {
+            EXTRACT_DNA(ch_csv_input, ch_genome_ref.first())
+            ch_csv_for_fasta = EXTRACT_DNA.out
+        } else {
+            ch_csv_for_fasta = ch_csv_input
+        }
+
+        CSV_TO_FASTA(ch_csv_for_fasta)
+
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
+        CODON_CHECK_10(ch_codon10_in)
+
+        EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
+
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
+        CODON_CHECK_20(ch_codon20_in)
+
+        ch_standard = CODON_CHECK_10.out.standard
+            .join(CODON_CHECK_20.out.standard)
+        COLLECT_STANDARD(ch_standard)
+
+        TRANSLATE(COLLECT_STANDARD.out)
+
+    } else if (run_step == 'visual') {
+        // =============================================================
+        // Visual-only mode: MAFFT + WebLogo + alignment figures
+        // =============================================================
+
+        // MAFFT and WebLogo from filtered allele FASTAs
+        ch_filtered_alleles = Channel
+            .fromPath("${params.outdir}/allele_seq_filtered/*_filtered.fasta")
+            .map { f ->
+                def name = f.baseName.replaceAll(/_filtered$/, '')
+                [name, f]
+            }
+
+        MAFFT_ALIGN(ch_filtered_alleles)
+        WEBLOGO(MAFFT_ALIGN.out)
+
+        // Alignment figures from allele info CSVs
+        ch_figure_self = Channel
+            .fromPath("${params.outdir}/allele_info/*/self_reference/*.csv")
+            .map { f ->
+                def query_name = f.parent.parent.name
+                [query_name, f]
+            }
+            .groupTuple()
+            .map { name, csvs -> [name, "self_reference", csvs] }
+
+        ch_figure_query = Channel
+            .fromPath("${params.outdir}/allele_info/*/query_reference/*.csv")
+            .map { f ->
+                def query_name = f.parent.parent.name
+                [query_name, f]
+            }
+            .groupTuple()
+            .map { name, csvs -> [name, "query_reference", csvs] }
+
+        ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
+
     } else {
-        ch_csv_for_fasta = FILTER_BLAST.out
-    }
+        // =============================================================
+        // Full pipeline (default)
+        // =============================================================
+        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_genome_ref = Channel.fromPath(params.genome_dir)
 
-    // Step 6: CSV to FASTA
-    CSV_TO_FASTA(ch_csv_for_fasta)
+        // Step 1: Ensure all BLAST databases exist (fast directory-level check)
+        COLLECT_ALL_BLAST_DBS(ch_genome_ref)
 
-    // Step 6: Check start/stop codons (10-codon window)
-    ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
-    CODON_CHECK_10(ch_codon10_in)
+        // Step 2: Run BLAST - batched (100 genomes per task)
+        ch_genome_batches = Channel
+            .fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
+            .map { it.name }
+            .collate(params.blast_batch_size)
+            .map { batch -> batch.join(',') }
 
-    // Step 7: Extend sequences ±10 codons from genome
-    EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
+        ch_blast_input = ch_queries
+            .combine(ch_genome_batches)
+            .combine(COLLECT_ALL_BLAST_DBS.out)
+        BLAST_SEARCH(ch_blast_input)
 
-    // Step 8: Re-check with 20-codon window
-    ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
-    CODON_CHECK_20(ch_codon20_in)
+        // Step 3: Parse BLAST results (collect all batches per query)
+        ch_grouped_blast = BLAST_SEARCH.out.groupTuple().map { name, files -> [name, files.flatten()] }
+        PARSE_BLAST(ch_grouped_blast)
 
-    // Step 9: Collect standard sequences from both rounds
-    ch_standard = CODON_CHECK_10.out.standard
-        .join(CODON_CHECK_20.out.standard)  // [query_name, std_10, std_20]
+        // Step 4: Filter BLAST results with strict cutoffs
+        ch_query_map = ch_queries.map { q -> [q.baseName, q] }
+        ch_filter_input = PARSE_BLAST.out.join(ch_query_map)
+        FILTER_BLAST(ch_filter_input)
 
-    COLLECT_STANDARD(ch_standard)
+        // Step 5: For tblastn, extract DNA from genomes using subject coordinates
+        if (params.blast_type == 'tblastn') {
+            EXTRACT_DNA(FILTER_BLAST.out, ch_genome_ref.first())
+            ch_csv_for_fasta = EXTRACT_DNA.out
+        } else {
+            ch_csv_for_fasta = FILTER_BLAST.out
+        }
 
-    // Step 10: Translate DNA to protein
-    TRANSLATE(COLLECT_STANDARD.out)
+        // Step 6: CSV to FASTA
+        CSV_TO_FASTA(ch_csv_for_fasta)
 
-    // Step 11: Allele analysis — query reference
-    ch_allele_qref = TRANSLATE.out.inframe
-        .join(ch_query_map)  // [query_name, protein_fasta, query_fasta]
+        // Step 7: Check start/stop codons (10-codon window)
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
+        CODON_CHECK_10(ch_codon10_in)
 
-    ALLELE_QUERY_REF(ch_allele_qref)
+        // Step 8: Extend sequences from genome
+        EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-    // Step 12: Allele analysis — self reference
-    ALLELE_SELF_REF(TRANSLATE.out.inframe)
+        // Step 9: Re-check with 20-codon window
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
+        CODON_CHECK_20(ch_codon20_in)
 
-    // Step 13: Filter alleles by species percentage
-    ch_allele_fasta = ALLELE_SELF_REF.out.results
-        .map { name, csv, fasta -> [name, fasta] }
+        // Step 10: Collect standard sequences from both rounds
+        ch_standard = CODON_CHECK_10.out.standard
+            .join(CODON_CHECK_20.out.standard)
+        COLLECT_STANDARD(ch_standard)
 
-    FILTER_ALLELES(ch_allele_fasta)
+        // Step 11: Translate DNA to protein
+        TRANSLATE(COLLECT_STANDARD.out)
 
-    // Step 14: Alignment variant figures (both reference types)
-    ch_figure_self = ALLELE_SELF_REF.out.results
-        .map { name, csvs, fasta -> [name, "self_reference", csvs] }
-    ch_figure_query = ALLELE_QUERY_REF.out
-        .map { name, csvs, fasta -> [name, "query_reference", csvs] }
+        // Step 12: Allele analysis - query reference
+        ch_allele_qref = TRANSLATE.out.inframe
+            .join(ch_query_map)
+        ALLELE_QUERY_REF(ch_allele_qref)
 
-    ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
+        // Step 13: Allele analysis - self reference
+        ALLELE_SELF_REF(TRANSLATE.out.inframe)
 
-    // Step 15: MAFFT alignment
-    MAFFT_ALIGN(FILTER_ALLELES.out)
+        // Step 14: Filter alleles by species percentage
+        ch_allele_fasta = ALLELE_SELF_REF.out.results
+            .map { name, csv, fasta -> [name, fasta] }
+        FILTER_ALLELES(ch_allele_fasta)
 
-    // Step 16: WebLogo
-    WEBLOGO(MAFFT_ALIGN.out)
+        // Step 15: Alignment variant figures (both reference types)
+        ch_figure_self = ALLELE_SELF_REF.out.results
+            .map { name, csvs, fasta -> [name, "self_reference", csvs] }
+        ch_figure_query = ALLELE_QUERY_REF.out
+            .map { name, csvs, fasta -> [name, "query_reference", csvs] }
+        ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
 
-    // Step 17: T-Coffee (optional)
-    if (!params.skip_tcoffee) {
-        TCOFFEE_ALIGN(FILTER_ALLELES.out)
+        // Step 16: MAFFT alignment
+        MAFFT_ALIGN(FILTER_ALLELES.out)
+
+        // Step 17: WebLogo
+        WEBLOGO(MAFFT_ALIGN.out)
     }
 }

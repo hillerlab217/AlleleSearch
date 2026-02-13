@@ -111,7 +111,7 @@ def update_header(header, new_len, new_start, new_end):
     
     # Rebuild header
     updated_parts = [f">{seq_id}"]
-    for key in ['contig', 'E-value', 'AlignLen', 'AlignPerc', 'SubjectStart', 'SubjectEnd']:
+    for key in ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']:
         if key in metadata:
             updated_parts.append(f"{key}={metadata[key]}")
     
@@ -148,7 +148,7 @@ def main():
                 else:
                     print(f"Warning: Ignoring malformed part '{part}' in header: {header}")
 
-            required_fields = ['contig', 'E-value', 'AlignLen', 'AlignPerc', 'SubjectStart', 'SubjectEnd']
+            required_fields = ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']
             missing_fields = [f for f in required_fields if f not in metadata]
 
             if missing_fields:
@@ -163,7 +163,7 @@ def main():
                 "contig": metadata['contig'],
                 "e_value": metadata['E-value'],
                 "align_len": metadata['AlignLen'],
-                "align_perc": metadata['AlignPerc'],
+                "seq_identity": metadata['SeqIdentity'],
                 "subject_start": int(metadata['SubjectStart']),
                 "subject_end": int(metadata['SubjectEnd'])
             })

@@ -166,7 +166,7 @@ def update_header(header, new_start, new_len, is_reverse=False):
     
     # Rebuild header
     updated_parts = [f">{seq_id}"]
-    for key in ['contig', 'E-value', 'AlignLen', 'AlignPerc', 'SubjectStart', 'SubjectEnd']:
+    for key in ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']:
         if key in metadata:
             updated_parts.append(f"{key}={metadata[key]}")
     
