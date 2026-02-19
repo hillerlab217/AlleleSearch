@@ -1,83 +1,221 @@
-Feb-12 18:54:57.099 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --filter --query_dir /home/xinruoz/Document/Hiller/allele_search/data --outdir ./results/s_p_insertion --sequence_identity 80 --length_percentage 80
-Feb-12 18:54:57.209 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
-Feb-12 18:54:57.236 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
-Feb-12 18:54:57.269 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
-Feb-12 18:54:57.270 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
-Feb-12 18:54:57.274 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
-Feb-12 18:54:57.291 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
-Feb-12 18:54:57.448 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
-Feb-12 18:54:57.482 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
-Feb-12 18:54:57.485 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
-Feb-12 18:54:57.515 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
-Feb-12 18:54:58.045 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
-Feb-12 18:54:58.046 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
-Feb-12 18:54:58.060 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
-Feb-12 18:54:58.063 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@1192b58e] - activable => nextflow.secret.LocalSecretsProvider@1192b58e
-Feb-12 18:54:58.066 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
-Feb-12 18:54:58.084 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [sick_gauss] DSL2 - revision: 2939ed15d7
-Feb-12 18:54:58.141 [main] DEBUG nextflow.Session - Session UUID: b08249f4-5b8c-43f6-ac7b-32bd91125f4d
-Feb-12 18:54:58.142 [main] DEBUG nextflow.Session - Run name: sick_gauss
-Feb-12 18:54:58.143 [main] DEBUG nextflow.Session - Executor pool size: 14
-Feb-12 18:54:58.153 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
-Feb-12 18:54:58.158 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-Feb-12 18:54:58.180 [main] DEBUG nextflow.cli.CmdRun - 
+Feb-19 15:37:34.204 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --query_dir /home/xinruoz/Document/Hiller/allele_search/test_query --genome_dir /home/xinruoz/Document/Hiller/mitis/data/MitisCollectionPubMLST_Fasta --blast_type tblastn --outdir murM
+Feb-19 15:37:34.341 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
+Feb-19 15:37:34.367 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
+Feb-19 15:37:34.394 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Feb-19 15:37:34.395 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Feb-19 15:37:34.398 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Feb-19 15:37:34.412 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Feb-19 15:37:34.579 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Feb-19 15:37:34.608 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-19 15:37:34.610 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Feb-19 15:37:34.636 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Feb-19 15:37:35.087 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Feb-19 15:37:35.088 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Feb-19 15:37:35.103 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
+Feb-19 15:37:35.108 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@4f8d86e4] - activable => nextflow.secret.LocalSecretsProvider@4f8d86e4
+Feb-19 15:37:35.110 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Feb-19 15:37:35.130 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [distracted_williams] DSL2 - revision: 4182aa91d5
+Feb-19 15:37:35.181 [main] DEBUG nextflow.Session - Session UUID: 71adc4bb-c904-4063-9467-59ba174f6841
+Feb-19 15:37:35.182 [main] DEBUG nextflow.Session - Run name: distracted_williams
+Feb-19 15:37:35.182 [main] DEBUG nextflow.Session - Executor pool size: 14
+Feb-19 15:37:35.191 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Feb-19 15:37:35.196 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-19 15:37:35.216 [main] DEBUG nextflow.cli.CmdRun - 
   Version: 25.10.3 build 10983
   Created: 22-01-2026 15:34 UTC (10:34 EDT)
   System: Linux 5.15.167.4-microsoft-standard-WSL2
   Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
   Encoding: UTF-8 (UTF-8)
-  Process: 4126509@rock1 [127.0.1.1]
-  CPUs: 14 - Mem: 7.8 GB (2.5 GB) - Swap: 2 GB (1.9 GB)
-Feb-12 18:54:58.204 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
-Feb-12 18:54:58.205 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
-Feb-12 18:54:58.214 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
-Feb-12 18:54:58.224 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
-Feb-12 18:54:58.227 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
-Feb-12 18:54:58.289 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
-Feb-12 18:54:58.299 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
-Feb-12 18:54:58.381 [main] DEBUG nextflow.Session - Session start
-Feb-12 18:54:58.872 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
-Feb-12 18:54:59.539 [main] INFO  nextflow.Nextflow - Running in 'filter' mode
-Feb-12 18:54:59.637 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-Feb-12 18:54:59.637 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-Feb-12 18:54:59.646 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
-Feb-12 18:54:59.661 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=14; memory=7.8 GB; capacity=14; pollInterval=100ms; dumpInterval=5m
-Feb-12 18:54:59.665 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
-Feb-12 18:54:59.700 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_BLAST': maxForks=0; fair=false; array=0
-Feb-12 18:54:59.729 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, BLAST_SEARCH, FILTER_ALLELES, ALLELE_QUERY_REF, COLLECT_STANDARD, FILTER_BLAST, MAFFT_ALIGN, COLLECT_ALL_BLAST_DBS, ALLELE_SELF_REF, EXTRACT_DNA, PARSE_BLAST, TRANSLATE, CODON_CHECK_20, CODON_CHECK_10, WEBLOGO, ALIGNMENT_FIGURE
-Feb-12 18:54:59.731 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
-Feb-12 18:54:59.736 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/xinruoz/Document/Hiller/allele_search/data/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
-Feb-12 18:54:59.739 [PathVisitor-2] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: ./results/s_p_insertion/blast_summary/; pattern: *.csv; options: [:]
-Feb-12 18:54:59.740 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_BLAST
-Feb-12 18:54:59.741 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
-  Script_adf1524799a69a26: /home/xinruoz/Document/Hiller/allele_search/modules/blast.nf
+  Process: 143678@rock1 [127.0.1.1]
+  CPUs: 14 - Mem: 7.8 GB (334.2 MB) - Swap: 2 GB (1.7 GB)
+Feb-19 15:37:35.236 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
+Feb-19 15:37:35.237 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
+Feb-19 15:37:35.245 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Feb-19 15:37:35.254 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Feb-19 15:37:35.257 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Feb-19 15:37:35.316 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Feb-19 15:37:35.326 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
+Feb-19 15:37:35.411 [main] DEBUG nextflow.Session - Session start
+Feb-19 15:37:35.919 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Feb-19 15:37:36.649 [main] INFO  nextflow.Nextflow - Running in 'full' mode
+Feb-19 15:37:36.709 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.709 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.719 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Feb-19 15:37:36.728 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=14; memory=7.8 GB; capacity=14; pollInterval=100ms; dumpInterval=5m
+Feb-19 15:37:36.731 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Feb-19 15:37:36.767 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_ALL_BLAST_DBS': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.848 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:BLAST_SEARCH` matches process BLAST_SEARCH
+Feb-19 15:37:36.849 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.849 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.850 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BLAST_SEARCH': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.862 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.862 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.863 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'PARSE_BLAST': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.874 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.874 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.874 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_BLAST': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.880 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.880 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.881 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTRACT_DNA': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.884 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.885 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.885 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CSV_TO_FASTA': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.891 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.891 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.892 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_10': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.896 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.896 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.897 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTEND_SEQUENCES': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.902 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.902 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.903 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_20': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.909 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.909 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.910 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_STANDARD': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.914 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.914 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.915 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'TRANSLATE': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.919 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.919 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.920 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_SELF_REF': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.924 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.924 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.925 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_FOR_CONSENSUS': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.928 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.928 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.929 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COMPUTE_CONSENSUS': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.933 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.934 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.934 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_CONSENSUS_REF': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.939 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.939 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.940 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_ALLELES': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.944 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.944 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.945 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALIGNMENT_FIGURE': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.949 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.949 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.950 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALIGNMENT_FIGURE_REF': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.952 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MAFFT_ALIGN` matches process MAFFT_ALIGN
+Feb-19 15:37:36.953 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.953 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.954 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_ALIGN': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.957 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-19 15:37:36.957 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-19 15:37:36.957 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'WEBLOGO': maxForks=0; fair=false; array=0
+Feb-19 15:37:36.959 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, ALIGNMENT_FIGURE_REF, BLAST_SEARCH, FILTER_ALLELES, COLLECT_STANDARD, FILTER_BLAST, MAFFT_FOR_CONSENSUS, MAFFT_ALIGN, ALLELE_CONSENSUS_REF, COLLECT_ALL_BLAST_DBS, ALLELE_SELF_REF, EXTRACT_DNA, PARSE_BLAST, TRANSLATE, CODON_CHECK_20, COMPUTE_CONSENSUS, CODON_CHECK_10, WEBLOGO, ALIGNMENT_FIGURE
+Feb-19 15:37:36.962 [main] DEBUG nextflow.Session - Igniting dataflow network (23)
+Feb-19 15:37:36.968 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_ALL_BLAST_DBS
+Feb-19 15:37:36.968 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/xinruoz/Document/Hiller/allele_search/test_query/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > BLAST_SEARCH
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > PARSE_BLAST
+Feb-19 15:37:36.969 [PathVisitor-3] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/xinruoz/Document/Hiller/mitis/data/MitisCollectionPubMLST_Fasta/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_BLAST
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > EXTRACT_DNA
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CSV_TO_FASTA
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_10
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > EXTEND_SEQUENCES
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_20
+Feb-19 15:37:36.969 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_STANDARD
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > TRANSLATE
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_SELF_REF
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_FOR_CONSENSUS
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COMPUTE_CONSENSUS
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_CONSENSUS_REF
+Feb-19 15:37:36.970 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_ALLELES
+Feb-19 15:37:36.971 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALIGNMENT_FIGURE
+Feb-19 15:37:36.971 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALIGNMENT_FIGURE_REF
+Feb-19 15:37:36.971 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_ALIGN
+Feb-19 15:37:36.971 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > WEBLOGO
+Feb-19 15:37:36.972 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_ef64cefeb215874a: /home/xinruoz/Document/Hiller/allele_search/modules/blast.nf
+  Script_c439484eb53f1689: /home/xinruoz/Document/Hiller/allele_search/modules/quality.nf
   Script_b7ee15f4583a0882: /home/xinruoz/Document/Hiller/allele_search/modules/translate.nf
-  Script_37e2b69bca17dcd9: /home/xinruoz/Document/Hiller/allele_search/main.nf
-  Script_d41e247046fe5a74: /home/xinruoz/Document/Hiller/allele_search/modules/quality.nf
+  Script_1a19418f8cfba667: /home/xinruoz/Document/Hiller/allele_search/modules/allele.nf
+  Script_7a3d9a1488a4128b: /home/xinruoz/Document/Hiller/allele_search/main.nf
   Script_3a43698364f3e66b: /home/xinruoz/Document/Hiller/allele_search/modules/filter.nf
   Script_2b1b9cc927b30e94: /home/xinruoz/Document/Hiller/allele_search/modules/orf.nf
-  Script_0f40325c6f6bf6c7: /home/xinruoz/Document/Hiller/allele_search/modules/allele.nf
-Feb-12 18:54:59.742 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
-Feb-12 18:54:59.742 [main] DEBUG nextflow.Session - Session await
-Feb-12 18:54:59.928 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Feb-12 18:54:59.930 [Task submitter] INFO  nextflow.Session - [ef/8dd27e] Submitted process > FILTER_BLAST (insertion_region_2)
-Feb-12 18:54:59.941 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Feb-12 18:54:59.942 [Task submitter] INFO  nextflow.Session - [47/5b276a] Submitted process > FILTER_BLAST (insertion_region_1)
-Feb-12 18:54:59.948 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Feb-12 18:54:59.949 [Task submitter] INFO  nextflow.Session - [0b/26d8e7] Submitted process > FILTER_BLAST (insersion_region_3)
-Feb-12 18:55:00.725 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: FILTER_BLAST (insersion_region_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0b/26d8e77f636c8301f2912c78372f2a]
-Feb-12 18:55:00.726 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-Feb-12 18:55:00.762 [TaskFinalizer-1] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-Feb-12 18:55:00.794 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: FILTER_BLAST (insertion_region_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/47/5b276af0ea4f7a63f543629fc413a8]
-Feb-12 18:55:01.602 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: FILTER_BLAST (insertion_region_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ef/8dd27ebae3b7107ce707be41626e78]
-Feb-12 18:55:01.611 [main] DEBUG nextflow.Session - Session await > all processes finished
-Feb-12 18:55:01.703 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
-Feb-12 18:55:01.704 [main] DEBUG nextflow.Session - Session await > all barriers passed
-Feb-12 18:55:01.707 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
-Feb-12 18:55:01.707 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
-Feb-12 18:55:01.720 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=3; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=3.2s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=3; peakCpus=3; peakMemory=0; ]
-Feb-12 18:55:01.900 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
-Feb-12 18:55:02.647 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
-Feb-12 18:55:02.742 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
-Feb-12 18:55:02.759 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
-Feb-12 18:55:02.759 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
+Feb-19 15:37:36.972 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Feb-19 15:37:36.972 [main] DEBUG nextflow.Session - Session await
+Feb-19 15:37:37.102 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:37.104 [Task submitter] INFO  nextflow.Session - [3d/5eccc0] Submitted process > COLLECT_ALL_BLAST_DBS (all_genomes)
+Feb-19 15:37:37.313 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: COLLECT_ALL_BLAST_DBS (all_genomes); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/3d/5eccc0261d3ba7b39608d4ea1dd09c]
+Feb-19 15:37:37.314 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-19 15:37:37.365 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:37.365 [Task submitter] INFO  nextflow.Session - [a2/b1ea59] Submitted process > BLAST_SEARCH (murM_batch)
+Feb-19 15:37:37.371 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:37.372 [Task submitter] INFO  nextflow.Session - [f8/53adca] Submitted process > BLAST_SEARCH (murM_batch)
+Feb-19 15:37:37.378 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:37.378 [Task submitter] INFO  nextflow.Session - [a9/9928f3] Submitted process > BLAST_SEARCH (murM_batch)
+Feb-19 15:37:37.383 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:37.383 [Task submitter] INFO  nextflow.Session - [9b/f37c80] Submitted process > BLAST_SEARCH (murM_batch)
+Feb-19 15:37:38.861 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: BLAST_SEARCH (murM_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a9/9928f3b5f384366c0a8e2a52c83e09]
+Feb-19 15:37:38.883 [TaskFinalizer-2] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-19 15:37:48.694 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: BLAST_SEARCH (murM_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a2/b1ea59fc41b4ceb8866c5d03355ed2]
+Feb-19 15:37:49.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: BLAST_SEARCH (murM_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9b/f37c803640e6a7027a89584ab26c9a]
+Feb-19 15:37:49.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: BLAST_SEARCH (murM_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f8/53adcab977e329f92750a14147eb53]
+Feb-19 15:37:49.676 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:49.677 [Task submitter] INFO  nextflow.Session - [cb/3aa8bb] Submitted process > PARSE_BLAST (murM)
+Feb-19 15:37:50.090 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: PARSE_BLAST (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/cb/3aa8bbbfad3ecdb1aab832f21df2c8]
+Feb-19 15:37:50.124 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:50.125 [Task submitter] INFO  nextflow.Session - [0d/63be01] Submitted process > FILTER_BLAST (murM)
+Feb-19 15:37:50.224 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: FILTER_BLAST (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0d/63be0104b5cf326fe9f634c0ad12da]
+Feb-19 15:37:50.248 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:50.249 [Task submitter] INFO  nextflow.Session - [5a/a1e6c6] Submitted process > EXTRACT_DNA (murM)
+Feb-19 15:37:52.620 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: EXTRACT_DNA (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/5a/a1e6c697c4f44a08173b1374d49b46]
+Feb-19 15:37:52.635 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:52.636 [Task submitter] INFO  nextflow.Session - [94/b3de01] Submitted process > CSV_TO_FASTA (murM)
+Feb-19 15:37:52.722 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: CSV_TO_FASTA (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/94/b3de015fb5f3cc5005bddbfd2bd5d4]
+Feb-19 15:37:52.736 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:52.737 [Task submitter] INFO  nextflow.Session - [8e/21e5ce] Submitted process > CODON_CHECK_10 (murM_10codon)
+Feb-19 15:37:52.851 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: CODON_CHECK_10 (murM_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/8e/21e5ce8bcbaeb0088927f1ff41131f]
+Feb-19 15:37:52.873 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:52.873 [Task submitter] INFO  nextflow.Session - [7a/79365c] Submitted process > EXTEND_SEQUENCES (murM)
+Feb-19 15:37:54.029 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: EXTEND_SEQUENCES (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7a/79365c4b087cd7792d22888738d05b]
+Feb-19 15:37:54.045 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:54.045 [Task submitter] INFO  nextflow.Session - [da/3069d7] Submitted process > CODON_CHECK_20 (murM_20codon)
+Feb-19 15:37:54.166 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: CODON_CHECK_20 (murM_20codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/da/3069d7dab5ae2c3cbf1e5bfa6434af]
+Feb-19 15:37:54.176 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:54.176 [Task submitter] INFO  nextflow.Session - [06/7f962e] Submitted process > COLLECT_STANDARD (murM)
+Feb-19 15:37:54.228 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: COLLECT_STANDARD (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/06/7f962e9c5b7f0483e5a7db63e2b698]
+Feb-19 15:37:54.243 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:54.244 [Task submitter] INFO  nextflow.Session - [7a/0aa575] Submitted process > TRANSLATE (murM)
+Feb-19 15:37:54.557 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: TRANSLATE (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7a/0aa57525ace8fec7a0bdf3320219dc]
+Feb-19 15:37:54.571 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:54.571 [Task submitter] INFO  nextflow.Session - [b6/7c8bd7] Submitted process > ALLELE_SELF_REF (murM)
+Feb-19 15:37:55.027 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: ALLELE_SELF_REF (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b6/7c8bd7e75666aa028eb468808ae67d]
+Feb-19 15:37:55.051 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:55.052 [Task submitter] INFO  nextflow.Session - [b9/39ba85] Submitted process > MAFFT_FOR_CONSENSUS (murM)
+Feb-19 15:37:55.058 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:55.058 [Task submitter] INFO  nextflow.Session - [a0/03a9dd] Submitted process > FILTER_ALLELES (murM)
+Feb-19 15:37:55.061 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:55.062 [Task submitter] INFO  nextflow.Session - [b4/38382b] Submitted process > ALIGNMENT_FIGURE (murM/self_reference)
+Feb-19 15:37:55.133 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: FILTER_ALLELES (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a0/03a9ddc18afbba9fc30f4d008f09a5]
+Feb-19 15:37:55.150 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:55.150 [Task submitter] INFO  nextflow.Session - [f5/5ebd90] Submitted process > MAFFT_ALIGN (murM)
+Feb-19 15:37:55.580 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: MAFFT_ALIGN (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f5/5ebd902d4954e4c92662b15516b2c7]
+Feb-19 15:37:55.608 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:37:55.608 [Task submitter] INFO  nextflow.Session - [1c/1f92dc] Submitted process > WEBLOGO (murM)
+Feb-19 15:37:56.713 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: WEBLOGO (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/1c/1f92dc4b0a2e3e2d480d58a6ddd5d8]
+Feb-19 15:38:01.550 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: ALIGNMENT_FIGURE (murM/self_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b4/38382bb9bcb971c5be2ea3893c25dc]
+Feb-19 15:38:04.936 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: MAFFT_FOR_CONSENSUS (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b9/39ba854f9227a1aefe995f7e819d92]
+Feb-19 15:38:04.948 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:38:04.948 [Task submitter] INFO  nextflow.Session - [4b/1de6d4] Submitted process > COMPUTE_CONSENSUS (murM)
+Feb-19 15:38:05.207 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: COMPUTE_CONSENSUS (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4b/1de6d4a63be341706a91e23c155bca]
+Feb-19 15:38:05.220 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:38:05.220 [Task submitter] INFO  nextflow.Session - [f8/b31d2e] Submitted process > ALLELE_CONSENSUS_REF (murM)
+Feb-19 15:38:05.608 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: ALLELE_CONSENSUS_REF (murM); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f8/b31d2e4e329a6909d4212dbebab85c]
+Feb-19 15:38:05.623 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-19 15:38:05.624 [Task submitter] INFO  nextflow.Session - [f5/365f05] Submitted process > ALIGNMENT_FIGURE_REF (murM/consensus_reference)
+Feb-19 15:38:11.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: ALIGNMENT_FIGURE_REF (murM/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f5/365f059f408581aa3eeb6a69650369]
+Feb-19 15:38:11.621 [main] DEBUG nextflow.Session - Session await > all processes finished
+Feb-19 15:38:11.718 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Feb-19 15:38:11.718 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Feb-19 15:38:11.724 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Feb-19 15:38:11.724 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
+Feb-19 15:38:11.739 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=23; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=1m 42s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=8; peakMemory=4 GB; ]
+Feb-19 15:38:11.778 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Feb-19 15:38:12.474 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Feb-19 15:38:12.548 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Feb-19 15:38:12.562 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Feb-19 15:38:12.562 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

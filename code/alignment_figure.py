@@ -24,6 +24,8 @@ import sys
 import re
 import argparse
 from pathlib import Path
+from typing import Optional
+from Bio import SeqIO
 
 import numpy as np
 import pandas as pd
@@ -74,8 +76,13 @@ def extract_positions(variant_str: str) -> list[int]:
 
 
 # ── data extraction ─────────────────────────────────────────────────
-def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
-    """Return (row_labels, col_positions, variant_positions, grid)."""
+def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
+                         reference_seq: Optional[str] = None):
+    """Return (row_labels, col_positions, variant_positions, grid).
+
+    If *reference_seq* is provided, it is prepended as a 'consensus' row
+    showing the reference amino acid at every variant column.
+    """
     df = pd.read_csv(input_csv)
 
     PCT_COL     = "species_percentage"
@@ -105,13 +112,23 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
     row_labels = []
     grid = []
     for _, row in df.iterrows():
-        seq = row[SEQ_COL]
+        seq = str(row[SEQ_COL]).rstrip("*")
         cells = [
             seq[p - 1] if (p in variant_positions and p - 1 < len(seq)) else ""
             for p in columns
         ]
         row_labels.append(str(row[NAME_COL]))
         grid.append(cells)
+
+    # Prepend consensus / reference row if provided
+    if reference_seq:
+        reference_seq = reference_seq.rstrip("*")
+        ref_cells = [
+            reference_seq[p - 1] if (p in variant_positions and p - 1 < len(reference_seq)) else ""
+            for p in columns
+        ]
+        row_labels.insert(0, "consensus")
+        grid.insert(0, ref_cells)
 
     return row_labels, columns, variant_positions, grid
 
@@ -176,14 +193,9 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
     x_edges = np.array(x_edges)
     y_edges = np.arange(n_rows + 1, dtype=float)
 
-    # pcolormesh needs (M+1, N+1) edges and (M, N) shaped color data
-    # Flip rows so row 0 is at top
-    img_flipped = img[::-1]
-
-    # Reshape colour data for pcolormesh: flatten RGB into facecolors
-    # Use pcolormesh with shading='flat'
+    # invert_yaxis() below puts row 0 at the top; no manual flip needed
     ax.pcolormesh(
-        x_edges, y_edges, img_flipped,
+        x_edges, y_edges, img,
         shading="flat",
         edgecolors="#dddddd",
         linewidth=0.3,
@@ -265,10 +277,17 @@ def main():
                         help="Minimum species %% to include")
     parser.add_argument("--gap", action="store_true",
                         help="Show all positions between first and last variant")
+    parser.add_argument("--reference_fasta", default=None,
+                        help="FASTA file whose sequence is prepended as the first row")
     args = parser.parse_args()
 
+    reference_seq = None
+    if args.reference_fasta:
+        rec = next(SeqIO.parse(args.reference_fasta, "fasta"))
+        reference_seq = str(rec.seq)
+
     row_labels, columns, variant_positions, grid = build_alignment_data(
-        args.input_csv, args.min_percentage, args.gap,
+        args.input_csv, args.min_percentage, args.gap, reference_seq,
     )
     draw_alignment(row_labels, columns, variant_positions, grid, args.output)
 

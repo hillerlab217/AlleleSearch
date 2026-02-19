@@ -9,8 +9,8 @@ include { COLLECT_ALL_BLAST_DBS; BLAST_SEARCH; PARSE_BLAST } from './modules/bla
 include { FILTER_BLAST }                             from './modules/filter'
 include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
-include { ALLELE_QUERY_REF; ALLELE_SELF_REF }        from './modules/allele'
-include { FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE } from './modules/quality'
+include { ALLELE_SELF_REF; ALLELE_CONSENSUS_REF }    from './modules/allele'
+include { MAFFT_FOR_CONSENSUS; COMPUTE_CONSENSUS; FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; ALIGNMENT_FIGURE_REF } from './modules/quality'
 
 // ──────────────────────────────────────────────────────────────
 // Resolve step mode
@@ -223,16 +223,23 @@ workflow {
             .groupTuple()
             .map { name, csvs -> [name, "self_reference", csvs] }
 
-        ch_figure_query = Channel
-            .fromPath("${params.outdir}/allele_info/*/query_reference/*.csv")
+        ALIGNMENT_FIGURE(ch_figure_self)
+
+        ch_consensus_csvs = Channel
+            .fromPath("${params.outdir}/allele_info/*/consensus_reference/*.csv")
             .map { f ->
                 def query_name = f.parent.parent.name
                 [query_name, f]
             }
             .groupTuple()
-            .map { name, csvs -> [name, "query_reference", csvs] }
+            .map { name, csvs -> [name, "consensus_reference", csvs] }
 
-        ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
+        ch_consensus_fasta = Channel
+            .fromPath("${params.outdir}/allele_info/*/consensus_reference/*_consensus.fasta")
+            .map { f -> [f.parent.parent.name, f] }
+
+        ALIGNMENT_FIGURE_REF(ch_consensus_csvs.join(ch_consensus_fasta)
+            .map { name, csvs, fasta -> [name, "consensus_reference", csvs, fasta] })
 
     } else {
         // =============================================================
@@ -295,30 +302,34 @@ workflow {
         // Step 11: Translate DNA to protein
         TRANSLATE(COLLECT_STANDARD.out)
 
-        // Step 12: Allele analysis - query reference
-        ch_allele_qref = TRANSLATE.out.inframe
-            .join(ch_query_map)
-        ALLELE_QUERY_REF(ch_allele_qref)
-
-        // Step 13: Allele analysis - self reference
+        // Step 12: Allele analysis - self reference
         ALLELE_SELF_REF(TRANSLATE.out.inframe)
 
-        // Step 14: Filter alleles by species percentage
-        ch_allele_fasta = ALLELE_SELF_REF.out.results
-            .map { name, csv, fasta -> [name, fasta] }
-        FILTER_ALLELES(ch_allele_fasta)
+        // Step 13: MAFFT on all alleles → consensus sequence
+        MAFFT_FOR_CONSENSUS(ALLELE_SELF_REF.out.results.map { name, csv, fasta -> [name, fasta] })
+        COMPUTE_CONSENSUS(MAFFT_FOR_CONSENSUS.out)
 
-        // Step 15: Alignment variant figures (both reference types)
+        // Step 14: Allele analysis - consensus reference
+        ch_allele_cref = TRANSLATE.out.inframe
+            .join(COMPUTE_CONSENSUS.out)
+        ALLELE_CONSENSUS_REF(ch_allele_cref)
+
+        // Step 15: Filter alleles by species percentage
+        FILTER_ALLELES(ALLELE_SELF_REF.out.results.map { name, csv, fasta -> [name, fasta] })
+
+        // Step 16: Alignment variant figures (both reference types)
         ch_figure_self = ALLELE_SELF_REF.out.results
             .map { name, csvs, fasta -> [name, "self_reference", csvs] }
-        ch_figure_query = ALLELE_QUERY_REF.out
-            .map { name, csvs, fasta -> [name, "query_reference", csvs] }
-        ALIGNMENT_FIGURE(ch_figure_self.mix(ch_figure_query))
+        ALIGNMENT_FIGURE(ch_figure_self)
 
-        // Step 16: MAFFT alignment
+        ch_figure_consensus = ALLELE_CONSENSUS_REF.out.results
+            .map { name, csvs, allele_fasta, cons_fasta -> [name, "consensus_reference", csvs, cons_fasta] }
+        ALIGNMENT_FIGURE_REF(ch_figure_consensus)
+
+        // Step 17: MAFFT alignment (filtered alleles for WebLogo)
         MAFFT_ALIGN(FILTER_ALLELES.out)
 
-        // Step 17: WebLogo
+        // Step 18: WebLogo
         WEBLOGO(MAFFT_ALIGN.out)
     }
 }

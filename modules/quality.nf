@@ -1,3 +1,41 @@
+process MAFFT_FOR_CONSENSUS {
+    tag "${query_name}"
+
+    input:
+    tuple val(query_name), path(allele_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_all_aligned.fasta")
+
+    script:
+    """
+    seq_cnt=\$(grep -c '^>' ${allele_fasta} || true)
+    if [ "\$seq_cnt" -ge 2 ]; then
+        mafft --auto ${allele_fasta} > ${query_name}_all_aligned.fasta
+    else
+        cp ${allele_fasta} ${query_name}_all_aligned.fasta
+    fi
+    """
+}
+
+process COMPUTE_CONSENSUS {
+    tag "${query_name}"
+
+    input:
+    tuple val(query_name), path(aligned_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_consensus.fasta")
+
+    script:
+    """
+    python ${params.code_dir}/compute_consensus.py \
+        ${aligned_fasta} \
+        -n ${query_name} \
+        -o ${query_name}_consensus.fasta
+    """
+}
+
 process FILTER_ALLELES {
     tag "${query_name}"
     publishDir "${params.outdir}/allele_seq_filtered", mode: 'copy'
@@ -118,6 +156,35 @@ process ALIGNMENT_FIGURE {
         ${query_name}_alignment_gap.pdf \
         ${params.species_threshold} \
         --gap \
+    || echo "Skipping gap figure for ${query_name}" >&2
+    """
+}
+
+process ALIGNMENT_FIGURE_REF {
+    tag "${query_name}/${ref_type}"
+    publishDir "${params.outdir}/alignment_figures/${query_name}/${ref_type}", mode: 'copy'
+
+    input:
+    tuple val(query_name), val(ref_type), path(csv_files), path(reference_fasta)
+
+    output:
+    tuple val(query_name), path("*.pdf"), optional: true
+
+    script:
+    """
+    python ${params.code_dir}/alignment_figure.py \
+        allele_info_no_strain_name.csv \
+        ${query_name}_alignment.pdf \
+        ${params.species_threshold} \
+        --reference_fasta ${reference_fasta} \
+    || echo "Skipping no-gap figure for ${query_name}" >&2
+
+    python ${params.code_dir}/alignment_figure.py \
+        allele_info_no_strain_name.csv \
+        ${query_name}_alignment_gap.pdf \
+        ${params.species_threshold} \
+        --gap \
+        --reference_fasta ${reference_fasta} \
     || echo "Skipping gap figure for ${query_name}" >&2
     """
 }
