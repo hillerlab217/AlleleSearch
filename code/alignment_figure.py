@@ -110,7 +110,7 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
             seq[p - 1] if (p in variant_positions and p - 1 < len(seq)) else ""
             for p in columns
         ]
-        row_labels.append(str(row[NAME_COL]).replace("_D39V", ""))
+        row_labels.append(str(row[NAME_COL]))
         grid.append(cells)
 
     return row_labels, columns, variant_positions, grid

@@ -53,7 +53,7 @@ process BLAST_SEARCH {
         ${blast_cmd} -query ${query} \
             -db \${DB_PREFIX} \
             -out ${query.baseName}_vs_\${base}.out \
-            -evalue 1e-5 \
+            -evalue ${params.max_evalue} \
             -num_threads ${task.cpus}
     done
     """

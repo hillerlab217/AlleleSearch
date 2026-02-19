@@ -152,18 +152,26 @@ def variat_position(ref_seq, allele_dict):
         ref_pos = 0
         num_diff = 0
         
-        alignment = next(aligner.align(ref_seq, seq))
+        try:
+            alignment = next(aligner.align(ref_seq, seq))
+        except StopIteration:
+            print(f"WARNING: Could not align allele '{info[0]}' to reference — skipping variant calling for this allele.", flush=True)
+            info[3] = 0
+            info[4] = 0.0
+            info[5] = variants
+            continue
+
         ref_aligned = alignment[0]
         seq_aligned = alignment[1]
 
         for ref_aa, seq_aa in zip(ref_aligned, seq_aligned):
             if ref_aa != '-':
                 ref_pos += 1
-            
+
             if ref_aa != seq_aa and seq_aa != '-':
                 num_diff += 1
                 variants[ref_pos] = [ref_aa, seq_aa]
-        
+
         # Update allele info
         info[3] = num_diff
         info[4] = (num_diff / len(ref_seq)) * 100 if ref_seq else 0
