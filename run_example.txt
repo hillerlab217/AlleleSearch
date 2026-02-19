@@ -16,8 +16,8 @@ python code/csv_to_fasta.py /home/xinruoz/Document/Hiller/allele_search/results/
 
 mafft --auto /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2_ALIGNED.fasta
 
-weblogo < /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2_ALIGNED.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2_loogo.eps
+weblogo -U probability --composition auto -F pdf < /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2_ALIGNED.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2_loogo.pdf
 
 mafft --auto /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2_ALIGNED.fasta
 
-weblogo < /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2_ALIGNED.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2_loogo.eps
+weblogo -U probability --composition auto -F pdf < /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2_ALIGNED.fasta > /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_98/insertion_region_2_loogo.pdf
