@@ -20,8 +20,8 @@ from collections import defaultdict
 import argparse
 import csv
 import re
-from collections import defaultdict
 from pathlib import Path
+from header_utils import parse_header, species_from_id
 
 # allel_info list, for protein sequence
 # allel_info = [str, int, float, int, float, defaultdict(list), list]
@@ -59,19 +59,11 @@ def allele_types(discovered_seqs, allele_sufix):
     # Create allele dictionary
     allele_dict = {}
     for idx, (seq, strain_ids) in enumerate(sorted_alleles, 1):
-        # Extract species names
-        species_names = []
-        for strain_id in strain_ids:
-            header_part = strain_id.split('|')[0]
-            
-            if 'vs_' in header_part:
-                species_part = header_part.split('vs_')[-1]
-            else:
-                species_part = header_part
-            
-            # Clean up remaining > characters
-            species_part = species_part.replace('>', '')
-            species_names.append(species_part.strip())
+        # Extract species names from the sequence ID part of each header
+        species_names = [
+            species_from_id(parse_header(sid)[0])
+            for sid in strain_ids
+        ]
         
         # Count unique species
         species_count = len(set(species_names))

@@ -2,6 +2,7 @@ import os
 import argparse
 from Bio import SeqIO
 from Bio.Seq import Seq
+from header_utils import parse_header, build_header, species_from_id
 
 def find_extended_sequence(mode, genome_filepath, contig_name, start_position, end_position, downstream_length):
     """
@@ -72,50 +73,19 @@ def format_fasta_sequence(sequence, line_length=60):
     return "\n".join(sequence[i:i+line_length] for i in range(0, len(sequence), line_length))
 
 
-def parse_header(header):
-    """Parse FASTA header into ID and metadata dict."""
-    header = header.lstrip('>')
-    parts = header.split('|')
-    seq_id = parts[0]
-    metadata = {}
-    
-    for part in parts[1:]:
-        if '=' in part:
-            key, value = part.split('=', 1)
-            metadata[key] = value
-    
-    return seq_id, metadata
-
 def update_header(header, new_len, new_start, new_end):
-    header = header.lstrip('>')
-    parts = header.split('|')
-    seq_id = parts[0]
-    metadata = {}
-    
-    # Parse existing metadata
-    for part in parts[1:]:
-        if '=' in part:
-            key, value = part.split('=', 1)
-            metadata[key] = value
-    
-    # Update subject positions if they exist
+    """Update a header with absolute subject coordinates and a new alignment length.
+
+    Unlike the version in start_stop_codon_dna_seq.py, new_start and new_end
+    are the final absolute genome positions (not offsets), computed by the
+    caller after extending the sequence.
+    """
+    seq_id, metadata = parse_header(header)
     if 'SubjectStart' in metadata and 'SubjectEnd' in metadata:
-        try:
-            metadata['SubjectStart'] = str(new_start)
-            metadata['SubjectEnd'] = str(new_end)
-        except ValueError:
-            pass
-    
-    # Update alignment length
+        metadata['SubjectStart'] = str(new_start)
+        metadata['SubjectEnd'] = str(new_end)
     metadata['AlignLen'] = str(new_len)
-    
-    # Rebuild header
-    updated_parts = [f">{seq_id}"]
-    for key in ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']:
-        if key in metadata:
-            updated_parts.append(f"{key}={metadata[key]}")
-    
-    return '|'.join(updated_parts)
+    return build_header(seq_id, metadata)
 
 def main():
     parser = argparse.ArgumentParser(description="Find extended sequences for protein sequences.")
@@ -136,17 +106,8 @@ def main():
 
     with open(seq_filepath, "r") as protein_handle:
         for protein_record in SeqIO.parse(protein_handle, "fasta"):
-            header = protein_record.description.strip().lstrip('>')
-            parts = [p.strip() for p in header.split('|')]
-            strain_name = parts[0]
-            metadata = {}
-
-            for part in parts[1:]:
-                if '=' in part:
-                    key, value = part.split('=', 1)
-                    metadata[key] = value
-                else:
-                    print(f"Warning: Ignoring malformed part '{part}' in header: {header}")
+            header = protein_record.description.strip()
+            strain_name, metadata = parse_header(header)
 
             required_fields = ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']
             missing_fields = [f for f in required_fields if f not in metadata]
@@ -170,7 +131,7 @@ def main():
 
     # Process each strain
     for strain_name, entries in strains.items():
-        actual_strain_name = strain_name.split("vs_")[-1] if "vs_" in strain_name else strain_name
+        actual_strain_name = species_from_id(strain_name)
         genome_filepath = os.path.join(genome_dir, f"{actual_strain_name}.fasta")
 
         for entry in entries:

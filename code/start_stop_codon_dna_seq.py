@@ -19,6 +19,7 @@ import os
 import argparse
 from collections import OrderedDict
 from Bio.Seq import Seq
+from header_utils import parse_header, build_header
 
 # Define codon sets
 start_codons = {'ATG', 'GTG', 'TTG'}
@@ -120,33 +121,17 @@ def check_stop_start_codon_dna(dna_string, codon_range=10):
 
     return status, final_start, final_stop
 
-def parse_header(header):
-    """Parse FASTA header into ID and metadata dict."""
-    header = header.lstrip('>')
-    parts = header.split('|')
-    seq_id = parts[0]
-    metadata = {}
-    
-    for part in parts[1:]:
-        if '=' in part:
-            key, value = part.split('=', 1)
-            metadata[key] = value
-    
-    return seq_id, metadata
-
 def update_header(header, new_start, new_len, is_reverse=False):
-    header = header.lstrip('>')
-    parts = header.split('|')
-    seq_id = parts[0]
-    metadata = {}
-    
-    # Parse existing metadata
-    for part in parts[1:]:
-        if '=' in part:
-            key, value = part.split('=', 1)
-            metadata[key] = value
-    
-    # Update subject positions if they exist
+    """Update subject coordinates and alignment length after sequence trimming.
+
+    new_start : offset (in bases) from the original SubjectStart where the
+                trimmed sequence begins.
+    new_len   : length of the trimmed sequence in bases.
+    is_reverse: True when the hit is on the reverse strand (SubjectStart >
+                SubjectEnd in the original BLAST result).
+    """
+    seq_id, metadata = parse_header(header)
+
     if 'SubjectStart' in metadata and 'SubjectEnd' in metadata:
         try:
             orig_start = int(metadata['SubjectStart'])
@@ -160,17 +145,9 @@ def update_header(header, new_start, new_len, is_reverse=False):
             metadata['SubjectEnd'] = str(new_subj_end)
         except ValueError:
             pass
-    
-    # Update alignment length
+
     metadata['AlignLen'] = str(new_len)
-    
-    # Rebuild header
-    updated_parts = [f">{seq_id}"]
-    for key in ['contig', 'E-value', 'AlignLen', 'SeqIdentity', 'SubjectStart', 'SubjectEnd']:
-        if key in metadata:
-            updated_parts.append(f"{key}={metadata[key]}")
-    
-    return '|'.join(updated_parts)
+    return build_header(seq_id, metadata)
 
 def process_fasta(input_file, output_dir, codon_range=10):
     """Classify and trim sequences from input FASTA."""
