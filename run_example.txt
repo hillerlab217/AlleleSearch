@@ -8,7 +8,9 @@ nextflow run main.nf --filter --query_dir /home/xinruoz/Document/Hiller/allele_s
 
 nextflow run main.nf --filter --query_dir /home/xinruoz/Document/Hiller/allele_search/data --outdir ./results/s_p_insertion --sequence_identity 80 --length_percentage 80
 
-python code/strain_sequence_analysis.py results/s_p_insertion/blast_summary_filtered_98
+# Note: strain_sequence_analysis.py removed. Multi-hit detection (strains with
+# >1 BLAST hit passing screening) is now built into the FILTER_BLAST step and
+# printed to the Nextflow task log automatically.
 
 python code/csv_to_fasta.py /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2.csv /home/xinruoz/Document/Hiller/allele_search/results/s_p_insertion/blast_summary_filtered_90/insertion_region_2.fasta
 

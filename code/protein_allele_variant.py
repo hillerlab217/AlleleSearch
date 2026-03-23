@@ -35,7 +35,7 @@ from header_utils import parse_header, species_from_id
 # ]
 
 
-def allele_types(discovered_seqs, allele_sufix):
+def allele_types(discovered_seqs, allele_suffix):
     """
     Analyze discovered sequences and create allele dictionary.
     Args:
@@ -71,7 +71,7 @@ def allele_types(discovered_seqs, allele_sufix):
         
         # Create allele info list
         allele_dict[seq] = [
-            f"{allele_sufix}_{idx}",
+            f"{allele_suffix}_{idx}",
             species_count,
             species_percentage,
             0,                             # placeholder
@@ -208,7 +208,7 @@ def main():
                                             'if not given or None, will take the allele owned by most species as reference')
     parser.add_argument('discovered', help='Discovered protein FASTA file location')
     parser.add_argument('-o', '--output', default='output/allele_info', help='Output directory')
-    parser.add_argument('-s', '--allele_sufix', default='allele', help='Allele name sufix')
+    parser.add_argument('-s', '--allele_suffix', default='allele', help='Allele name sufix')
     args = parser.parse_args()
 
     from translate import translate_three_frames, longest_reading_frame
@@ -220,7 +220,7 @@ def main():
     #get allele count
     try:
         discovered_seqs = {rec.id: str(rec.seq) for rec in SeqIO.parse(args.discovered, 'fasta')}
-        allele_dict = allele_types(discovered_seqs, args.allele_sufix)
+        allele_dict = allele_types(discovered_seqs, args.allele_suffix)
     except Exception as e:
         print(f"Error during analysis: {e}")
 

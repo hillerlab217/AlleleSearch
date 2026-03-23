@@ -11,16 +11,14 @@ Important[When these specific steps are asked to run, if output already exist re
 5. update the conda yml file as needed, update the readme.md for these changes, make other documentation for best practice
 
 
-Phase 2 — Fix soon (robustness)
-5. Extract FASTA header parsing into a shared utility
-6. Move filter.nf Python logic to code/filter_blast.py
-7. Make orf.nf handle the empty-extension case properly
-8. Strengthen contig matching in extract_dna_from_blast_csv.py
+Phase 2 — Done
+5. Extract FASTA header parsing into a shared utility — DONE (header_utils.py)
+6. Move filter.nf Python logic to code/filter_blast.py — DONE
+7. Make orf.nf handle the empty-extension case properly — DONE (optional output in COLLECT_STANDARD)
+8. Strengthen contig matching in extract_dna_from_blast_csv.py — DONE (find_contig() with ordered fallbacks)
 
-Phase 3 — Nice to have (style/maintainability)
-9. Fix typo allele_sufix → allele_suffix
-10. Remove duplicate imports
-11. Remove import glob dead import
-12. Decide on strain_sequence_analysis.py — integrate or document
-
-Want me to start fixing any of these?
+Phase 3 — Done
+9. Fix typo allele_sufix → allele_suffix — DONE
+10. Remove duplicate imports — N/A (none found)
+11. Remove import glob dead import — DONE
+12. Decide on strain_sequence_analysis.py — DONE (deleted; multi-hit warning integrated into filter_blast.py)
