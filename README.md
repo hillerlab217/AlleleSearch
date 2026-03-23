@@ -54,6 +54,11 @@ conda activate allele_search
 
 **Note:** Run `conda activate allele_search` every time you open a new terminal before using the pipeline.
 
+After creating the environment, update the conda path in `nextflow.config` to match your local miniconda prefix:
+```
+process.beforeScript = 'export PATH=/path/to/miniconda3/envs/allele_search/bin:$PATH'
+```
+
 ### Step 3: Verify Installation
 
 ```bash
@@ -73,12 +78,14 @@ You should see a help message listing all available options.
 
 ## Requirements
 
-- [Nextflow](https://www.nextflow.io/) (DSL2)
+- [Nextflow](https://www.nextflow.io/) (DSL2) — install separately: `curl -s https://get.nextflow.io | bash`
 - Conda (environments are managed automatically via `environment.yml`)
 - BLAST+
 - Python 3 with BioPython
 - MAFFT
 - WebLogo
+
+> All dependencies except Nextflow are installed automatically by the conda environment.
 
 ## Usage
 
@@ -129,6 +136,7 @@ nextflow run main.nf --help
 | `--length_percentage` | `80` | Minimum alignment length as percentage of query length |
 | `--extension_codons` | `10` | Number of codons to extend incomplete sequences |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
+| `--blast_batch_size` | `100` | Number of genomes processed per BLAST task |
 
 ### Step Modes
 
@@ -183,18 +191,19 @@ results/
 │   └── others/                 # Alternative reading frames
 ├── allele_info/                # KEY OUTPUT: per-query allele variant analysis
 │   └── <query_name>/
-│       ├── query_reference/    # Variants compared to the original query sequence
+│       ├── consensus_reference/  # Variants compared to the majority-vote consensus sequence
 │       │   ├── allele_info_with_strain_name.csv
 │       │   ├── allele_info_no_strain_name.csv
-│       │   └── allele_sequence_output.fasta
+│       │   ├── allele_sequence_output.fasta
+│       │   └── <query_name>_consensus.fasta
 │       └── self_reference/     # Variants compared to the most abundant allele found
 │           ├── allele_info_with_strain_name.csv
 │           ├── allele_info_no_strain_name.csv
 │           └── allele_sequence_output.fasta
 ├── alignment_figures/           # Coloured variant alignment figures (PDF)
 │   └── <query_name>/
-│       ├── self_reference/     # Figures using most abundant allele as reference
-│       └── query_reference/    # Figures using original query as reference
+│       ├── self_reference/         # Figures using most abundant allele as reference
+│       └── consensus_reference/    # Figures using consensus sequence as reference
 ├── allele_seq_filtered/        # Alleles passing species threshold
 ├── allele_seq/                 # MAFFT-aligned allele sequences
 ├── logo/                       # WebLogo sequence logos
@@ -218,7 +227,7 @@ Each CSV row represents one allele (a group of identical protein sequences) and 
 | `allele_sequence` | Full protein sequence of the allele |
 | `strain_names` | Strain list (only in `_with_strain_name.csv`) |
 
-- **`query_reference/`** uses the original query as the reference for variant calling.
+- **`consensus_reference/`** uses a majority-vote consensus sequence (computed from all alleles) as the reference for variant calling.
 - **`self_reference/`** uses the most abundant allele found as the reference.
 - **`allele_sequence_output.fasta`** contains the protein sequence of each allele, with species count in the header.
 

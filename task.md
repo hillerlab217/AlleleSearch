@@ -1,3 +1,4 @@
+Phase 1 - Done
 1. Modify the visualization step to completely remove the T-Coffee alignment track. Ensure the remaining tracks adjust their layout accordingly.
 2. Identify all adjustable parameters for the Sequence Logo generation. Expose these as params in Nextflow so they can be adjusted without changing the source code.
 3. add --step parameter for partical pipline run/specific functional run. 

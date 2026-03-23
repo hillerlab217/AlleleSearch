@@ -102,10 +102,15 @@ process COLLECT_STANDARD {
     tuple val(query_name), path(standard_10), path(standard_20)
 
     output:
-    tuple val(query_name), path("${query_name}.fasta")
+    tuple val(query_name), path("${query_name}.fasta"), optional: true
 
     script:
     """
     cat ${standard_10} ${standard_20} > ${query_name}.fasta
+    seq_cnt=\$(grep -c '^>' ${query_name}.fasta || echo 0)
+    if [ "\$seq_cnt" -eq 0 ]; then
+        rm ${query_name}.fasta
+        echo "WARNING: [${query_name}] No valid sequences after ORF extension — skipping downstream steps"
+    fi
     """
 }
