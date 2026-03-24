@@ -22,36 +22,63 @@ from Bio.Seq import Seq
 from header_utils import parse_header, build_header
 
 # Define codon sets
-start_codons = {'ATG', 'GTG', 'TTG'}
-stop_codons = {'TAA', 'TAG', 'TGA'}
+common_start_codons = {'ATG'}
+rare_start_codons   = {'GTG', 'TTG'}
+common_stop_codons  = {'TAA', 'TGA'}
+rare_stop_codons    = {'TAG'}
 
-def have_start_codon(dna_seq, codon_range=10, direction="down"):
-    """Check for start codon in the first `codon_range` codons."""
-    if direction=="down":
+def find_all_start_codons(dna_seq, codon_range=10, direction="down"):
+    """Return all valid start positions in the first `codon_range` codons.
+
+    Searches common start codons (ATG) first; falls back to rare (GTG, TTG)
+    only if no common codon is found in the window.
+
+    Returned list is sorted so that index 0 is the primary (closest to gene body):
+    - direction="down": ascending (earliest position first)
+    - direction="up":   descending (latest position first, closest to gene body)
+    """
+    def _scan(codon_set):
+        positions = []
         for i in range(min(codon_range, len(dna_seq) // 3)):
-            codon = dna_seq[i*3 : (i+1)*3]
-            if codon in start_codons:
-                return True, i*3  # Return position of the start codon
-        return False, 0
-    elif direction=="up":
-        for i in reversed(range(min(codon_range, len(dna_seq) // 3))):
-            codon = dna_seq[i*3 : (i+1)*3]
-            if codon in start_codons:
-                return True, i*3  # Return position of the start codon
-        return False, 0
+            if dna_seq[i*3:(i+1)*3] in codon_set:
+                positions.append(i*3)
+        return positions
+
+    positions = _scan(common_start_codons)
+    if not positions:
+        positions = _scan(rare_start_codons)
+
+    if direction == "down":
+        return sorted(positions)
+    elif direction == "up":
+        return sorted(positions, reverse=True)
     else:
         raise ValueError("direction must be either 'down' or 'up'")
 
 
-def end_with_stop_codon(dna_seq, codon_range=10):
-    """Check for stop codon in the last `codon_range` codons."""
-    seq_len = len(dna_seq)
-    left_over = seq_len%3
-    for i in reversed(range(1, min(codon_range, seq_len // 3) + 1)):
-        codon = dna_seq[seq_len - left_over - i*3 : seq_len -left_over- (i-1)*3]
-        if codon in stop_codons:
-            return True, seq_len - (i-1)*3  # Return end position of the stop codon
-    return False, seq_len
+def find_all_stop_codons(dna_seq, codon_range=10):
+    """Return all valid stop END positions in the last `codon_range` codons.
+
+    Searches common stop codons (TAA, TGA) first; falls back to rare (TAG)
+    only if no common codon is found in the window.
+
+    Returned list is sorted ascending so that index 0 is the primary (earliest
+    end-position = closest to gene body = tightest ORF boundary).
+    """
+    def _scan(codon_set):
+        seq_len = len(dna_seq)
+        left_over = seq_len % 3
+        positions = []
+        for i in range(1, min(codon_range, seq_len // 3) + 1):
+            codon = dna_seq[seq_len - left_over - i*3 : seq_len - left_over - (i-1)*3]
+            if codon in codon_set:
+                positions.append(seq_len - left_over - (i-1)*3)
+        return positions
+
+    positions = _scan(common_stop_codons)
+    if not positions:
+        positions = _scan(rare_stop_codons)
+    return sorted(positions)
 
 def count_stop_codons(dna_seq, codon_range=10):
     """Count in-frame stop codons (excluding trailing partial codons)."""
@@ -60,41 +87,53 @@ def count_stop_codons(dna_seq, codon_range=10):
     # Search the entire sequence except the last codon_range
     search_end = seq_len - (seq_len % 3) - (codon_range*3 if codon_range*3 < seq_len else 0)
     for i in range(0, max(0, search_end), 3):
-        if dna_seq[i:i+3] in stop_codons:
+        if dna_seq[i:i+3] in common_stop_codons | rare_stop_codons:
             count += 1
     return count
 
-def classify_sequence(dna_seq, codon_range=10):
-    """Classify sequence based on start/stop codon presence."""
-    has_start, start_pos = have_start_codon(dna_seq, codon_range)
-    has_stop, stop_pos = end_with_stop_codon(dna_seq, codon_range)
-    stop_count = count_stop_codons(dna_seq, codon_range)
+def classify_sequence(dna_seq, codon_range=10, direction="down"):
+    """Classify sequence based on start/stop codon presence.
 
-    if stop_count > 1:
-        return "more_than_one_stop", start_pos, stop_pos
-    
+    Returns (status, start_pos, stop_pos, alt_starts, alt_stops).
+    Primary start/stop are the first elements of each list (closest to gene body).
+    alt_starts / alt_stops are the remaining candidates.
+    """
+    start_positions = find_all_start_codons(dna_seq, codon_range, direction)
+    stop_positions  = find_all_stop_codons(dna_seq, codon_range)
+    stop_count      = count_stop_codons(dna_seq, codon_range)
+
+    has_start = len(start_positions) > 0
+    has_stop  = len(stop_positions) > 0
+    start_pos = start_positions[0] if has_start else 0
+    stop_pos  = stop_positions[0]  if has_stop  else len(dna_seq)
+    alt_starts = start_positions[1:]
+    alt_stops  = stop_positions[1:]
+
+    if stop_count > 1 or (stop_count == 1 and has_stop):
+        return "more_than_one_stop", start_pos, stop_pos, alt_starts, alt_stops
+
     if has_start and has_stop and stop_count == 0:
-        return "standard", start_pos, stop_pos
-    
+        return "standard", start_pos, stop_pos, alt_starts, alt_stops
+
     if stop_count == 1 and not has_stop:
         if has_start:
-            return "stop_not_at_end", start_pos, len(dna_seq)
+            return "stop_not_at_end", start_pos, len(dna_seq), alt_starts, alt_stops
         else:
-            return "no_start_stop_not_at_end", 0, len(dna_seq)
-    
+            return "no_start_stop_not_at_end", 0, len(dna_seq), alt_starts, alt_stops
+
     if not has_stop and stop_count == 0:
         if has_start:
-            return "no_stop", start_pos, len(dna_seq)
+            return "no_stop", start_pos, len(dna_seq), alt_starts, alt_stops
         else:
-            return "no_stop_no_start", 0, len(dna_seq)
-    
-    if has_stop and not has_start:
-        return "no_start", 0, stop_pos
-    
-    # Default case (shouldn't normally reach here)
-    return "no_stop_no_start", 0, len(dna_seq)
+            return "no_stop_no_start", 0, len(dna_seq), alt_starts, alt_stops
 
-def check_stop_start_codon_dna(dna_string, codon_range=10):
+    if has_stop and not has_start:
+        return "no_start", 0, stop_pos, alt_starts, alt_stops
+
+    # Default case (shouldn't normally reach here)
+    return "no_stop_no_start", 0, len(dna_seq), alt_starts, alt_stops
+
+def check_stop_start_codon_dna(dna_string, codon_range=10, direction="down"):
     dna_string = dna_string.replace('-', '')
 
     status_que = {
@@ -110,16 +149,21 @@ def check_stop_start_codon_dna(dna_string, codon_range=10):
     status = "more_than_one_stop"
     final_start = 0
     final_stop = len(dna_string)
+    best_alt_starts, best_alt_stops = [], []
 
     for i in range(3):
         dna_seq = dna_string[i:]
-        status_temp, start_position, stop_position = classify_sequence(dna_seq, codon_range)
+        status_temp, start_pos, stop_pos, alt_starts, alt_stops = classify_sequence(
+            dna_seq, codon_range, direction
+        )
         if status_que[status] > status_que[status_temp]:
             status = status_temp
-            final_start = start_position + i
-            final_stop = stop_position + i
+            final_start = start_pos + i
+            final_stop  = stop_pos + i
+            best_alt_starts = [p + i for p in alt_starts]
+            best_alt_stops  = [p + i for p in alt_stops]
 
-    return status, final_start, final_stop
+    return status, final_start, final_stop, best_alt_starts, best_alt_stops
 
 def update_header(header, new_start, new_len, is_reverse=False):
     """Update subject coordinates and alignment length after sequence trimming.
@@ -149,12 +193,21 @@ def update_header(header, new_start, new_len, is_reverse=False):
     metadata['AlignLen'] = str(new_len)
     return build_header(seq_id, metadata)
 
-def process_fasta(input_file, output_dir, codon_range=10):
+def add_offset_fields(header, start_offset, stop_offset):
+    """Append StartCodonOffset and StopCodonOffset (codon units) to a header."""
+    seq_id, metadata = parse_header(header)
+    metadata['StartCodonOffset'] = str(start_offset)
+    metadata['StopCodonOffset']  = str(stop_offset)
+    return build_header(seq_id, metadata)
+
+
+def process_fasta(input_file, output_dir, codon_range=10, direction="down"):
     """Classify and trim sequences from input FASTA."""
     os.makedirs(output_dir, exist_ok=True)
     sequences = {status: [] for status in [
         "standard", "no_stop_no_start", "no_start", "no_stop",
-        "no_start_stop_not_at_end", "stop_not_at_end", "more_than_one_stop"
+        "no_start_stop_not_at_end", "stop_not_at_end", "more_than_one_stop",
+        "alternative_start", "alternative_stop",
     ]}
 
     with open(input_file) as f:
@@ -162,13 +215,13 @@ def process_fasta(input_file, output_dir, codon_range=10):
         for line in f:
             if line.startswith('>'):
                 if current_id:
-                    process_sequence(current_id, ''.join(current_seq), sequences, codon_range)
+                    process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction)
                 current_id = line.strip()
                 current_seq = []
             else:
                 current_seq.append(line.strip())
         if current_id:
-            process_sequence(current_id, ''.join(current_seq), sequences, codon_range)
+            process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction)
 
     # Write output files
     for status, seqs in sequences.items():
@@ -179,31 +232,53 @@ def process_fasta(input_file, output_dir, codon_range=10):
                     for i in range(0, len(seq), 60):
                         f.write(f"{seq[i:i+60]}\n")
 
-def process_sequence(header, dna_seq, sequences, codon_range):
-    """Classify and trim a single sequence."""
+def process_sequence(header, dna_seq, sequences, codon_range, direction="down"):
+    """Classify, trim, and record a single sequence with offset metadata.
+
+    Offset fields (codon units, relative to original BLAST hit boundary):
+      StartCodonOffset: 0 = first codon of BLAST hit, negative = in upstream extension
+      StopCodonOffset:  0 = last codon of BLAST hit,  positive = in downstream extension
+    """
     dna_seq = dna_seq.upper().replace('-', '')
-    status, start_pos, end_pos = check_stop_start_codon_dna(dna_seq, codon_range)
-    
-    # Determine strand direction from header
-    is_reverse = False
+    status, start_pos, end_pos, alt_starts, alt_stops = check_stop_start_codon_dna(
+        dna_seq, codon_range, direction
+    )
+
     _, metadata = parse_header(header)
+    is_reverse = False
     if 'SubjectStart' in metadata and 'SubjectEnd' in metadata:
         try:
-            subj_start = int(metadata['SubjectStart'])
-            subj_end = int(metadata['SubjectEnd'])
-            is_reverse = subj_start > subj_end
+            is_reverse = int(metadata['SubjectStart']) > int(metadata['SubjectEnd'])
         except ValueError:
             pass
-    
-    # Trim sequence
-    trimmed_seq = dna_seq[start_pos:end_pos]
 
-    
-    # Update header
-    new_header = update_header(
-        header, start_pos, len(trimmed_seq), is_reverse
-    )
-    sequences[status].append((new_header, trimmed_seq))
+    upstream_ext   = int(metadata.get('UpstreamExtension', 0))
+    downstream_ext = int(metadata.get('DownstreamExtension', 0))
+
+    start_offset = (start_pos - upstream_ext) // 3
+    stop_offset  = (end_pos - (len(dna_seq) - downstream_ext)) // 3
+
+    # Primary sequence
+    trimmed = dna_seq[start_pos:end_pos]
+    new_header = update_header(header, start_pos, len(trimmed), is_reverse)
+    new_header = add_offset_fields(new_header, start_offset, stop_offset)
+    sequences[status].append((new_header, trimmed))
+
+    # Alternative start sequences (same stop, different start)
+    for alt_start in alt_starts:
+        alt_seq = dna_seq[alt_start:end_pos]
+        alt_offset = (alt_start - upstream_ext) // 3
+        alt_h = update_header(header, alt_start, len(alt_seq), is_reverse)
+        alt_h = add_offset_fields(alt_h, alt_offset, stop_offset)
+        sequences["alternative_start"].append((alt_h, alt_seq))
+
+    # Alternative stop sequences (same start, different stop)
+    for alt_stop in alt_stops:
+        alt_seq = dna_seq[start_pos:alt_stop]
+        alt_offset_stop = (alt_stop - (len(dna_seq) - downstream_ext)) // 3
+        alt_h = update_header(header, start_pos, len(alt_seq), is_reverse)
+        alt_h = add_offset_fields(alt_h, start_offset, alt_offset_stop)
+        sequences["alternative_stop"].append((alt_h, alt_seq))
 
 def main():
     parser = argparse.ArgumentParser(
@@ -216,7 +291,7 @@ def main():
     parser.add_argument("--start_search_direction", type=str, default="down",
                        help="direction must be either 'down' or 'up'(default: down)")
     args = parser.parse_args()
-    process_fasta(args.input_fasta, args.output_dir, args.codon_range)
+    process_fasta(args.input_fasta, args.output_dir, args.codon_range, args.start_search_direction)
 
 if __name__ == "__main__":
     main()

@@ -1,17 +1,28 @@
 # Allele Search Pipeline — CLAUDE.md
 
+## Project Context
+
+This is a bioinformatics project using Python. When debugging, always check input data constraints (e.g., sequence lengths, file formats) before diving into code logic.
+
+## Workflow
+
+When working through a checklist or TODO list, always re-read the checklist file after completing each major item to track progress and avoid missing steps.
+
+---
+
 ## Project Purpose
 
-This is a **Nextflow DSL2 bioinformatics pipeline** for discovering protein allele variants across large collections of bacterial/microbial genomes. Given one or more query DNA/protein sequences and a directory of genome FASTA files, it:
+Nextflow DSL2 pipeline for discovering protein allele variants across large collections of bacterial/microbial genomes. Given one or more query DNA/protein sequences and a directory of genome FASTA files, it:
 
 1. BLASTs each query against all genomes
 2. Validates and extends open reading frames (start/stop codon checking)
 3. Translates DNA hits to proteins
 4. Clusters identical proteins into allele groups
 5. Calls amino acid variants relative to a reference
-6. Produces colored alignment figures and WebLogo sequence logos
+6. Computes a consensus reference sequence from all alleles
+7. Produces colored alignment figures and WebLogo sequence logos
 
-**Domain context:** "Allele" here means a unique protein variant found in ≥1 sequenced strain. Variant positions are formatted as `90:K→T` (position : reference AA → observed AA). The most common allele is `allele_1`.
+**Domain context:** "Allele" here means a unique protein variant found in ≥1 sequenced strain. Variant positions are formatted as `90:K→T` (position : reference AA → observed AA). The most frequent allele is named `allele_1`.
 
 ---
 
@@ -42,11 +53,11 @@ conda activate allele_search
 nextflow run main.nf --help
 ```
 
-The `nextflow.config` hard-codes the conda env path:
+`nextflow.config` hard-codes the conda env path in `beforeScript`:
 ```
 export PATH=/home/xinruoz/miniconda3/envs/allele_search/bin:$PATH
 ```
-IMPORTANT: Update this path in `nextflow.config` if the conda prefix changes.
+**Update this path in `nextflow.config` if the conda prefix changes.**
 
 ---
 
@@ -63,18 +74,24 @@ nextflow run main.nf \
   -resume
 ```
 
-### Step-specific modes (partial runs)
-Each mode reads from and writes to `--outdir`. Prior steps must have been run first.
+### Step-specific modes
+Each mode reads from and writes to `--outdir`. Prior steps must have completed first.
+
 ```bash
-# Re-filter with different thresholds (reuses existing BLAST .out files)
+# Re-run BLAST only (creates/rebuilds blast DBs, runs search, parses, filters)
+nextflow run main.nf --blast --query_dir ./data --genome_dir /genomes --outdir ./results
+
+# Re-filter with different thresholds (reuses existing blast_summary/ CSVs)
 nextflow run main.nf --filter --query_dir ./data --outdir ./results --sequence_identity 95
 
-# Re-run ORF finding + translation
-nextflow run main.nf --orf --query_dir ./data --genome_dir /genomes --outdir ./results
+# Re-run ORF finding + translation (reuses existing blast_summary_filtered/ CSVs)
+nextflow run main.nf --orf --genome_dir /genomes --outdir ./results
 
-# Re-run visualization only
+# Re-run visualization only (reuses existing allele_info/ and allele_seq_filtered/)
 nextflow run main.nf --visual --outdir ./results --weblogo_format png
 ```
+
+Alternative syntax: `--step blast|filter|orf|visual`
 
 ### Test run
 ```bash
@@ -90,61 +107,105 @@ Test query: `test_query/murM.fa`
 ## Directory & Module Map
 
 ```
-main.nf                     # Workflow entrypoint; routes --step modes
-nextflow.config             # All parameters with defaults
-environment.yml             # Conda deps
+main.nf                          # Workflow entrypoint; routes step modes
+nextflow.config                  # All parameters with defaults
+environment.yml                  # Conda dependencies
 modules/
-  blast.nf                  # COLLECT_ALL_BLAST_DBS, BLAST_SEARCH, PARSE_BLAST
-  filter.nf                 # FILTER_BLAST
-  orf.nf                    # EXTRACT_DNA, CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, COLLECT_STANDARD
-  translate.nf              # TRANSLATE (DNA → protein, 3 frames)
-  allele.nf                 # ALLELE_QUERY_REF, ALLELE_SELF_REF
-  quality.nf                # FILTER_ALLELES, MAFFT_ALIGN, WEBLOGO, ALIGNMENT_FIGURE
+  blast.nf                       # COLLECT_ALL_BLAST_DBS, BLAST_SEARCH, PARSE_BLAST
+  filter.nf                      # FILTER_BLAST
+  orf.nf                         # EXTRACT_DNA, CSV_TO_FASTA, CODON_CHECK,
+                                 #   EXTEND_SEQUENCES, COLLECT_STANDARD
+  translate.nf                   # TRANSLATE (DNA → protein, longest ORF)
+  allele.nf                      # ALLELE_SELF_REF, ALLELE_CONSENSUS_REF
+  quality.nf                     # MAFFT_FOR_CONSENSUS, COMPUTE_CONSENSUS,
+                                 #   FILTER_ALLELES, MAFFT_ALIGN, WEBLOGO,
+                                 #   ALIGNMENT_FIGURE, ALIGNMENT_FIGURE_REF
 code/
-  blastParser.py            # Converts raw BLAST .out → CSV
-  csv_to_fasta.py           # CSV → FASTA with metadata headers
-  start_stop_codon_dna_seq.py  # Classifies sequences by codon validity
-  up_down_stream.py         # Extends incomplete sequences from genome files
-  translate.py              # DNA → protein in 3 frames, returns longest ORF
+  header_utils.py                # Canonical FASTA header parser/builder (shared utility)
+  blastParser.py                 # Converts raw BLAST .out → CSV
+  filter_blast.py                # Filters parsed BLAST CSV by identity/length/e-value
+  csv_to_fasta.py                # CSV → FASTA with metadata headers
+  start_stop_codon_dna_seq.py   # Classifies sequences by codon validity; trims
+  up_down_stream.py              # Extends incomplete sequences from genome files
   extract_dna_from_blast_csv.py  # Replaces tblastn protein seqs with DNA coords
-  protein_allele_variant.py # Core: groups identical proteins, calls variants (BLOSUM62)
-  alignment_figure.py       # Renders colored AA alignment PDFs/PNGs
-data/                       # Example query FASTA files (insertion regions)
-test_query/                 # Test data (murM.fa)
-results/                    # Pipeline outputs (gitignored)
+  translate.py                   # DNA → protein in 3 frames, returns longest ORF
+  compute_consensus.py           # Computes consensus sequence from MAFFT alignment
+  protein_allele_variant.py      # Core: groups identical proteins, calls variants (BLOSUM62)
+  alignment_figure.py            # Renders colored AA alignment PDFs
+  format_fasta.py                # Utility: FASTA formatting helpers
+  highlight_variant_pos_protein_structure.py  # Auxiliary: highlights variant positions on protein structures (not called by pipeline)
+  pyMol.py                       # Auxiliary: PyMOL visualization helper (not called by pipeline)
+data/                            # Example query FASTA files (insertion regions)
+test_query/                      # Test data (murM.fa)
+results/                         # Pipeline outputs (gitignored)
 ```
+
+---
+
+## Full Pipeline Step-by-Step
+
+| Step | Process | Description |
+|---|---|---|
+| 1 | `COLLECT_ALL_BLAST_DBS` | Auto-build missing BLAST nucleotide DBs for all genome FASAs |
+| 2 | `BLAST_SEARCH` | Run blastn/tblastn in batches of 100 genomes per task |
+| 3 | `PARSE_BLAST` | Merge batch `.out` files → single CSV per query |
+| 4 | `FILTER_BLAST` | Apply identity/length/e-value cutoffs |
+| 5 | `EXTRACT_DNA` | tblastn only: replace protein hits with DNA coordinates from genome |
+| 6 | `CSV_TO_FASTA` | Convert filtered CSV → FASTA with metadata headers |
+| 7 | `CODON_CHECK_10` | Classify sequences by start/stop codons (10-codon window) |
+| 8 | `EXTEND_SEQUENCES` | Fetch upstream/downstream sequence from genome for incomplete ORFs |
+| 9 | `CODON_CHECK_20` | Re-classify extended sequences (20-codon window) |
+| 10 | `COLLECT_STANDARD` | Merge sequences that passed both codon rounds |
+| 11 | `TRANSLATE` | DNA → protein (3-frame, longest ORF wins) |
+| 12 | `ALLELE_SELF_REF` | Group identical proteins into alleles; call variants vs. most frequent allele |
+| 13 | `MAFFT_FOR_CONSENSUS` | Align all allele sequences |
+| 14 | `COMPUTE_CONSENSUS` | Derive consensus reference from the alignment |
+| 15 | `ALLELE_CONSENSUS_REF` | Re-call variants vs. consensus reference |
+| 16 | `FILTER_ALLELES` | Remove alleles below `--species_threshold` % |
+| 17 | `ALIGNMENT_FIGURE` | PDF alignment figure for self-reference |
+| 18 | `ALIGNMENT_FIGURE_REF` | PDF alignment figure for consensus-reference |
+| 19 | `MAFFT_ALIGN` | Align filtered alleles for WebLogo |
+| 20 | `WEBLOGO` | Generate sequence logo (weighted by strain frequency) |
 
 ---
 
 ## Key Conventions & Design Decisions
 
 ### FASTA header format (internal)
-Scripts communicate metadata through structured FASTA headers. DO NOT change this format without updating all downstream parsers:
+All scripts communicate metadata through structured FASTA headers, parsed and built exclusively via `header_utils.py`. **Do not change this format without updating `header_utils.py`.**
 ```
 >ID|contig=NAME|E-value=VALUE|AlignLen=LEN|SeqIdentity=%|SubjectStart=POS|SubjectEnd=POS
 ```
 
 ### Strand detection
-**SubjectStart > SubjectEnd signals reverse strand.** This is used in `up_down_stream.py` and `extract_dna_from_blast_csv.py`. No explicit strand column exists.
+**SubjectStart > SubjectEnd signals reverse strand.** No explicit strand column exists. Used in `up_down_stream.py`, `extract_dna_from_blast_csv.py`, and `start_stop_codon_dna_seq.py`.
 
 ### Species name extraction
-Species/strain names are parsed from BLAST IDs by splitting on `"vs_"`. BLAST output file names follow the convention `{query}_vs_{genome_name}`. Changing this naming convention will break allele species counting in `protein_allele_variant.py`.
+Parsed from BLAST sequence IDs by splitting on `"vs_"` (implemented in `header_utils.species_from_id()`). BLAST output files follow `{query}_vs_{genome_name}`. Changing this naming convention breaks allele species counting.
 
-### Two allele reference modes (always both generated)
-- `query_reference/`: variants called against the original query sequence
-- `self_reference/`: variants called against the most abundant allele found
-
-Both are always produced in the full pipeline. The self-reference is used for WebLogo weighting.
+### Two allele reference modes (always both generated in full pipeline)
+- `self_reference/`: variants called against the most frequent allele found
+- `consensus_reference/`: variants called against a computed consensus of all alleles
 
 ### BLAST batching
-Genomes are batched 100 per BLAST task (configurable: `--blast_batch_size`). Each batch produces a separate `.out` file; `PARSE_BLAST` collects all batches per query with `groupTuple()`.
+Genomes are batched 100 per task (configurable: `--blast_batch_size`). Each batch produces a separate `.out` file; `PARSE_BLAST` collects all batches per query with `groupTuple()`.
+
+### BLAST DB creation
+`COLLECT_ALL_BLAST_DBS` always auto-checks and builds any missing `.nin`-indexed databases before BLAST runs. No manual flag needed.
 
 ### Codon check logic
-- Round 1 (`CODON_CHECK_10`): 10-codon window at each terminus
-- Round 2 (`CODON_CHECK_20`): 20-codon window after genome extension
-- Valid start codons: ATG, GTG, TTG
-- Valid stop codons: TAA, TAG, TGA
-- Sequences with internal in-frame stop codons are discarded
+- Round 1 (`CODON_CHECK_10`): 10-codon window; searches all 3 reading frames
+- Round 2 (`CODON_CHECK_20`): 20-codon window on genome-extended sequences
+- Valid start codons: `ATG`, `GTG`, `TTG`
+- Valid stop codons: `TAA`, `TAG`, `TGA`
+- Sequences with internal in-frame stop codons (`more_than_one_stop`) are discarded
+- Classified outputs: `standard`, `no_stop`, `no_start`, `no_stop_no_start`, `stop_not_at_end`, `no_start_stop_not_at_end`, `more_than_one_stop`
+
+### Consensus sequence
+Computed by MAFFT-aligning all alleles, then `compute_consensus.py` picks the plurality AA at each position. Used as the reference for `ALLELE_CONSENSUS_REF` and `ALIGNMENT_FIGURE_REF`.
+
+### WebLogo weighting
+Before WebLogo runs, sequences are duplicated to weight the logo by strain frequency. The awk in `quality.nf` first uses `species_number=N` (raw strain count) if present; otherwise it rounds `species_percentage` to the nearest int. Headers must contain at least one of these fields.
 
 ### Amino acid color scheme (alignment figures)
 Physicochemical groups in `alignment_figure.py`:
@@ -156,42 +217,66 @@ Physicochemical groups in `alignment_figure.py`:
 
 ---
 
+## Parameters Reference
+
+| Parameter | Default | Description |
+|---|---|---|
+| `--query_dir` | required | Directory with query `.fasta/.fa/.fna/.ffn` files |
+| `--genome_dir` | required | Directory with genome FASTA files |
+| `--outdir` | `./results` | Output directory |
+| `--blast_type` | `blastn` | `blastn` or `tblastn` |
+| `--blast_batch_size` | `100` | Genomes per BLAST task (not in `--help`, set in `nextflow.config`) |
+| `--max_evalue` | `0.00001` | E-value cutoff |
+| `--sequence_identity` | `80` | Minimum % sequence identity |
+| `--length_percentage` | `80` | Minimum alignment length as % of query length |
+| `--extension_codons` | `10` | Codons to extend incomplete ORFs |
+| `--species_threshold` | `1` | Minimum species % for allele filtering / figures |
+| `--weblogo_format` | `eps` | `eps`, `png`, `pdf`, `svg`, `jpeg` |
+| `--weblogo_units` | `probability` | `probability`, `bits`, `nats` |
+| `--weblogo_color_scheme` | `chemistry` | `chemistry`, `hydrophobicity`, `charge`, `classic` |
+| `--weblogo_size` | `medium` | `small`, `medium`, `large` |
+| `--weblogo_resolution` | `96` | DPI |
+
+---
+
 ## Common Gotchas
 
-- **`--filter` mode requires `--query_dir`** — needed to calculate the minimum alignment length from query sequence length. Forgetting this causes an error.
-- **`--blast_type tblastn` triggers an extra step** (`EXTRACT_DNA`) to swap protein sequences back for DNA coordinates before ORF checking.
-- **WebLogo weighting** in `quality.nf` expands sequences by `species_percentage` (rounded to int) to weight the logo by strain frequency. Headers must contain `species_percentage=X.XX`.
-- **MAFFT is skipped silently** if fewer than 2 sequences pass the `--species_threshold` filter. Check `WARNING` messages in nextflow logs.
-- **Nextflow work directory** can grow very large. Run `nextflow clean -f` periodically to remove cached task directories.
-- **`-resume` reuses cached tasks** — omit it when you want to force a full re-run. Step modes (`--blast`, `--filter`, etc.) always overwrite their output directories regardless of `-resume`.
-- **BlastDB building** is skipped by default (`--make_blastdb false`). If `.n*` index files are missing, set `--make_blastdb true`.
+- **`--filter` mode requires `--query_dir`** — needed to calculate minimum alignment length from query length.
+- **`--filter` mode requires prior `--blast` run** — needs `{outdir}/blast_summary/*.csv` to exist.
+- **`--orf` mode requires `--genome_dir`** — needed for upstream/downstream sequence extension.
+- **`--visual` mode requires prior full run** — needs `{outdir}/allele_seq_filtered/` and `{outdir}/allele_info/`.
+- **`--blast_type tblastn` triggers `EXTRACT_DNA`** — swaps protein subject sequences for the underlying DNA coordinates before ORF checking.
+- **MAFFT is skipped silently** if fewer than 2 sequences remain after `FILTER_ALLELES`. Search for "Skipping MAFFT" in Nextflow logs (the message does not use the word WARNING).
+- **`COLLECT_STANDARD` emits an optional output** — if no sequences survive both codon rounds, downstream steps are skipped automatically (no crash).
+- **`-resume` reuses cached tasks** — omit it to force a full re-run. Step modes always overwrite their output subdirectories regardless of `-resume`.
+- **Nextflow work directory grows large** — run `nextflow clean -f` periodically.
 
 ---
 
 ## Development Workflow
 
 ### Adding a new parameter
-1. Add to `params {}` block in `nextflow.config` with a sensible default
-2. Reference via `${params.param_name}` in the relevant module's `script:` block
-3. Document in `README.md` parameter tables
-4. Add to `--help` message in `main.nf`
+1. Add to `params {}` in `nextflow.config` with a sensible default
+2. Reference as `${params.param_name}` in the relevant module `script:` block
+3. Add to the `--help` message in `main.nf`
+4. Document in `README.md`
 
 ### Adding a new pipeline step
 1. Create or edit the relevant `modules/*.nf` file
-2. Import the process in `main.nf` at the top
-3. Wire it into the appropriate workflow block(s) (`full`, and any relevant step modes)
-4. If it produces output needed by downstream steps, update channel routing
+2. Import the process at the top of `main.nf`
+3. Wire it into the appropriate workflow block(s) (`full` and any relevant step modes)
+4. Update channel routing if downstream steps depend on its output
 
 ### Modifying Python scripts
-Scripts in `code/` are called from Nextflow `script:` blocks via:
+Scripts are called from Nextflow `script:` blocks via:
 ```
 python ${params.code_dir}/script_name.py [args]
 ```
-The `code_dir` defaults to `${projectDir}/code`. Scripts must be executable and accept arguments from the command line (argparse or sys.argv).
+`code_dir` defaults to `${projectDir}/code`. All scripts use `argparse`. Header parsing/building must go through `header_utils.py`.
 
 ### Testing a step change
 ```bash
-# Re-run only the affected step with -resume to reuse upstream work
+# Re-run only the affected step; -resume reuses upstream cached work
 nextflow run main.nf --visual --outdir ./results/test -resume
 ```
 
@@ -199,21 +284,34 @@ nextflow run main.nf --visual --outdir ./results/test -resume
 
 ## Output Interpretation
 
-Key output: `results/allele_info/<query_name>/`
+### Key outputs: `results/allele_info/<query_name>/`
 
-| File | Description |
+| Path | Description |
 |---|---|
-| `self_reference/allele_info_no_strain_name.csv` | Alleles ranked by frequency; variants vs. most common allele |
-| `query_reference/allele_info_no_strain_name.csv` | Same, but variants vs. original query sequence |
-| `allele_sequence_output.fasta` | Protein FASTA, one entry per allele, header includes species count |
+| `self_reference/allele_info_no_strain_name.csv` | Alleles ranked by frequency; variants vs. most frequent allele |
+| `self_reference/allele_info_with_strain_name.csv` | Same, with strain names listed per allele |
+| `self_reference/allele_sequence_output.fasta` | Protein FASTA, one entry per allele |
+| `consensus_reference/allele_info_no_strain_name.csv` | Alleles ranked by frequency; variants vs. consensus |
+| `consensus_reference/allele_sequence_output.fasta` | Protein FASTA, one entry per allele (same format, consensus-reference run) |
+| `consensus_reference/<query>_consensus.fasta` | The computed consensus reference sequence |
 
 CSV columns: `allele_name`, `species_count`, `species_percentage`, `variant_position_count`, `variant_percentage`, `variant_positions(position:reference→changed)`, `allele_sequence`
 
-Alignment figures: `results/alignment_figures/<query>/{self,query}_reference/`
+### Alignment figures: `results/alignment_figures/<query>/{self_reference,consensus_reference}/`
 - `*_alignment.pdf` — only variant positions shown
 - `*_alignment_gap.pdf` — all positions between first and last variant
 
-Logos: `results/logo/<query_name>_logo.<format>`
+### Logos: `results/logo/<query_name>_logo.<format>`
+
+### Intermediate outputs
+| Directory | Contents |
+|---|---|
+| `blast_raw/` | Raw BLAST `.out` files (one per query-batch) |
+| `blast_summary/` | Parsed CSVs (one per query, all hits) |
+| `blast_summary_filtered/` | Filtered CSVs after identity/length/e-value cutoffs |
+| `standard_dna_seq/` | DNA sequences passing both codon-check rounds |
+| `allele_seq_filtered/` | Per-allele protein FASTAs above species threshold |
+| `allele_seq/` | MAFFT-aligned filtered allele FASTAs |
 
 ---
 
@@ -221,5 +319,5 @@ Logos: `results/logo/<query_name>_logo.<format>`
 
 - `README.md` — User-facing installation and usage guide
 - `run_example.txt` — Real command examples from previous analysis runs
-- `task.md` — Active development task list
+- `task.md` — Development task history (all phases complete)
 - `flowchart.mermaid` — Visual overview of the pipeline DAG

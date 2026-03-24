@@ -183,12 +183,12 @@ workflow {
 
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down"] }
         CODON_CHECK_10(ch_codon10_in)
 
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up"] }
         CODON_CHECK_20(ch_codon20_in)
 
         ch_standard = CODON_CHECK_10.out.standard
@@ -283,15 +283,15 @@ workflow {
         // Step 6: CSV to FASTA
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        // Step 7: Check start/stop codons (10-codon window)
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, 10, "down"] }
+        // Step 7: Check start/stop codons
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down"] }
         CODON_CHECK_10(ch_codon10_in)
 
         // Step 8: Extend sequences from genome
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-        // Step 9: Re-check with 20-codon window
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, 20, "up"] }
+        // Step 9: Re-check with same codon window on extended sequences
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up"] }
         CODON_CHECK_20(ch_codon20_in)
 
         // Step 10: Collect standard sequences from both rounds

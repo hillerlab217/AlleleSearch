@@ -1,0 +1,2 @@
+1. I would like both the search within the blast hit and extended blast hit to follow the same length, same number of codon. Currently it is raw first and then extend, I would like it to pick the codon closest to the start codon or the stop codon, and pick the closest if there is multiple within the search range given. And report in seperate file for the other options that are not picked in multiple and clearlt state in the fasta file header where where the start or stop codon compared to the raw blast sequence in the header.
+
