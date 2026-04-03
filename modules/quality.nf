@@ -1,5 +1,6 @@
 process MAFFT_FOR_CONSENSUS {
     tag "${query_name}"
+    publishDir "${params.outdir}/allele_mafft_consensus", mode: 'copy'
 
     input:
     tuple val(query_name), path(allele_fasta)
@@ -165,7 +166,7 @@ process ALIGNMENT_FIGURE_REF {
     publishDir "${params.outdir}/alignment_figures/${query_name}/${ref_type}", mode: 'copy'
 
     input:
-    tuple val(query_name), val(ref_type), path(csv_files), path(reference_fasta)
+    tuple val(query_name), val(ref_type), path(csv_files), path(reference_fasta), path(mafft_aligned)
 
     output:
     tuple val(query_name), path("*.pdf"), optional: true
@@ -177,6 +178,7 @@ process ALIGNMENT_FIGURE_REF {
         ${query_name}_alignment.pdf \
         ${params.species_threshold} \
         --reference_fasta ${reference_fasta} \
+        --mafft_alignment ${mafft_aligned} \
     || echo "Skipping no-gap figure for ${query_name}" >&2
 
     python ${params.code_dir}/alignment_figure.py \
@@ -185,6 +187,7 @@ process ALIGNMENT_FIGURE_REF {
         ${params.species_threshold} \
         --gap \
         --reference_fasta ${reference_fasta} \
+        --mafft_alignment ${mafft_aligned} \
     || echo "Skipping gap figure for ${query_name}" >&2
     """
 }

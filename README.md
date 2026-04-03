@@ -136,6 +136,7 @@ nextflow run main.nf --help
 | `--length_percentage` | `80` | Minimum alignment length as percentage of query length |
 | `--extension_codons` | `10` | Number of codons to extend incomplete sequences |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
+| `--self_reference_figures` | `false` | Also generate self-reference alignment figures; by default only consensus-reference figures are generated |
 | `--blast_batch_size` | `100` | Number of genomes processed per BLAST task |
 
 ### Step Modes
@@ -202,8 +203,8 @@ results/
 │           └── allele_sequence_output.fasta
 ├── alignment_figures/           # Coloured variant alignment figures (PDF)
 │   └── <query_name>/
-│       ├── self_reference/         # Figures using most abundant allele as reference
-│       └── consensus_reference/    # Figures using consensus sequence as reference
+│       ├── consensus_reference/    # Figures using consensus sequence as reference (always generated)
+│       └── self_reference/         # Figures using most abundant allele as reference (only with --self_reference_figures)
 ├── allele_seq_filtered/        # Alleles passing species threshold
 ├── allele_seq/                 # MAFFT-aligned allele sequences
 ├── logo/                       # WebLogo sequence logos
@@ -227,8 +228,8 @@ Each CSV row represents one allele (a group of identical protein sequences) and 
 | `allele_sequence` | Full protein sequence of the allele |
 | `strain_names` | Strain list (only in `_with_strain_name.csv`) |
 
-- **`consensus_reference/`** uses a majority-vote consensus sequence (computed from all alleles) as the reference for variant calling.
-- **`self_reference/`** uses the most abundant allele found as the reference.
+- **`consensus_reference/`** uses a majority-vote consensus sequence (computed from all alleles) as the reference for variant calling. The consensus row in alignment figures is labeled `<query_name>_consensus`. Alignment figures are always generated.
+- **`self_reference/`** uses the most abundant allele found as the reference. Alignment figures are generated only when `--self_reference_figures` is passed.
 - **`allele_sequence_output.fasta`** contains the protein sequence of each allele, with species count in the header.
 
 ## Project Structure

@@ -25,7 +25,8 @@ import re
 import argparse
 from pathlib import Path
 from typing import Optional
-from Bio import SeqIO
+from collections import Counter
+from Bio import SeqIO, AlignIO
 
 import numpy as np
 import pandas as pd
@@ -62,8 +63,32 @@ LEGEND_GROUPS = {
 GAP_RGB   = to_rgb("#eeeeee")
 BLANK_RGB = to_rgb("#ffffff")
 
+# Gap character gets the same gray as gap-fill columns
+AA_HEX['-'] = "#eeeeee"
+
 
 # ── helpers ─────────────────────────────────────────────────────────
+def gapped_consensus_from_mafft(mafft_fasta: str) -> str:
+    """Compute a gapped consensus from a MAFFT-aligned FASTA.
+
+    Returns a string of length = alignment_length where each character is the
+    plurality non-gap amino acid, or '-' when the column is all-gaps.
+    """
+    records = list(AlignIO.read(mafft_fasta, "fasta"))
+    if not records:
+        return ""
+    alignment_len = len(records[0].seq)
+    consensus = []
+    for i in range(alignment_len):
+        col = [str(rec.seq[i]) for rec in records]
+        non_gap = [aa for aa in col if aa != '-']
+        if non_gap:
+            consensus.append(Counter(non_gap).most_common(1)[0][0])
+        else:
+            consensus.append('-')
+    return ''.join(consensus)
+
+
 def extract_positions(variant_str: str) -> list[int]:
     """'166:D→E; 469:V→I' → [166, 469]"""
     if pd.isna(variant_str) or not variant_str.strip():
@@ -77,11 +102,20 @@ def extract_positions(variant_str: str) -> list[int]:
 
 # ── data extraction ─────────────────────────────────────────────────
 def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
-                         reference_seq: Optional[str] = None):
+                         reference_seq: Optional[str] = None,
+                         reference_label: str = "consensus",
+                         mafft_alignment_fasta: Optional[str] = None):
     """Return (row_labels, col_positions, variant_positions, grid).
 
-    If *reference_seq* is provided, it is prepended as a 'consensus' row
-    showing the reference amino acid at every variant column.
+    If *mafft_alignment_fasta* is provided (consensus-reference mode):
+      - Positions are 1-based MAFFT alignment column numbers.
+      - The reference row uses the gapped consensus derived from the alignment.
+      - allele_sequence in the CSV is already gapped, so seq[p-1] is correct.
+      - '-' cells are rendered as gray gap cells.
+
+    If only *reference_seq* is provided (legacy / self-reference mode):
+      - Positions are protein sequence positions (1-based, ungapped).
+      - reference_seq is prepended as the first row.
     """
     df = pd.read_csv(input_csv)
 
@@ -112,7 +146,9 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
     row_labels = []
     grid = []
     for _, row in df.iterrows():
-        seq = str(row[SEQ_COL]).rstrip("*")
+        seq = str(row[SEQ_COL])
+        if not mafft_alignment_fasta:
+            seq = seq.rstrip("*")
         cells = [
             seq[p - 1] if (p in variant_positions and p - 1 < len(seq)) else ""
             for p in columns
@@ -120,14 +156,24 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
         row_labels.append(str(row[NAME_COL]))
         grid.append(cells)
 
-    # Prepend consensus / reference row if provided
-    if reference_seq:
-        reference_seq = reference_seq.rstrip("*")
+    # Determine the reference row sequence
+    if mafft_alignment_fasta:
+        # Use gapped consensus derived from the MAFFT alignment
+        ref_seq_for_row = gapped_consensus_from_mafft(mafft_alignment_fasta)
+        ref_label = reference_label  # e.g. "murM_consensus" from --reference_fasta label
+    elif reference_seq:
+        ref_seq_for_row = reference_seq.rstrip("*")
+        ref_label = reference_label
+    else:
+        ref_seq_for_row = None
+        ref_label = reference_label
+
+    if ref_seq_for_row:
         ref_cells = [
-            reference_seq[p - 1] if (p in variant_positions and p - 1 < len(reference_seq)) else ""
+            ref_seq_for_row[p - 1] if (p in variant_positions and p - 1 < len(ref_seq_for_row)) else ""
             for p in columns
         ]
-        row_labels.insert(0, "consensus")
+        row_labels.insert(0, ref_label)
         grid.insert(0, ref_cells)
 
     return row_labels, columns, variant_positions, grid
@@ -148,7 +194,7 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
                 img[i, j] = GAP_RGB
             else:
                 aa = grid[i][j].upper() if grid[i][j] else ""
-                img[i, j] = to_rgb(AA_HEX[aa]) if aa in AA_HEX else BLANK_RGB
+                img[i, j] = to_rgb(AA_HEX.get(aa, "#ffffff"))
 
     # ── figure sizing ───────────────────────────────────────────────
     # In gap mode, make non-variant columns narrower via column width ratios
@@ -214,7 +260,7 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
         for j in range(n_cols):
             if is_variant[j]:
                 aa = grid[i][j].upper() if grid[i][j] else ""
-                if aa:
+                if aa and aa != '-':
                     ax.text(
                         x_centers[j], y_centers[i], aa,
                         ha="center", va="center",
@@ -279,15 +325,20 @@ def main():
                         help="Show all positions between first and last variant")
     parser.add_argument("--reference_fasta", default=None,
                         help="FASTA file whose sequence is prepended as the first row")
+    parser.add_argument("--mafft_alignment", default=None,
+                        help="MAFFT-aligned FASTA; enables gapped consensus row and indel display")
     args = parser.parse_args()
 
     reference_seq = None
+    reference_label = "consensus"
     if args.reference_fasta:
         rec = next(SeqIO.parse(args.reference_fasta, "fasta"))
         reference_seq = str(rec.seq)
+        reference_label = rec.id  # e.g. "murM_consensus"
 
     row_labels, columns, variant_positions, grid = build_alignment_data(
-        args.input_csv, args.min_percentage, args.gap, reference_seq,
+        args.input_csv, args.min_percentage, args.gap, reference_seq, reference_label,
+        mafft_alignment_fasta=args.mafft_alignment,
     )
     draw_alignment(row_labels, columns, variant_positions, grid, args.output)
 

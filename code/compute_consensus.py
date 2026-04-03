@@ -8,10 +8,15 @@ import argparse
 
 
 def compute_consensus(aligned_fasta, name, output_fasta):
-    records = list(AlignIO.read(aligned_fasta, "fasta"))
+    try:
+        records = list(AlignIO.read(aligned_fasta, "fasta"))
+    except ValueError:
+        records = []
 
     if len(records) == 0:
-        raise ValueError("No sequences found in alignment file")
+        open(output_fasta, 'w').close()
+        print(f"No sequences in alignment; writing empty consensus file: {output_fasta}", flush=True)
+        return
 
     if len(records) == 1:
         # Only one allele — it is its own consensus

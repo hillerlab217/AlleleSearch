@@ -33,9 +33,9 @@ done
 # --- Helpers ---
 print_result() {
     local status="$1" name="$2" msg="${3:-}"
-    if   [[ "$status" == "PASS" ]]; then echo "  [PASS] $name"; ((PASS++))
-    elif [[ "$status" == "FAIL" ]]; then echo "  [FAIL] $name${msg:+: $msg}"; ((FAIL++))
-    elif [[ "$status" == "SKIP" ]]; then echo "  [SKIP] $name${msg:+: $msg}"; ((SKIP++))
+    if   [[ "$status" == "PASS" ]]; then echo "  [PASS] $name"; (( ++PASS ))
+    elif [[ "$status" == "FAIL" ]]; then echo "  [FAIL] $name${msg:+: $msg}"; (( ++FAIL ))
+    elif [[ "$status" == "SKIP" ]]; then echo "  [SKIP] $name${msg:+: $msg}"; (( ++SKIP ))
     fi
 }
 

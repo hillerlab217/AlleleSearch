@@ -162,8 +162,8 @@ results/                         # Pipeline outputs (gitignored)
 | 14 | `COMPUTE_CONSENSUS` | Derive consensus reference from the alignment |
 | 15 | `ALLELE_CONSENSUS_REF` | Re-call variants vs. consensus reference |
 | 16 | `FILTER_ALLELES` | Remove alleles below `--species_threshold` % |
-| 17 | `ALIGNMENT_FIGURE` | PDF alignment figure for self-reference |
-| 18 | `ALIGNMENT_FIGURE_REF` | PDF alignment figure for consensus-reference |
+| 17 | `ALIGNMENT_FIGURE` | PDF alignment figure for self-reference (only when `--self_reference_figures`) |
+| 18 | `ALIGNMENT_FIGURE_REF` | PDF alignment figure for consensus-reference (always generated; consensus row labeled `{query_name}_consensus`) |
 | 19 | `MAFFT_ALIGN` | Align filtered alleles for WebLogo |
 | 20 | `WEBLOGO` | Generate sequence logo (weighted by strain frequency) |
 
@@ -183,9 +183,10 @@ All scripts communicate metadata through structured FASTA headers, parsed and bu
 ### Species name extraction
 Parsed from BLAST sequence IDs by splitting on `"vs_"` (implemented in `header_utils.species_from_id()`). BLAST output files follow `{query}_vs_{genome_name}`. Changing this naming convention breaks allele species counting.
 
-### Two allele reference modes (always both generated in full pipeline)
-- `self_reference/`: variants called against the most frequent allele found
-- `consensus_reference/`: variants called against a computed consensus of all alleles
+### Two allele reference modes
+Both allele info CSVs are always generated. Alignment figures differ:
+- `self_reference/`: variants called against the most frequent allele. Alignment figures only generated when `--self_reference_figures` is set (default: off).
+- `consensus_reference/`: variants called against a computed consensus of all alleles. Alignment figures always generated; the consensus reference row is labeled `{query_name}_consensus` (e.g. `murM_consensus`).
 
 ### BLAST batching
 Genomes are batched 100 per task (configurable: `--blast_batch_size`). Each batch produces a separate `.out` file; `PARSE_BLAST` collects all batches per query with `groupTuple()`.
@@ -231,6 +232,7 @@ Physicochemical groups in `alignment_figure.py`:
 | `--length_percentage` | `80` | Minimum alignment length as % of query length |
 | `--extension_codons` | `10` | Codons to extend incomplete ORFs |
 | `--species_threshold` | `1` | Minimum species % for allele filtering / figures |
+| `--self_reference_figures` | `false` | Also generate self-reference alignment figures (default: only consensus-reference figures are generated) |
 | `--weblogo_format` | `eps` | `eps`, `png`, `pdf`, `svg`, `jpeg` |
 | `--weblogo_units` | `probability` | `probability`, `bits`, `nats` |
 | `--weblogo_color_scheme` | `chemistry` | `chemistry`, `hydrophobicity`, `charge`, `classic` |

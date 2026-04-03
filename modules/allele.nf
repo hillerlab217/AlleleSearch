@@ -22,7 +22,7 @@ process ALLELE_CONSENSUS_REF {
     publishDir "${params.outdir}/allele_info/${query_name}/consensus_reference", mode: 'copy'
 
     input:
-    tuple val(query_name), path(protein_fasta), path(consensus_fasta, stageAs: 'consensus_ref.fasta')
+    tuple val(query_name), path(protein_fasta), path(consensus_fasta, stageAs: 'consensus_ref.fasta'), path(mafft_aligned)
 
     output:
     tuple val(query_name), path("*.csv"), path("allele_sequence_output.fasta"), path("${query_name}_consensus.fasta"), emit: results
@@ -33,7 +33,8 @@ process ALLELE_CONSENSUS_REF {
         -r consensus_ref.fasta \
         ${protein_fasta} \
         -o . \
-        -s ${query_name}
+        -s ${query_name} \
+        --mafft_alignment ${mafft_aligned}
 
     cp consensus_ref.fasta ${query_name}_consensus.fasta
     """

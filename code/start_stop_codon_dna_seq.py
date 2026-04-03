@@ -84,8 +84,8 @@ def count_stop_codons(dna_seq, codon_range=10):
     """Count in-frame stop codons (excluding trailing partial codons)."""
     seq_len = len(dna_seq)
     count = 0
-    # Search the entire sequence except the last codon_range
-    search_end = seq_len - (seq_len % 3) - (codon_range*3 if codon_range*3 < seq_len else 0)
+    # Search everything except the terminal codon_range window
+    search_end = max(0, seq_len - (seq_len % 3) - codon_range * 3)
     for i in range(0, max(0, search_end), 3):
         if dna_seq[i:i+3] in common_stop_codons | rare_stop_codons:
             count += 1

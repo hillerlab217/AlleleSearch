@@ -71,6 +71,7 @@ if (params.help) {
       --extension_codons   Codons to extend (default: 10)
       --species_threshold  Min species % for filtering (default: 1)
       --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
+      --self_reference_figures  Also generate self-reference alignment figures (default: false)
 
     WebLogo:
       --weblogo_format       Output format: eps, png, pdf, svg, jpeg (default: eps)
@@ -183,12 +184,12 @@ workflow {
 
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down"] }
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1"] }
         CODON_CHECK_10(ch_codon10_in)
 
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up"] }
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2"] }
         CODON_CHECK_20(ch_codon20_in)
 
         ch_standard = CODON_CHECK_10.out.standard
@@ -214,16 +215,17 @@ workflow {
         WEBLOGO(MAFFT_ALIGN.out)
 
         // Alignment figures from allele info CSVs
-        ch_figure_self = Channel
-            .fromPath("${params.outdir}/allele_info/*/self_reference/*.csv")
-            .map { f ->
-                def query_name = f.parent.parent.name
-                [query_name, f]
-            }
-            .groupTuple()
-            .map { name, csvs -> [name, "self_reference", csvs] }
-
-        ALIGNMENT_FIGURE(ch_figure_self)
+        if (params.self_reference_figures) {
+            ch_figure_self = Channel
+                .fromPath("${params.outdir}/allele_info/*/self_reference/*.csv")
+                .map { f ->
+                    def query_name = f.parent.parent.name
+                    [query_name, f]
+                }
+                .groupTuple()
+                .map { name, csvs -> [name, "self_reference", csvs] }
+            ALIGNMENT_FIGURE(ch_figure_self)
+        }
 
         ch_consensus_csvs = Channel
             .fromPath("${params.outdir}/allele_info/*/consensus_reference/*.csv")
@@ -238,8 +240,11 @@ workflow {
             .fromPath("${params.outdir}/allele_info/*/consensus_reference/*_consensus.fasta")
             .map { f -> [f.parent.parent.name, f] }
 
-        ALIGNMENT_FIGURE_REF(ch_consensus_csvs.join(ch_consensus_fasta)
-            .map { name, csvs, fasta -> [name, "consensus_reference", csvs, fasta] })
+        ch_mafft_consensus = Channel
+            .fromPath("${params.outdir}/allele_mafft_consensus/*_all_aligned.fasta")
+            .map { f -> [f.baseName.replaceAll(/_all_aligned$/, ''), f] }
+
+        ALIGNMENT_FIGURE_REF(ch_consensus_csvs.join(ch_consensus_fasta).join(ch_mafft_consensus))
 
     } else {
         // =============================================================
@@ -284,14 +289,14 @@ workflow {
         CSV_TO_FASTA(ch_csv_for_fasta)
 
         // Step 7: Check start/stop codons
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down"] }
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1"] }
         CODON_CHECK_10(ch_codon10_in)
 
         // Step 8: Extend sequences from genome
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
         // Step 9: Re-check with same codon window on extended sequences
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up"] }
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2"] }
         CODON_CHECK_20(ch_codon20_in)
 
         // Step 10: Collect standard sequences from both rounds
@@ -306,24 +311,31 @@ workflow {
         ALLELE_SELF_REF(TRANSLATE.out.inframe)
 
         // Step 13: MAFFT on all alleles → consensus sequence
-        MAFFT_FOR_CONSENSUS(ALLELE_SELF_REF.out.results.map { name, csv, fasta -> [name, fasta] })
+        ch_allele_fasta_nonempty = ALLELE_SELF_REF.out.results
+            .map { name, csv, fasta -> [name, fasta] }
+            .filter { name, fasta -> fasta.text.contains('>') }
+        MAFFT_FOR_CONSENSUS(ch_allele_fasta_nonempty)
         COMPUTE_CONSENSUS(MAFFT_FOR_CONSENSUS.out)
 
-        // Step 14: Allele analysis - consensus reference
+        // Step 14: Allele analysis - consensus reference (uses MAFFT alignment for indel-aware variant calling)
         ch_allele_cref = TRANSLATE.out.inframe
             .join(COMPUTE_CONSENSUS.out)
+            .join(MAFFT_FOR_CONSENSUS.out)
         ALLELE_CONSENSUS_REF(ch_allele_cref)
 
         // Step 15: Filter alleles by species percentage
         FILTER_ALLELES(ALLELE_SELF_REF.out.results.map { name, csv, fasta -> [name, fasta] })
 
-        // Step 16: Alignment variant figures (both reference types)
-        ch_figure_self = ALLELE_SELF_REF.out.results
-            .map { name, csvs, fasta -> [name, "self_reference", csvs] }
-        ALIGNMENT_FIGURE(ch_figure_self)
+        // Step 16: Alignment variant figures
+        if (params.self_reference_figures) {
+            ch_figure_self = ALLELE_SELF_REF.out.results
+                .map { name, csvs, fasta -> [name, "self_reference", csvs] }
+            ALIGNMENT_FIGURE(ch_figure_self)
+        }
 
         ch_figure_consensus = ALLELE_CONSENSUS_REF.out.results
             .map { name, csvs, allele_fasta, cons_fasta -> [name, "consensus_reference", csvs, cons_fasta] }
+            .join(MAFFT_FOR_CONSENSUS.out)
         ALIGNMENT_FIGURE_REF(ch_figure_consensus)
 
         // Step 17: MAFFT alignment (filtered alleles for WebLogo)
