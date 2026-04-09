@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/35255_SMRU510.fasta
+           258 sequences; 2,196,859 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR048187_A113879_NODE_8_COV_32.260166                                289     4e-79
+
+
+>ERR048187_A113879_NODE_8_COV_32.260166
+Length=29034
+
+ Score = 289 bits (156),  Expect = 4e-79
+ Identities = 186/201 (93%), Gaps = 0/201 (0%)
+ Strand=Plus/Minus
+
+Query  12    CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+             |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  8727  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  8668
+
+Query  72    ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+             ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  8667  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  8608
+
+Query  132   CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  191
+             ||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  8607  CGTGTTATACTGTACTTATAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAT  8548
+
+Query  192   AAATGAAGATAATTGAAGGAG  212
+             || | || ||||||| |||||
+Sbjct  8547  AAGTAAAAATAATTGGAGGAG  8527
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 438339800
+
+
+  Database: data/GoldenSet_7548Genomes_2023/35255_SMRU510.fasta
+    Posted date:  Apr 24, 2025  5:34 PM
+  Number of letters in database: 2,196,859
+  Number of sequences in database:  258
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

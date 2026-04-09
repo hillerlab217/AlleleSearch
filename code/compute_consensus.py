@@ -7,6 +7,19 @@ from collections import Counter
 import argparse
 
 
+def compute_gapped_consensus_from_records(records):
+    """Return a gapped consensus string of length == alignment_len.
+    Each position is the plurality non-gap AA, or '-' when all chars are gaps.
+    Importable by other scripts for shared consensus computation."""
+    alignment_len = len(records[0].seq)
+    result = []
+    for i in range(alignment_len):
+        col = [str(rec.seq[i]) for rec in records]
+        non_gap = [aa for aa in col if aa != '-']
+        result.append(Counter(non_gap).most_common(1)[0][0] if non_gap else '-')
+    return ''.join(result)
+
+
 def compute_consensus(aligned_fasta, name, output_fasta):
     try:
         records = list(AlignIO.read(aligned_fasta, "fasta"))
@@ -22,14 +35,8 @@ def compute_consensus(aligned_fasta, name, output_fasta):
         # Only one allele — it is its own consensus
         seq = str(records[0].seq).replace('-', '')
     else:
-        alignment_len = len(records[0].seq)
-        consensus = []
-        for i in range(alignment_len):
-            col = [str(rec.seq[i]) for rec in records]
-            non_gap = [aa for aa in col if aa != '-']
-            if non_gap:
-                consensus.append(Counter(non_gap).most_common(1)[0][0])
-        seq = ''.join(consensus)
+        gapped = compute_gapped_consensus_from_records(records)
+        seq = gapped.replace('-', '')
 
     with open(output_fasta, 'w') as f:
         f.write(f">{name}_consensus\n")

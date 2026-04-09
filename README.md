@@ -137,6 +137,7 @@ nextflow run main.nf --help
 | `--extension_codons` | `10` | Number of codons to extend incomplete sequences |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
 | `--self_reference_figures` | `false` | Also generate self-reference alignment figures; by default only consensus-reference figures are generated |
+| `--dna_variation_figure_format` | `pdf` | Output format for the DNA conservation figure: `pdf`, `png`, `svg`, `eps`, `jpeg` |
 | `--blast_batch_size` | `100` | Number of genomes processed per BLAST task |
 
 ### Step Modes
@@ -149,7 +150,8 @@ Run a specific stage of the pipeline instead of the full workflow. Useful for re
 | `--filter` | Re-filter existing BLAST results (requires prior `--blast` run) |
 | `--orf` | Run ORF finding + translation on existing filtered results |
 | `--visual` | Run visualization (MAFFT, WebLogo, alignment figures) on existing allele results |
-| `--step <name>` | Alternative syntax: `blast`, `filter`, `orf`, `visual` |
+| `--dna_variation` | Run DNA conservation figure from existing filtered BLAST results (requires prior `--blast` run with `--blast_type blastn`) |
+| `--step <name>` | Alternative syntax: `blast`, `filter`, `orf`, `visual`, `dna_variation` |
 
 Examples:
 
@@ -162,6 +164,12 @@ nextflow run main.nf --filter --query_dir ./queries --outdir ./results --sequenc
 
 # Re-run visualization with different WebLogo settings
 nextflow run main.nf --visual --outdir ./results --weblogo_format png --weblogo_units bits
+
+# DNA conservation figure from existing BLAST results (blastn only)
+nextflow run main.nf --dna_variation --outdir ./results -resume
+
+# DNA conservation figure with PNG output
+nextflow run main.nf --dna_variation --outdir ./results --dna_variation_figure_format png -resume
 ```
 
 **Note:** Step modes require that previous stages have already been run with the same `--outdir`. Each step reads intermediate files from the output directory.
@@ -201,6 +209,9 @@ results/
 │           ├── allele_info_with_strain_name.csv
 │           ├── allele_info_no_strain_name.csv
 │           └── allele_sequence_output.fasta
+├── dna_variation/               # DNA conservation figures (--dna_variation mode)
+│   ├── mafft/                  #   MAFFT-aligned DNA sequences per query
+│   └── figures/                #   Conservation score line plots per query
 ├── alignment_figures/           # Coloured variant alignment figures (PDF)
 │   └── <query_name>/
 │       ├── consensus_reference/    # Figures using consensus sequence as reference (always generated)

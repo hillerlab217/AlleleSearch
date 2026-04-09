@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/42374_SOT0237.fasta
+           94 sequences; 2,147,308 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+contig00057                                                           289     4e-79
+
+
+>contig00057
+Length=6468
+
+ Score = 289 bits (156),  Expect = 4e-79
+ Identities = 186/201 (93%), Gaps = 0/201 (0%)
+ Strand=Plus/Minus
+
+Query  12    CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+             |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  2049  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  1990
+
+Query  72    ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+             ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  1989  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  1930
+
+Query  132   CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  191
+             ||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  1929  CGTGTTATACTGTACTTATAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAT  1870
+
+Query  192   AAATGAAGATAATTGAAGGAG  212
+             || | || ||||||| |||||
+Sbjct  1869  AAGTAAAAATAATTGGAGGAG  1849
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 429085600
+
+
+  Database: data/GoldenSet_7548Genomes_2023/42374_SOT0237.fasta
+    Posted date:  Apr 24, 2025  5:37 PM
+  Number of letters in database: 2,147,308
+  Number of sequences in database:  94
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

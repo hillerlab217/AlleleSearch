@@ -1,0 +1,63 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/49155_VICE1941.fasta
+           36 sequences; 2,002,661 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+.16399_8_51.10                                                        213     2e-56
+
+
+>.16399_8_51.10
+Length=80159
+
+ Score = 213 bits (115),  Expect = 2e-56
+ Identities = 135/145 (93%), Gaps = 0/145 (0%)
+ Strand=Plus/Minus
+
+Query  12     CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+              |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  38877  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  38818
+
+Query  72     ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+              ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  38817  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  38758
+
+Query  132    CGTGTTATACTGTACTTGTAAAGCA  156
+              ||||||||||||||||| |||||||
+Sbjct  38757  CGTGTTATACTGTACTTATAAAGCA  38733
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 400388200
+
+
+  Database: data/GoldenSet_7548Genomes_2023/49155_VICE1941.fasta
+    Posted date:  Apr 24, 2025  5:41 PM
+  Number of letters in database: 2,002,661
+  Number of sequences in database:  36
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

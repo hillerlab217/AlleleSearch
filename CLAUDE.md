@@ -89,9 +89,12 @@ nextflow run main.nf --orf --genome_dir /genomes --outdir ./results
 
 # Re-run visualization only (reuses existing allele_info/ and allele_seq_filtered/)
 nextflow run main.nf --visual --outdir ./results --weblogo_format png
+
+# DNA conservation figure (reuses existing blast_summary_filtered/; blastn only)
+nextflow run main.nf --dna_variation --outdir ./results -resume
 ```
 
-Alternative syntax: `--step blast|filter|orf|visual`
+Alternative syntax: `--step blast|filter|orf|visual|dna_variation`
 
 ### Test run
 ```bash
@@ -120,6 +123,7 @@ modules/
   quality.nf                     # MAFFT_FOR_CONSENSUS, COMPUTE_CONSENSUS,
                                  #   FILTER_ALLELES, MAFFT_ALIGN, WEBLOGO,
                                  #   ALIGNMENT_FIGURE, ALIGNMENT_FIGURE_REF
+  dna_variation.nf               # MAFFT_DNA, DNA_CONSERVATION_FIGURE
 code/
   header_utils.py                # Canonical FASTA header parser/builder (shared utility)
   blastParser.py                 # Converts raw BLAST .out → CSV
@@ -132,6 +136,7 @@ code/
   compute_consensus.py           # Computes consensus sequence from MAFFT alignment
   protein_allele_variant.py      # Core: groups identical proteins, calls variants (BLOSUM62)
   alignment_figure.py            # Renders colored AA alignment PDFs
+  dna_conservation_figure.py     # Renders per-position DNA conservation score line plots (--dna_variation)
   format_fasta.py                # Utility: FASTA formatting helpers
   highlight_variant_pos_protein_structure.py  # Auxiliary: highlights variant positions on protein structures (not called by pipeline)
   pyMol.py                       # Auxiliary: PyMOL visualization helper (not called by pipeline)
@@ -233,6 +238,7 @@ Physicochemical groups in `alignment_figure.py`:
 | `--extension_codons` | `10` | Codons to extend incomplete ORFs |
 | `--species_threshold` | `1` | Minimum species % for allele filtering / figures |
 | `--self_reference_figures` | `false` | Also generate self-reference alignment figures (default: only consensus-reference figures are generated) |
+| `--dna_variation_figure_format` | `pdf` | Output format for the DNA conservation figure: `pdf`, `png`, `svg`, `eps`, `jpeg` |
 | `--weblogo_format` | `eps` | `eps`, `png`, `pdf`, `svg`, `jpeg` |
 | `--weblogo_units` | `probability` | `probability`, `bits`, `nats` |
 | `--weblogo_color_scheme` | `chemistry` | `chemistry`, `hydrophobicity`, `charge`, `classic` |

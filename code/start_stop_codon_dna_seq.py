@@ -16,6 +16,7 @@ change the start and stop site according to the trimm
  """
 
 import os
+import sys
 import argparse
 from collections import OrderedDict
 from Bio.Seq import Seq
@@ -240,6 +241,16 @@ def process_sequence(header, dna_seq, sequences, codon_range, direction="down"):
       StopCodonOffset:  0 = last codon of BLAST hit,  positive = in downstream extension
     """
     dna_seq = dna_seq.upper().replace('-', '')
+    min_check_len = (codon_range + 1) * 3
+    if len(dna_seq) < min_check_len:
+        seq_id, _ = parse_header(header)
+        print(
+            f"WARNING: Sequence '{seq_id}' is only {len(dna_seq)} bp "
+            f"({len(dna_seq) // 3} codons). The internal stop-codon check requires "
+            f"at least {min_check_len} bp ({codon_range + 1} codons); "
+            f"'more_than_one_stop' classification may be unreliable.",
+            file=sys.stderr,
+        )
     status, start_pos, end_pos, alt_starts, alt_stops = check_stop_start_codon_dna(
         dna_seq, codon_range, direction
     )

@@ -11,28 +11,30 @@ include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK 
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_SELF_REF; ALLELE_CONSENSUS_REF }    from './modules/allele'
 include { MAFFT_FOR_CONSENSUS; COMPUTE_CONSENSUS; FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; ALIGNMENT_FIGURE_REF } from './modules/quality'
+include { MAFFT_DNA; DNA_CONSERVATION_FIGURE }                       from './modules/dna_variation'
 
 // ──────────────────────────────────────────────────────────────
 // Resolve step mode
 // ──────────────────────────────────────────────────────────────
 def resolveStep() {
-    if (params.step)   return params.step
-    if (params.blast)  return 'blast'
-    if (params.filter) return 'filter'
-    if (params.orf)    return 'orf'
-    if (params.visual) return 'visual'
+    if (params.step)          return params.step
+    if (params.blast)         return 'blast'
+    if (params.filter)        return 'filter'
+    if (params.orf)           return 'orf'
+    if (params.visual)        return 'visual'
+    if (params.dna_variation) return 'dna_variation'
     return 'full'
 }
 
 def run_step = resolveStep()
 
-def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual']
+def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual', 'dna_variation']
 if (!(run_step in valid_steps)) {
     error "ERROR: Invalid --step '${run_step}'. Valid options: ${valid_steps.join(', ')}"
 }
 
 // Check that at most one boolean step flag is set
-def step_count = [params.blast, params.filter, params.orf, params.visual].count { it }
+def step_count = [params.blast, params.filter, params.orf, params.visual, params.dna_variation].count { it }
 if (step_count > 1) {
     error "ERROR: Only one step mode can be specified at a time. Use --blast, --filter, --orf, or --visual."
 }
@@ -51,7 +53,7 @@ if (params.help) {
       nextflow run main.nf --query_dir <path> --genome_dir <path>
 
     Required:
-      --query_dir       Directory with query .fasta files
+      --query_dir       Directory with query .fasta files, or a single query file
       --genome_dir      Directory with genome .fasta files (also used for sequence extension)
 
     Step modes (run a specific stage only):
@@ -59,7 +61,9 @@ if (params.help) {
       --filter          Re-filter existing BLAST results (requires prior --blast run)
       --orf             Run ORF finding + translation on existing filtered results
       --visual          Run visualization on existing allele results
-      --step <name>     Alternative syntax: blast, filter, orf, visual
+      --dna_variation   Run DNA conservation figure from existing filtered BLAST results
+                        (requires prior --blast run with --blast_type blastn)
+      --step <name>     Alternative syntax: blast, filter, orf, visual, dna_variation
 
     Optional:
       --code_dir        Path to code/ scripts (default: ./code)
@@ -72,6 +76,7 @@ if (params.help) {
       --species_threshold  Min species % for filtering (default: 1)
       --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
       --self_reference_figures  Also generate self-reference alignment figures (default: false)
+      --dna_variation_figure_format  Output format for conservation figure: pdf, png, svg (default: pdf)
 
     WebLogo:
       --weblogo_format       Output format: eps, png, pdf, svg, jpeg (default: eps)
@@ -119,6 +124,16 @@ if (run_step == 'visual') {
     }
 }
 
+if (run_step == 'dna_variation') {
+    def filtered_dir = file("${params.outdir}/blast_summary_filtered")
+    if (!filtered_dir.isDirectory()) {
+        error "ERROR: --dna_variation mode requires existing filtered results in ${params.outdir}/blast_summary_filtered/. Run --blast first."
+    }
+    if (params.blast_type == 'tblastn') {
+        error "ERROR: --dna_variation requires --blast_type blastn. tblastn produces protein sequences that are incompatible with DNA conservation analysis."
+    }
+}
+
 // ──────────────────────────────────────────────────────────────
 // Workflow
 // ──────────────────────────────────────────────────────────────
@@ -128,7 +143,9 @@ workflow {
         // =============================================================
         // BLAST-only mode: DB creation + search + parse + filter
         // =============================================================
-        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_queries = file(params.query_dir).isFile()
+            ? Channel.fromPath(params.query_dir)
+            : Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
         ch_genome_dir = Channel.fromPath(params.genome_dir)
 
         COLLECT_ALL_BLAST_DBS(ch_genome_dir)
@@ -155,7 +172,9 @@ workflow {
         // =============================================================
         // Filter-only mode: re-filter existing parsed BLAST CSVs
         // =============================================================
-        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_queries = file(params.query_dir).isFile()
+            ? Channel.fromPath(params.query_dir)
+            : Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
         ch_query_map = ch_queries.map { q -> [q.baseName, q] }
 
         ch_parsed_csv = Channel
@@ -236,21 +255,27 @@ workflow {
             .groupTuple()
             .map { name, csvs -> [name, "consensus_reference", csvs] }
 
-        ch_consensus_fasta = Channel
-            .fromPath("${params.outdir}/allele_info/*/consensus_reference/*_consensus.fasta")
-            .map { f -> [f.parent.parent.name, f] }
+        ALIGNMENT_FIGURE_REF(ch_consensus_csvs)
 
-        ch_mafft_consensus = Channel
-            .fromPath("${params.outdir}/allele_mafft_consensus/*_all_aligned.fasta")
-            .map { f -> [f.baseName.replaceAll(/_all_aligned$/, ''), f] }
+    } else if (run_step == 'dna_variation') {
+        // =============================================================
+        // DNA variation mode: MAFFT + conservation figure from filtered BLAST CSVs
+        // =============================================================
+        ch_csv = Channel
+            .fromPath("${params.outdir}/blast_summary_filtered/*.csv")
+            .map { f -> [f.baseName, f] }
 
-        ALIGNMENT_FIGURE_REF(ch_consensus_csvs.join(ch_consensus_fasta).join(ch_mafft_consensus))
+        CSV_TO_FASTA(ch_csv)
+        MAFFT_DNA(CSV_TO_FASTA.out)
+        DNA_CONSERVATION_FIGURE(MAFFT_DNA.out)
 
     } else {
         // =============================================================
         // Full pipeline (default)
         // =============================================================
-        ch_queries = Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+        ch_queries = file(params.query_dir).isFile()
+            ? Channel.fromPath(params.query_dir)
+            : Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
         ch_genome_ref = Channel.fromPath(params.genome_dir)
 
         // Step 1: Ensure all BLAST databases exist (fast directory-level check)
@@ -334,8 +359,7 @@ workflow {
         }
 
         ch_figure_consensus = ALLELE_CONSENSUS_REF.out.results
-            .map { name, csvs, allele_fasta, cons_fasta -> [name, "consensus_reference", csvs, cons_fasta] }
-            .join(MAFFT_FOR_CONSENSUS.out)
+            .map { name, csvs, allele_fasta, cons_fasta -> [name, "consensus_reference", csvs] }
         ALIGNMENT_FIGURE_REF(ch_figure_consensus)
 
         // Step 17: MAFFT alignment (filtered alleles for WebLogo)
