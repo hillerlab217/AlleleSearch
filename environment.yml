@@ -1,13 +1,23 @@
 name: allele_search
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
+  # Python
   - python=3.9
-  - biopython=1.85
+  - pip
+
+  # Core bioinformatics tools
   - blast=2.16.0
-  - mafft
+  - mafft=7.525
+  - weblogo=3.7.9
+
+  # Core Python libraries
+  - biopython=1.85
   - matplotlib=3.9.4
-  - weblogo
-  - nextflow
+  - numpy=2.0.2
+  - pandas=2.3.1
+
+  # PyMOL (auxiliary visualization scripts)
+  - pymol-open-source=3.1.0
