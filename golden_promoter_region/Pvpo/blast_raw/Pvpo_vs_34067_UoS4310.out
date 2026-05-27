@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/34067_UoS4310.fasta
+           100 sequences; 2,134,379 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR045360_A149823_NODE_21_COV_47.694069                               337     1e-93
+
+
+>ERR045360_A149823_NODE_21_COV_47.694069
+Length=197247
+
+ Score = 337 bits (182),  Expect = 1e-93
+ Identities = 200/209 (96%), Gaps = 0/209 (0%)
+ Strand=Plus/Minus
+
+Query  12     CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+              |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  83826  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  83767
+
+Query  72     ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+              ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  83766  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  83707
+
+Query  132    CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  191
+              ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  83706  CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  83647
+
+Query  192    AAATGAAGATAATTGAAGGAGTGTAAAAG  220
+              |||||||||||||||||||||||||||||
+Sbjct  83646  AAATGAAGATAATTGAAGGAGTGTAAAAG  83618
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 426475800
+
+
+  Database: data/GoldenSet_7548Genomes_2023/34067_UoS4310.fasta
+    Posted date:  Apr 24, 2025  5:32 PM
+  Number of letters in database: 2,134,379
+  Number of sequences in database:  100
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

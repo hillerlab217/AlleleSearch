@@ -1,0 +1,4 @@
+Instruction: When executing the tasks in this file, plan one task at a time using plan mode at maximum complexity. Assign a separate agent to review the plan to identify issues and suggest improvements. If any requirements are unclear, prompt the user for input to clarify—do not guess. Project info are in ClAUDE.md, possible availble skills are in in SKILLS.md. Update CLAUDE.md and README.md after making functional changes.
+
+
+have a new option for the pipline, dna_variation. this part of the pipline should include BLAST Search and Filtering steps, which is line 72-72 in README.md. After filtering, it should conduct MAFFT for the sequences pased the filter, and use matplotlib to draw consevative figure according to MAFFT figure should look like /home/xinruoz/Document/Hiller/allele_search/test/wanted_figure_genomic_veriation.png.

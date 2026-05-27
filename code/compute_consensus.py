@@ -1,0 +1,60 @@
+"""
+Compute a consensus sequence from a MAFFT-aligned FASTA file.
+At each alignment column, picks the most common residue (ignoring gaps).
+"""
+from Bio import AlignIO
+from collections import Counter
+import argparse
+
+
+def compute_gapped_consensus_from_records(records):
+    """Return a gapped consensus string of length == alignment_len.
+    Each position is the plurality non-gap AA, or '-' when all chars are gaps.
+    Importable by other scripts for shared consensus computation."""
+    alignment_len = len(records[0].seq)
+    result = []
+    for i in range(alignment_len):
+        col = [str(rec.seq[i]) for rec in records]
+        non_gap = [aa for aa in col if aa != '-']
+        result.append(Counter(non_gap).most_common(1)[0][0] if non_gap else '-')
+    return ''.join(result)
+
+
+def compute_consensus(aligned_fasta, name, output_fasta):
+    try:
+        records = list(AlignIO.read(aligned_fasta, "fasta"))
+    except ValueError:
+        records = []
+
+    if len(records) == 0:
+        open(output_fasta, 'w').close()
+        print(f"No sequences in alignment; writing empty consensus file: {output_fasta}", flush=True)
+        return
+
+    if len(records) == 1:
+        # Only one allele — it is its own consensus
+        seq = str(records[0].seq).replace('-', '')
+    else:
+        gapped = compute_gapped_consensus_from_records(records)
+        seq = gapped.replace('-', '')
+
+    with open(output_fasta, 'w') as f:
+        f.write(f">{name}_consensus\n")
+        for i in range(0, len(seq), 60):
+            f.write(seq[i:i+60] + '\n')
+
+    print(f"Consensus sequence ({len(seq)} aa) written to: {output_fasta}", flush=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Compute consensus from MAFFT alignment')
+    parser.add_argument('aligned_fasta', help='MAFFT-aligned FASTA file')
+    parser.add_argument('-n', '--name', default='consensus', help='Prefix for the consensus FASTA header')
+    parser.add_argument('-o', '--output', required=True, help='Output FASTA file path')
+    args = parser.parse_args()
+
+    compute_consensus(args.aligned_fasta, args.name, args.output)
+
+
+if __name__ == '__main__':
+    main()

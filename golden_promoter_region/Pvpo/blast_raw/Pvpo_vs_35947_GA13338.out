@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/35947_GA13338.fasta
+           15 sequences; 2,124,611 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+AGOX01000001.1                                                        289     4e-79
+
+
+>AGOX01000001.1
+Length=436215
+
+ Score = 289 bits (156),  Expect = 4e-79
+ Identities = 186/201 (93%), Gaps = 0/201 (0%)
+ Strand=Plus/Plus
+
+Query  12      CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+               |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  127303  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  127362
+
+Query  72      ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+               ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  127363  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  127422
+
+Query  132     CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  191
+               ||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  127423  CGTGTTATACTGTACTTATAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAT  127482
+
+Query  192     AAATGAAGATAATTGAAGGAG  212
+               || | || ||||||| |||||
+Sbjct  127483  AAGTAAAAATAATTGGAGGAG  127503
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 424862200
+
+
+  Database: data/GoldenSet_7548Genomes_2023/35947_GA13338.fasta
+    Posted date:  Apr 24, 2025  5:35 PM
+  Number of letters in database: 2,124,611
+  Number of sequences in database:  15
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

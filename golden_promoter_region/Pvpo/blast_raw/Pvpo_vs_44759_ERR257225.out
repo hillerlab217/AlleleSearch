@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/44759_ERR257225.fasta
+           101 sequences; 2,084,926 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR257225_A58452_NODE_50_COV_27.149622                                261     8e-71
+
+
+>ERR257225_A58452_NODE_50_COV_27.149622
+Length=173074
+
+ Score = 261 bits (141),  Expect = 8e-71
+ Identities = 182/201 (91%), Gaps = 5/201 (2%)
+ Strand=Plus/Plus
+
+Query  12     CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+              |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  22023  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  22082
+
+Query  72     ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+              ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  22083  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  22142
+
+Query  132    CGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAC  191
+              |||||||||||||     ||||||||||||||||||||||||||||||||||||||||| 
+Sbjct  22143  CGTGTTATACTGT-----TAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTAT  22197
+
+Query  192    AAATGAAGATAATTGAAGGAG  212
+              || | || ||||||| |||||
+Sbjct  22198  AAGTAAAAATAATTGGAGGAG  22218
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 416581200
+
+
+  Database: data/GoldenSet_7548Genomes_2023/44759_ERR257225.fasta
+    Posted date:  Apr 24, 2025  5:41 PM
+  Number of letters in database: 2,084,926
+  Number of sequences in database:  101
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

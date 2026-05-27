@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/34439_VICE1525.fasta
+           93 sequences; 2,024,657 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR697257_A163456_NODE_42_COV_18.717047                               291     1e-79
+
+
+>ERR697257_A163456_NODE_42_COV_18.717047
+Length=194463
+
+ Score = 291 bits (157),  Expect = 1e-79
+ Identities = 204/224 (91%), Gaps = 14/224 (6%)
+ Strand=Plus/Minus
+
+Query  11      CCTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgca  70
+               ||||||  ||||||||||||||||||||||||||||||||||||||||| ||||||||||
+Sbjct  167520  CCTCCTCATTAGTAATAACTTTATTATACCAGGGAAATAATCAAATCTACCAAAATCGCA  167461
+
+Query  71      aataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTT  130
+               |||  |||||||||||||||||||||||||||||||||||||| ||||||||||||||||
+Sbjct  167460  AATCTGAAATTTCTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTT  167401
+
+Query  131     TCGTGTTATA--------------CTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTC  176
+               ||||||||||              ||||||||||||||||||||||||||||||||||||
+Sbjct  167400  TCGTGTTATAATTTTCGTGTTATACTGTACTTGTAAAGCACTTGAAGCAAATCCTAGGTC  167341
+
+Query  177     GCAGAAGTGGTTTACAAATGAAGATAATTGAAGGAGTGTAAAAG  220
+               ||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  167340  GCAGAAGTGGTTTACAAATGAAGATAATTGAAGGAGTGTAAAAG  167297
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 404559400
+
+
+  Database: data/GoldenSet_7548Genomes_2023/34439_VICE1525.fasta
+    Posted date:  Apr 24, 2025  5:33 PM
+  Number of letters in database: 2,024,657
+  Number of sequences in database:  93
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

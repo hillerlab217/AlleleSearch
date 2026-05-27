@@ -34,11 +34,11 @@ process CODON_CHECK {
     tag "${query_name}_${codon_range}codon"
 
     input:
-    tuple val(query_name), path(fasta_file), val(codon_range), val(direction)
+    tuple val(query_name), path(fasta_file), val(codon_range), val(direction), val(round_label)
 
     output:
     tuple val(query_name), val(codon_range), path("codon_out/*"), emit: classified
-    tuple val(query_name), path("standard_${codon_range}.fasta"), optional: true, emit: standard
+    tuple val(query_name), path("standard_${round_label}.fasta"), optional: true, emit: standard
 
     script:
     """
@@ -50,7 +50,7 @@ process CODON_CHECK {
         --start_search_direction ${direction}
     # Ensure standard.fasta exists even if empty
     touch codon_out/standard.fasta
-    cp codon_out/standard.fasta standard_${codon_range}.fasta
+    cp codon_out/standard.fasta standard_${round_label}.fasta
     """
 }
 
@@ -102,10 +102,15 @@ process COLLECT_STANDARD {
     tuple val(query_name), path(standard_10), path(standard_20)
 
     output:
-    tuple val(query_name), path("${query_name}.fasta")
+    tuple val(query_name), path("${query_name}.fasta"), optional: true
 
     script:
     """
     cat ${standard_10} ${standard_20} > ${query_name}.fasta
+    seq_cnt=\$(grep -c '^>' ${query_name}.fasta || echo 0)
+    if [ "\$seq_cnt" -eq 0 ]; then
+        rm ${query_name}.fasta
+        echo "WARNING: [${query_name}] No valid sequences after ORF extension — skipping downstream steps"
+    fi
     """
 }

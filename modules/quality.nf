@@ -1,3 +1,42 @@
+process MAFFT_FOR_CONSENSUS {
+    tag "${query_name}"
+    publishDir "${params.outdir}/allele_mafft_consensus", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(allele_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_all_aligned.fasta")
+
+    script:
+    """
+    seq_cnt=\$(grep -c '^>' ${allele_fasta} || true)
+    if [ "\$seq_cnt" -ge 2 ]; then
+        mafft --auto ${allele_fasta} > ${query_name}_all_aligned.fasta
+    else
+        cp ${allele_fasta} ${query_name}_all_aligned.fasta
+    fi
+    """
+}
+
+process COMPUTE_CONSENSUS {
+    tag "${query_name}"
+
+    input:
+    tuple val(query_name), path(aligned_fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}_consensus.fasta")
+
+    script:
+    """
+    python ${params.code_dir}/compute_consensus.py \
+        ${aligned_fasta} \
+        -n ${query_name} \
+        -o ${query_name}_consensus.fasta
+    """
+}
+
 process FILTER_ALLELES {
     tag "${query_name}"
     publishDir "${params.outdir}/allele_seq_filtered", mode: 'copy'
@@ -56,7 +95,7 @@ process WEBLOGO {
     tuple val(query_name), path(aligned_fasta)
 
     output:
-    path "${query_name}_logo.eps"
+    path "${query_name}_logo.${params.weblogo_format}"
 
     script:
     """
@@ -84,12 +123,14 @@ process WEBLOGO {
 
     weblogo \
         --fin expanded.fasta \
-        --fout ${query_name}_logo.eps \
-        --format eps \
+        --fout ${query_name}_logo.${params.weblogo_format} \
+        --format ${params.weblogo_format} \
         --datatype fasta \
         --title "${query_name}" \
-        --units probability \
-        --color-scheme chemistry
+        --units ${params.weblogo_units} \
+        --color-scheme ${params.weblogo_color_scheme} \
+        --size ${params.weblogo_size} \
+        --resolution ${params.weblogo_resolution}
     """
 }
 
@@ -120,22 +161,29 @@ process ALIGNMENT_FIGURE {
     """
 }
 
-process TCOFFEE_ALIGN {
-    tag "${query_name}"
-    publishDir "${params.outdir}/allele_tcoffee/${query_name}", mode: 'copy'
+process ALIGNMENT_FIGURE_REF {
+    tag "${query_name}/${ref_type}"
+    publishDir "${params.outdir}/alignment_figures/${query_name}/${ref_type}", mode: 'copy'
 
     input:
-    tuple val(query_name), path(filtered_fasta)
+    tuple val(query_name), val(ref_type), path(csv_files)
 
     output:
-    tuple path("${query_name}_aligned_tcoffee.aln"), path("${query_name}_aligned_tcoffee.fasta")
+    tuple val(query_name), path("*.pdf"), optional: true
 
     script:
     """
-    t_coffee ${filtered_fasta} \
-        -output clustalw_aln,fasta_aln \
-        -outfile ${query_name}_aligned_tcoffee.aln
+    python ${params.code_dir}/alignment_figure.py \
+        allele_info_no_strain_name.csv \
+        ${query_name}_alignment.pdf \
+        ${params.species_threshold} \
+    || echo "Skipping no-gap figure for ${query_name}" >&2
 
-    mv ${query_name}_aligned_tcoffee.fasta_aln ${query_name}_aligned_tcoffee.fasta
+    python ${params.code_dir}/alignment_figure.py \
+        allele_info_no_strain_name.csv \
+        ${query_name}_alignment_gap.pdf \
+        ${params.species_threshold} \
+        --gap \
+    || echo "Skipping gap figure for ${query_name}" >&2
     """
 }

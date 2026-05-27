@@ -24,6 +24,8 @@ import sys
 import re
 import argparse
 from pathlib import Path
+from typing import Optional
+from Bio import SeqIO
 
 import numpy as np
 import pandas as pd
@@ -60,6 +62,9 @@ LEGEND_GROUPS = {
 GAP_RGB   = to_rgb("#eeeeee")
 BLANK_RGB = to_rgb("#ffffff")
 
+# Gap character gets the same gray as gap-fill columns
+AA_HEX['-'] = "#eeeeee"
+
 
 # ── helpers ─────────────────────────────────────────────────────────
 def extract_positions(variant_str: str) -> list[int]:
@@ -74,8 +79,18 @@ def extract_positions(variant_str: str) -> list[int]:
 
 
 # ── data extraction ─────────────────────────────────────────────────
-def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
-    """Return (row_labels, col_positions, variant_positions, grid)."""
+def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
+                         reference_seq: Optional[str] = None,
+                         reference_label: str = "consensus"):
+    """Return (row_labels, col_positions, variant_positions, grid).
+
+    Consensus-reference mode: the CSV's first row has allele_name ending in
+    '_consensus' and carries the gapped consensus sequence. It is extracted
+    BEFORE the min_pct filter and used as the reference row in the figure.
+
+    Legacy / self-reference mode: no '_consensus' row in the CSV; reference_seq
+    (from --reference_fasta) is used if provided.
+    """
     df = pd.read_csv(input_csv)
 
     PCT_COL     = "species_percentage"
@@ -87,7 +102,15 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
         if col not in df.columns:
             sys.exit(f"Column '{col}' not found in {input_csv}")
 
-    df = df[df[PCT_COL] >= min_pct].copy()
+    # Extract consensus row BEFORE the min_pct filter so it is never dropped
+    consensus_mask = df[NAME_COL].astype(str).str.endswith('_consensus', na=False)
+    consensus_rows = df[consensus_mask]
+    df = df[~consensus_mask].copy()
+
+    # True when the CSV was produced in MAFFT/consensus-reference mode
+    is_mafft_mode = not consensus_rows.empty
+
+    df = df[pd.to_numeric(df[PCT_COL], errors='coerce').fillna(0) >= min_pct]
     if df.empty:
         sys.exit(f"No rows meet ≥{min_pct}% — nothing to draw.")
 
@@ -105,13 +128,52 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool):
     row_labels = []
     grid = []
     for _, row in df.iterrows():
-        seq = row[SEQ_COL]
+        seq = str(row[SEQ_COL])
+        if not is_mafft_mode:
+            seq = seq.rstrip("*")
         cells = [
             seq[p - 1] if (p in variant_positions and p - 1 < len(seq)) else ""
             for p in columns
         ]
-        row_labels.append(str(row[NAME_COL]).replace("_D39V", ""))
+        row_labels.append(str(row[NAME_COL]))
         grid.append(cells)
+
+    # Determine the reference row (consensus from CSV takes priority)
+    if not consensus_rows.empty:
+        # Read raw — gapped string indexed by alignment column; do NOT rstrip
+        ref_seq_for_row = str(consensus_rows.iloc[0][SEQ_COL])
+        ref_label = str(consensus_rows.iloc[0][NAME_COL])
+    elif reference_seq:
+        ref_seq_for_row = reference_seq.rstrip("*")
+        ref_label = reference_label
+    else:
+        ref_seq_for_row = None
+        ref_label = reference_label
+
+    # Warn when a stale consensus-reference CSV is missing its consensus row
+    # (gapped sequences present but no _consensus row → old results pre-embedding change).
+    # Skip this check for self-reference CSVs where ungapped sequences and no
+    # reference row is the normal expected state.
+    if ref_seq_for_row is None:
+        is_stale_consensus_csv = (
+            not is_mafft_mode
+            and df[SEQ_COL].astype(str).str.contains('-').any()
+        )
+        if is_stale_consensus_csv:
+            print(
+                "WARNING: No consensus row found in CSV but sequences appear to be "
+                "MAFFT-aligned (contain gaps). Re-run the full pipeline to embed the "
+                "consensus reference row.",
+                file=sys.stderr,
+            )
+
+    if ref_seq_for_row:
+        ref_cells = [
+            ref_seq_for_row[p - 1] if (p in variant_positions and p - 1 < len(ref_seq_for_row)) else ""
+            for p in columns
+        ]
+        row_labels.insert(0, ref_label)
+        grid.insert(0, ref_cells)
 
     return row_labels, columns, variant_positions, grid
 
@@ -131,7 +193,7 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
                 img[i, j] = GAP_RGB
             else:
                 aa = grid[i][j].upper() if grid[i][j] else ""
-                img[i, j] = to_rgb(AA_HEX[aa]) if aa in AA_HEX else BLANK_RGB
+                img[i, j] = to_rgb(AA_HEX.get(aa, "#ffffff"))
 
     # ── figure sizing ───────────────────────────────────────────────
     # In gap mode, make non-variant columns narrower via column width ratios
@@ -176,14 +238,9 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
     x_edges = np.array(x_edges)
     y_edges = np.arange(n_rows + 1, dtype=float)
 
-    # pcolormesh needs (M+1, N+1) edges and (M, N) shaped color data
-    # Flip rows so row 0 is at top
-    img_flipped = img[::-1]
-
-    # Reshape colour data for pcolormesh: flatten RGB into facecolors
-    # Use pcolormesh with shading='flat'
+    # invert_yaxis() below puts row 0 at the top; no manual flip needed
     ax.pcolormesh(
-        x_edges, y_edges, img_flipped,
+        x_edges, y_edges, img,
         shading="flat",
         edgecolors="#dddddd",
         linewidth=0.3,
@@ -202,7 +259,7 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
         for j in range(n_cols):
             if is_variant[j]:
                 aa = grid[i][j].upper() if grid[i][j] else ""
-                if aa:
+                if aa and aa != '-':
                     ax.text(
                         x_centers[j], y_centers[i], aa,
                         ha="center", va="center",
@@ -265,10 +322,21 @@ def main():
                         help="Minimum species %% to include")
     parser.add_argument("--gap", action="store_true",
                         help="Show all positions between first and last variant")
+    parser.add_argument("--reference_fasta", default=None,
+                        help="FASTA file whose sequence is prepended as the first row "
+                             "(legacy fallback; consensus row in CSV takes priority)")
     args = parser.parse_args()
 
+    reference_seq = None
+    reference_label = "consensus"
+    if args.reference_fasta:
+        recs = list(SeqIO.parse(args.reference_fasta, "fasta"))
+        if recs:
+            reference_seq = str(recs[0].seq)
+            reference_label = recs[0].id  # e.g. "murM_consensus"
+
     row_labels, columns, variant_positions, grid = build_alignment_data(
-        args.input_csv, args.min_percentage, args.gap,
+        args.input_csv, args.min_percentage, args.gap, reference_seq, reference_label,
     )
     draw_alignment(row_labels, columns, variant_positions, grid, args.output)
 

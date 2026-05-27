@@ -1,0 +1,67 @@
+BLASTN 2.16.0+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: data/GoldenSet_7548Genomes_2023/26222_ND6012.fasta
+           119 sequences; 2,085,207 total letters
+
+
+
+Query= Pvpo_220nt_full_intergenic_shp144_to_vp1
+
+Length=220
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+ERR129194_A46824_NODE_14_COV_28.736666                                283     2e-77
+
+
+>ERR129194_A46824_NODE_14_COV_28.736666
+Length=42908
+
+ Score = 283 bits (153),  Expect = 2e-77
+ Identities = 186/202 (92%), Gaps = 1/202 (0%)
+ Strand=Plus/Plus
+
+Query  12     CTCCTTGTTAGTAATAACTTTATTATACCAGGGaaataatcaaatctatcaaaatcgcaa  71
+              |||||  |||||||||||||||||||||||||||||| ||||||||||  ||||||||||
+Sbjct  34152  CTCCTCATTAGTAATAACTTTATTATACCAGGGAAATGATCAAATCTACTAAAATCGCAA  34211
+
+Query  72     ataagaaatttctataagaaaaaatatcaaatatGCGATTTTTTAAAATAAGCCAATTTT  131
+              ||  ||||||| |||||||||||||||||||||||||||||| |||||||||||||||||
+Sbjct  34212  ATGTGAAATTTTTATAAGAAAAAATATCAAATATGCGATTTTCTAAAATAAGCCAATTTT  34271
+
+Query  132    CGTGTTATACTGTACTT-GTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTA  190
+              |||||||||||||||||  |||||||||||||||||||||||||||||||||||||||||
+Sbjct  34272  CGTGTTATACTGTACTTACTAAAGCACTTGAAGCAAATCCTAGGTCGCAGAAGTGGTTTA  34331
+
+Query  191    CAAATGAAGATAATTGAAGGAG  212
+               || | || ||||||| |||||
+Sbjct  34332  TAAGTAAAAATAATTGGAGGAG  34353
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 416565400
+
+
+  Database: data/GoldenSet_7548Genomes_2023/26222_ND6012.fasta
+    Posted date:  Apr 24, 2025  5:25 PM
+  Number of letters in database: 2,085,207
+  Number of sequences in database:  119
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

@@ -20,14 +20,14 @@ with open(args.input_file, mode='r') as csv_file, open(args.output_file, mode='w
         contig = row['Contig']
         e_value = row['E-value']
         align_len = row['Alignment Length']
-        align_perc = row['Alignment Percentage']
+        seq_identity = row['Sequence Identity']
         query_start = row['Query Start']
         subject_start = row['Subject Start']
         subject_end = row['Subject End']
         sequence = row['Sequence']
         
         # Create the FASTA header
-        header = f">{ID}|contig={contig}|E-value={e_value}|AlignLen={align_len}|AlignPerc={align_perc}|SubjectStart={subject_start}|SubjectEnd={subject_end}"
+        header = f">{ID}|contig={contig}|E-value={e_value}|AlignLen={align_len}|SeqIdentity={seq_identity}|SubjectStart={subject_start}|SubjectEnd={subject_end}"
 
         # Format sequence into 60-character lines for FASTA format
         wrapped_sequence = "\n".join(textwrap.wrap(sequence, 60))

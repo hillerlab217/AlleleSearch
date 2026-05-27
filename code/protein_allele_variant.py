@@ -12,16 +12,18 @@ Containing:
     Percentage of variant positions
     Variant positions, reference, variant amino acids
 """
-from Bio import SeqIO
+import sys
+from Bio import SeqIO, AlignIO
 from Bio.Seq import Seq
 from Bio.Align import substitution_matrices
 from Bio.Align import PairwiseAligner
-from collections import defaultdict
+from collections import defaultdict, Counter
 import argparse
 import csv
 import re
-from collections import defaultdict
 from pathlib import Path
+from header_utils import parse_header, species_from_id
+from compute_consensus import compute_gapped_consensus_from_records
 
 # allel_info list, for protein sequence
 # allel_info = [str, int, float, int, float, defaultdict(list), list]
@@ -35,7 +37,7 @@ from pathlib import Path
 # ]
 
 
-def allele_types(discovered_seqs, allele_sufix):
+def allele_types(discovered_seqs, allele_suffix):
     """
     Analyze discovered sequences and create allele dictionary.
     Args:
@@ -59,19 +61,11 @@ def allele_types(discovered_seqs, allele_sufix):
     # Create allele dictionary
     allele_dict = {}
     for idx, (seq, strain_ids) in enumerate(sorted_alleles, 1):
-        # Extract species names
-        species_names = []
-        for strain_id in strain_ids:
-            header_part = strain_id.split('|')[0]
-            
-            if 'vs_' in header_part:
-                species_part = header_part.split('vs_')[-1]
-            else:
-                species_part = header_part
-            
-            # Clean up remaining > characters
-            species_part = species_part.replace('>', '')
-            species_names.append(species_part.strip())
+        # Extract species names from the sequence ID part of each header
+        species_names = [
+            species_from_id(parse_header(sid)[0])
+            for sid in strain_ids
+        ]
         
         # Count unique species
         species_count = len(set(species_names))
@@ -79,7 +73,7 @@ def allele_types(discovered_seqs, allele_sufix):
         
         # Create allele info list
         allele_dict[seq] = [
-            f"{allele_sufix}_{idx}",
+            f"{allele_suffix}_{idx}",
             species_count,
             species_percentage,
             0,                             # placeholder
@@ -92,7 +86,7 @@ def allele_types(discovered_seqs, allele_sufix):
 
 
 # Write to CSV
-def write_csv(allele_dict, output_loc, with_strain_name=True):
+def write_csv(allele_dict, output_loc, with_strain_name=True, gapped_seqs=None, consensus_row=None):
 
     with open(output_loc, "w", newline="") as csvfile:
         fieldnames = [
@@ -110,14 +104,30 @@ def write_csv(allele_dict, output_loc, with_strain_name=True):
         
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        
+
+        # Prepend consensus row as first data row (no_strain CSV only, MAFFT mode)
+        if consensus_row:
+            label, gapped_seq = consensus_row
+            writer.writerow({
+                "allele_name": label,
+                "species_count": "",
+                "species_percentage": "",
+                "variant_position_count": 0,
+                "variant_percentage": "0.00",
+                "variant_positions(position:reference→changed)": "",
+                "allele_sequence": gapped_seq,
+            })
+
         for allele_seq, allele_info in allele_dict.items():
             # Format variant positions dictionary as string
             variant_pos_str = "; ".join(
                 f"{pos}:{vals[0]}→{vals[1]}"
                 for pos, vals in sorted(allele_info[5].items())
             )
-            
+
+            # Use gapped sequence for the figure when available
+            seq_for_csv = (gapped_seqs or {}).get(allele_seq, allele_seq)
+
             row_data = {
                 "allele_name": allele_info[0],
                 "species_count": allele_info[1],
@@ -125,7 +135,7 @@ def write_csv(allele_dict, output_loc, with_strain_name=True):
                 "variant_position_count": allele_info[3],
                 "variant_percentage": f"{allele_info[4]:.2f}",
                 "variant_positions(position:reference→changed)":variant_pos_str,
-                "allele_sequence": allele_seq
+                "allele_sequence": seq_for_csv
             }
 
             if with_strain_name:
@@ -152,25 +162,124 @@ def variat_position(ref_seq, allele_dict):
         ref_pos = 0
         num_diff = 0
         
-        alignment = next(aligner.align(ref_seq, seq))
+        try:
+            alignment = next(aligner.align(ref_seq, seq))
+        except StopIteration:
+            print(f"WARNING: Could not align allele '{info[0]}' to reference — skipping variant calling for this allele.", flush=True)
+            info[3] = 0
+            info[4] = 0.0
+            info[5] = variants
+            continue
+
         ref_aligned = alignment[0]
         seq_aligned = alignment[1]
 
         for ref_aa, seq_aa in zip(ref_aligned, seq_aligned):
             if ref_aa != '-':
                 ref_pos += 1
-            
+
             if ref_aa != seq_aa and seq_aa != '-':
                 num_diff += 1
                 variants[ref_pos] = [ref_aa, seq_aa]
-        
+
         # Update allele info
         info[3] = num_diff
         info[4] = (num_diff / len(ref_seq)) * 100 if ref_seq else 0
         info[5] = variants
     
     return allele_dict
-    
+
+
+def variat_position_from_mafft(mafft_fasta, allele_dict):
+    """Compute variant positions using an existing MAFFT multiple alignment.
+
+    Positions are 1-based MAFFT alignment column numbers.
+    Variant notation:
+      substitution  →  pos : ref_aa  → allele_aa
+      deletion      →  pos : ref_aa  → -          (allele has gap where consensus doesn't)
+      insertion     →  pos : -       → allele_aa   (allele has AA where consensus has gap)
+
+    The gapped allele sequence (with '-') is returned in a separate dict so
+    the CSV can store it for the alignment figure.
+    Returns (allele_dict, gapped_seqs, gapped_consensus_str).
+    """
+    try:
+        records = list(AlignIO.read(mafft_fasta, "fasta"))
+    except Exception as e:
+        print(f"WARNING: Could not read MAFFT alignment '{mafft_fasta}': {e} — falling back to pairwise.", flush=True)
+        return allele_dict, {}, ""
+
+    if not records:
+        return allele_dict, {}, ""
+
+    alignment_len = len(records[0].seq)
+
+    # Gapped consensus via shared helper (same algorithm as compute_consensus.py)
+    gapped_consensus_str = compute_gapped_consensus_from_records(records)
+    gapped_consensus = list(gapped_consensus_str)
+
+    # Consensus length (non-gap positions) — used as denominator for variant %
+    ref_len = sum(1 for aa in gapped_consensus if aa != '-')
+
+    # Map ungapped protein sequence → gapped aligned sequence
+    seq_to_gapped = {}
+    for rec in records:
+        gapped = str(rec.seq)
+        ungapped = gapped.replace('-', '')
+        seq_to_gapped[ungapped] = gapped
+
+    gapped_seqs = {}   # ungapped_seq → gapped_seq, returned to caller
+
+    for seq, info in allele_dict.items():
+        variants = defaultdict(list)
+        num_diff = 0
+
+        gapped_seq = seq_to_gapped.get(seq)
+        if gapped_seq is None:
+            # Try stripping trailing stop codons
+            stripped = seq.rstrip('*')
+            for ug, g in seq_to_gapped.items():
+                if ug.rstrip('*') == stripped:
+                    gapped_seq = g
+                    break
+
+        if gapped_seq is None:
+            print(f"WARNING: Allele '{info[0]}' not found in MAFFT alignment — skipping variant calling.", flush=True)
+            info[3] = 0
+            info[4] = 0.0
+            info[5] = variants
+            continue
+
+        gapped_seqs[seq] = gapped_seq
+
+        for col_idx in range(alignment_len):
+            pos = col_idx + 1          # 1-based alignment column
+            cons_aa = gapped_consensus[col_idx]
+            allele_aa = gapped_seq[col_idx]
+
+            if cons_aa == allele_aa:
+                continue               # identical (including both '-')
+
+            if cons_aa == '-' and allele_aa != '-':
+                # Insertion in allele
+                num_diff += 1
+                variants[pos] = ['-', allele_aa]
+            elif cons_aa != '-' and allele_aa == '-':
+                # Deletion in allele
+                num_diff += 1
+                variants[pos] = [cons_aa, '-']
+            else:
+                # Substitution
+                num_diff += 1
+                variants[pos] = [cons_aa, allele_aa]
+
+        info[3] = num_diff
+        info[4] = (num_diff / ref_len) * 100 if ref_len else 0.0
+        info[5] = variants
+
+    return allele_dict, gapped_seqs, gapped_consensus_str
+
+
 def most_frequent_allele(allele_dict):
     if not allele_dict:
         return None
@@ -208,7 +317,10 @@ def main():
                                             'if not given or None, will take the allele owned by most species as reference')
     parser.add_argument('discovered', help='Discovered protein FASTA file location')
     parser.add_argument('-o', '--output', default='output/allele_info', help='Output directory')
-    parser.add_argument('-s', '--allele_sufix', default='allele', help='Allele name sufix')
+    parser.add_argument('-s', '--allele_suffix', default='allele', help='Allele name sufix')
+    parser.add_argument('--mafft_alignment', default=None,
+                        help='MAFFT-aligned FASTA of alleles; when provided, uses alignment '
+                             'columns as positions and records insertions/deletions explicitly')
     args = parser.parse_args()
 
     from translate import translate_three_frames, longest_reading_frame
@@ -220,41 +332,56 @@ def main():
     #get allele count
     try:
         discovered_seqs = {rec.id: str(rec.seq) for rec in SeqIO.parse(args.discovered, 'fasta')}
-        allele_dict = allele_types(discovered_seqs, args.allele_sufix)
+        allele_dict = allele_types(discovered_seqs, args.allele_suffix)
     except Exception as e:
         print(f"Error during analysis: {e}")
 
     # Read sequences
-    if args.reference != None:    
-        try:
-            ref_rec = next(SeqIO.parse(args.reference, 'fasta'))
+    effective_mafft = args.mafft_alignment  # may be set to None in empty-FASTA fallback
+    if args.reference is not None:
+        recs = list(SeqIO.parse(args.reference, 'fasta'))
+        if recs:
+            ref_rec = recs[0]
             ref_seq = str(ref_rec.seq)
-        except Exception as e:
-            print(f"Error reading input files: {e}")
-            return
-
-        if is_dna(ref_seq):
-            translates = translate_three_frames(ref_rec)
-            ref_seq, _ = longest_reading_frame(translates)
-            ref_seq = str(list(ref_seq.values())[0])
+            if is_dna(ref_seq):
+                translates = translate_three_frames(ref_rec)
+                ref_seq, _ = longest_reading_frame(translates)
+                ref_seq = str(list(ref_seq.values())[0])
+        else:
+            print(
+                f"WARNING: Consensus FASTA '{args.reference}' is empty. "
+                f"Falling back to self-reference (most frequent allele). "
+                f"Re-run the full pipeline to regenerate the consensus.",
+                file=sys.stderr,
+            )
+            ref_seq = most_frequent_allele(allele_dict)
+            effective_mafft = None  # force pairwise mode
     else:
         ref_seq = most_frequent_allele(allele_dict)
-    
-    try:
-        allele_dict = variat_position(ref_seq, allele_dict)
 
-        # Write the fasta file for alleles
+    try:
+        if effective_mafft:
+            allele_dict, gapped_seqs, gapped_consensus_str = variat_position_from_mafft(effective_mafft, allele_dict)
+        else:
+            allele_dict = variat_position(ref_seq, allele_dict)
+            gapped_seqs = {}
+            gapped_consensus_str = None
+
+        # Write the fasta file for alleles (always ungapped sequences)
         write_allele_sequences_fasta(allele_dict, output_dir)
 
         # Generate output file paths
         output_with_strain = output_dir / "allele_info_with_strain_name.csv"
         output_no_strain = output_dir / "allele_info_no_strain_name.csv"
-        
-        write_csv(allele_dict, output_with_strain, with_strain_name=True)
-        write_csv(allele_dict, output_no_strain, with_strain_name=False)
-        
+
+        # Embed gapped consensus as first row in no-strain CSV (consensus_reference mode only)
+        consensus_label = f"{args.allele_suffix}_consensus" if gapped_consensus_str else None
+        write_csv(allele_dict, output_with_strain, with_strain_name=True, gapped_seqs=gapped_seqs)
+        write_csv(allele_dict, output_no_strain, with_strain_name=False, gapped_seqs=gapped_seqs,
+                  consensus_row=(consensus_label, gapped_consensus_str) if consensus_label else None)
+
         print(f"Analysis complete. Results saved to: {output_dir}")
-        
+
     except Exception as e:
         print(f"Error during analysis: {e}")
 
