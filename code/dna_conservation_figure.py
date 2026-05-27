@@ -99,9 +99,9 @@ def compute_consensus(records):
 # ── drawing ───────────────────────────────────────────────────────────────────
 
 def draw_conservation_figure(positions, scores, query_name, output_path):
-    fig, ax = plt.subplots(figsize=(12, 4))
+    fig, ax = plt.subplots(figsize=(6, 4))
 
-    ax.plot(positions, scores, color='#4f81bd', linewidth=0.9, label=query_name)
+    ax.plot(positions, scores, color='#4f81bd', linewidth=1.2, label=query_name)
 
     ax.set_ylim(0.0, 1.05)
     ax.set_xlim(positions[0], positions[-1])

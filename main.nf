@@ -11,7 +11,7 @@ include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK 
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_SELF_REF; ALLELE_CONSENSUS_REF }    from './modules/allele'
 include { MAFFT_FOR_CONSENSUS; COMPUTE_CONSENSUS; FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; ALIGNMENT_FIGURE_REF } from './modules/quality'
-include { MAFFT_DNA; DNA_CONSERVATION_FIGURE }                       from './modules/dna_variation'
+include { BLAST_SEARCH_DNA; PARSE_BLAST_DNA; FILTER_BLAST_DNA; MAFFT_DNA; DNA_CONSERVATION_FIGURE } from './modules/dna_variation'
 
 // ──────────────────────────────────────────────────────────────
 // Resolve step mode
@@ -61,8 +61,9 @@ if (params.help) {
       --filter          Re-filter existing BLAST results (requires prior --blast run)
       --orf             Run ORF finding + translation on existing filtered results
       --visual          Run visualization on existing allele results
-      --dna_variation   Run DNA conservation figure from existing filtered BLAST results
-                        (requires prior --blast run with --blast_type blastn)
+      --dna_variation   Run DNA conservation figure (always uses blastn).
+                        With --query_dir and --genome_dir: runs BLAST automatically.
+                        Without them: reuses existing dna_variation/blast_summary_filtered/ CSVs.
       --step <name>     Alternative syntax: blast, filter, orf, visual, dna_variation
 
     Optional:
@@ -125,12 +126,17 @@ if (run_step == 'visual') {
 }
 
 if (run_step == 'dna_variation') {
-    def filtered_dir = file("${params.outdir}/blast_summary_filtered")
-    if (!filtered_dir.isDirectory()) {
-        error "ERROR: --dna_variation mode requires existing filtered results in ${params.outdir}/blast_summary_filtered/. Run --blast first."
+    def has_inputs = params.query_dir && params.genome_dir
+    if (!has_inputs) {
+        // Reuse-only mode: prior filtered results must exist
+        def filtered_dir = file("${params.outdir}/dna_variation/blast_summary_filtered")
+        if (!filtered_dir.isDirectory()) {
+            error "ERROR: --dna_variation without --query_dir/--genome_dir requires existing filtered results in ${params.outdir}/dna_variation/blast_summary_filtered/. Provide --query_dir and --genome_dir to run BLAST, or run --blast first."
+        }
     }
+    // blast_type is ignored — dna_variation always uses blastn internally
     if (params.blast_type == 'tblastn') {
-        error "ERROR: --dna_variation requires --blast_type blastn. tblastn produces protein sequences that are incompatible with DNA conservation analysis."
+        log.warn "WARNING: --blast_type tblastn is ignored for --dna_variation; blastn will be used."
     }
 }
 
@@ -259,13 +265,48 @@ workflow {
 
     } else if (run_step == 'dna_variation') {
         // =============================================================
-        // DNA variation mode: MAFFT + conservation figure from filtered BLAST CSVs
+        // DNA variation mode: BLAST (blastn) + filter + MAFFT + conservation figure
+        // If --query_dir and --genome_dir are provided: run BLAST automatically.
+        // Otherwise: reuse existing dna_variation/blast_summary_filtered/ CSVs.
         // =============================================================
-        ch_csv = Channel
-            .fromPath("${params.outdir}/blast_summary_filtered/*.csv")
-            .map { f -> [f.baseName, f] }
 
-        CSV_TO_FASTA(ch_csv)
+        if (params.query_dir && params.genome_dir) {
+            // ── Run BLAST (always blastn) ──────────────────────────────
+            ch_queries_dv = file(params.query_dir).isFile()
+                ? Channel.fromPath(params.query_dir)
+                : Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
+            ch_genome_dir_dv = Channel.fromPath(params.genome_dir)
+
+            COLLECT_ALL_BLAST_DBS(ch_genome_dir_dv)
+
+            ch_genome_batches_dv = Channel
+                .fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
+                .map { it.name }
+                .collate(params.blast_batch_size)
+                .map { batch -> batch.join(',') }
+
+            ch_blast_input_dv = ch_queries_dv
+                .combine(ch_genome_batches_dv)
+                .combine(COLLECT_ALL_BLAST_DBS.out)
+            BLAST_SEARCH_DNA(ch_blast_input_dv)
+
+            ch_grouped_dv = BLAST_SEARCH_DNA.out.groupTuple().map { name, files -> [name, files.flatten()] }
+            PARSE_BLAST_DNA(ch_grouped_dv)
+
+            ch_query_map_dv = ch_queries_dv.map { q -> [q.baseName, q] }
+            ch_filter_input_dv = PARSE_BLAST_DNA.out.join(ch_query_map_dv)
+            FILTER_BLAST_DNA(ch_filter_input_dv)
+
+            ch_filtered_dv = FILTER_BLAST_DNA.out
+
+        } else {
+            // ── Reuse existing filtered results ────────────────────────
+            ch_filtered_dv = Channel
+                .fromPath("${params.outdir}/dna_variation/blast_summary_filtered/*.csv")
+                .map { f -> [f.baseName, f] }
+        }
+
+        CSV_TO_FASTA(ch_filtered_dv)
         MAFFT_DNA(CSV_TO_FASTA.out)
         DNA_CONSERVATION_FIGURE(MAFFT_DNA.out)
 

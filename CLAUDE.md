@@ -90,7 +90,10 @@ nextflow run main.nf --orf --genome_dir /genomes --outdir ./results
 # Re-run visualization only (reuses existing allele_info/ and allele_seq_filtered/)
 nextflow run main.nf --visual --outdir ./results --weblogo_format png
 
-# DNA conservation figure (reuses existing blast_summary_filtered/; blastn only)
+# DNA conservation figure — run own BLAST (blastn) from scratch
+nextflow run main.nf --dna_variation --query_dir ./data --genome_dir /genomes --outdir ./results
+
+# DNA conservation figure — reuse existing dna_variation/blast_summary_filtered/ CSVs
 nextflow run main.nf --dna_variation --outdir ./results -resume
 ```
 
@@ -123,7 +126,8 @@ modules/
   quality.nf                     # MAFFT_FOR_CONSENSUS, COMPUTE_CONSENSUS,
                                  #   FILTER_ALLELES, MAFFT_ALIGN, WEBLOGO,
                                  #   ALIGNMENT_FIGURE, ALIGNMENT_FIGURE_REF
-  dna_variation.nf               # MAFFT_DNA, DNA_CONSERVATION_FIGURE
+  dna_variation.nf               # BLAST_SEARCH_DNA, PARSE_BLAST_DNA, FILTER_BLAST_DNA,
+                                 #   MAFFT_DNA, DNA_CONSERVATION_FIGURE
 code/
   header_utils.py                # Canonical FASTA header parser/builder (shared utility)
   blastParser.py                 # Converts raw BLAST .out → CSV
