@@ -75,7 +75,8 @@ if (params.help) {
       --length_percentage  Length % cutoff (default: 80)
       --extension_codons   Codons to extend (default: 10)
       --species_threshold  Min species % for filtering (default: 1)
-      --make_blastdb    Build BLAST databases (default: false, uses existing DBs)
+      --make_blastdb    Build missing BLAST databases before searching (default: false).
+                        When false and no DB exists, uses -subject <genome_file> directly.
       --self_reference_figures  Also generate self-reference alignment figures (default: false)
       --dna_variation_figure_format  Output format for conservation figure: pdf, png, svg (default: pdf)
 

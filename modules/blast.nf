@@ -9,18 +9,22 @@ process COLLECT_ALL_BLAST_DBS {
 
     script:
     """
-    # Find genomes missing BLAST DBs (directory-level diff, not per-file ls)
-    MISSING=\$(comm -23 \
-        <(ls ${genome_dir}/*.fasta ${genome_dir}/*.fa ${genome_dir}/*.fna ${genome_dir}/*.ffn 2>/dev/null | sort) \
-        <(ls ${genome_dir}/*.nin 2>/dev/null | sed 's/\\.nin\$//' | sort))
+    if [ "${params.make_blastdb}" = "true" ]; then
+        # Find genomes missing BLAST DBs (directory-level diff, not per-file ls)
+        MISSING=\$(comm -23 \
+            <(ls ${genome_dir}/*.fasta ${genome_dir}/*.fa ${genome_dir}/*.fna ${genome_dir}/*.ffn 2>/dev/null | sort) \
+            <(ls ${genome_dir}/*.nin 2>/dev/null | sed 's/\\.nin\$//' | sort))
 
-    if [ -n "\$MISSING" ]; then
-        echo "Building BLAST DBs for \$(echo "\$MISSING" | wc -l) genomes..."
-        for genome in \$MISSING; do
-            makeblastdb -in "\$genome" -dbtype nucl -out "\$genome" -parse_seqids
-        done
+        if [ -n "\$MISSING" ]; then
+            echo "Building BLAST DBs for \$(echo "\$MISSING" | wc -l) genomes..."
+            for genome in \$MISSING; do
+                makeblastdb -in "\$genome" -dbtype nucl -out "\$genome" -parse_seqids
+            done
+        else
+            echo "All BLAST DBs already exist, skipping."
+        fi
     else
-        echo "All BLAST DBs already exist, skipping."
+        echo "make_blastdb=false: skipping DB creation."
     fi
     """
 }
@@ -46,15 +50,26 @@ process BLAST_SEARCH {
 
         if [ -f "\${genome}.nin" ] || [ -f "\${genome}.nsq" ]; then
             DB_PREFIX="\${genome}"
-        else
+            USE_DB=true
+        elif [ -f "\${genome%.*}.nin" ] || [ -f "\${genome%.*}.nsq" ]; then
             DB_PREFIX="\${genome%.*}"
+            USE_DB=true
+        else
+            USE_DB=false
         fi
 
-        ${blast_cmd} -query ${query} \
-            -db \${DB_PREFIX} \
-            -out ${query.baseName}_vs_\${base}.out \
-            -evalue ${params.max_evalue} \
-            -num_threads ${task.cpus}
+        if [ "\$USE_DB" = "true" ]; then
+            ${blast_cmd} -query ${query} \
+                -db \${DB_PREFIX} \
+                -out ${query.baseName}_vs_\${base}.out \
+                -evalue ${params.max_evalue} \
+                -num_threads ${task.cpus}
+        else
+            ${blast_cmd} -query ${query} \
+                -subject \${genome} \
+                -out ${query.baseName}_vs_\${base}.out \
+                -evalue ${params.max_evalue}
+        fi
     done
     """
 }
