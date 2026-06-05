@@ -1,817 +1,207 @@
-May-17 22:00:14.371 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --query_dir /home/xinruoz/Document/Hiller/Rgg-SHP144/results/distribution_alleles/SHP_queries --genome_dir /home/xinruoz/Document/Hiller/mitis/data/MitisCollectionPubMLST_Fasta --outdir /home/xinruoz/Document/Hiller/allele_search/results/mitis_SHP144 --blast_type tblastn --max_evalue 1e-5 --sequence_identity 80 --length_percentage 80
-May-17 22:00:14.496 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
-May-17 22:00:14.519 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
-May-17 22:00:14.547 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
-May-17 22:00:14.548 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
-May-17 22:00:14.552 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
-May-17 22:00:14.567 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
-May-17 22:00:14.705 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
-May-17 22:00:14.736 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
-May-17 22:00:14.738 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
-May-17 22:00:14.763 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
-May-17 22:00:15.232 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
-May-17 22:00:15.233 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
-May-17 22:00:15.246 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
-May-17 22:00:15.250 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@12ad1b2a] - activable => nextflow.secret.LocalSecretsProvider@12ad1b2a
-May-17 22:00:15.252 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
-May-17 22:00:15.271 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [furious_ochoa] DSL2 - revision: 4b159100cb
-May-17 22:00:15.322 [main] DEBUG nextflow.Session - Session UUID: 46f8466e-33a2-4b73-b946-b9f830a98c8c
-May-17 22:00:15.323 [main] DEBUG nextflow.Session - Run name: furious_ochoa
-May-17 22:00:15.324 [main] DEBUG nextflow.Session - Executor pool size: 14
-May-17 22:00:15.331 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
-May-17 22:00:15.335 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-May-17 22:00:15.355 [main] DEBUG nextflow.cli.CmdRun - 
+Jun-04 19:20:00.606 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --query_dir test_query/Rgg144.fasta --genome_dir ../mitis/data/MitisCollectionPubMLST_Fasta/ --blast_type blastn --outdir results/mitis_Rgg144
+Jun-04 19:20:00.821 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
+Jun-04 19:20:00.856 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/xinruoz/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
+Jun-04 19:20:00.893 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jun-04 19:20:00.895 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jun-04 19:20:00.901 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Jun-04 19:20:00.929 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Jun-04 19:20:01.125 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jun-04 19:20:01.185 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Jun-04 19:20:01.189 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xinruoz/Document/Hiller/allele_search/nextflow.config
+Jun-04 19:20:01.240 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jun-04 19:20:02.006 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jun-04 19:20:02.006 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Jun-04 19:20:02.025 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/xinruoz/.nextflow/secrets/store.json
+Jun-04 19:20:02.029 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@46383a78] - activable => nextflow.secret.LocalSecretsProvider@46383a78
+Jun-04 19:20:02.034 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Jun-04 19:20:02.058 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [special_dubinsky] DSL2 - revision: f72494d682
+Jun-04 19:20:02.139 [main] DEBUG nextflow.Session - Session UUID: 20b1ae04-02cb-4ee3-81c9-6ab363aa19f2
+Jun-04 19:20:02.139 [main] DEBUG nextflow.Session - Run name: special_dubinsky
+Jun-04 19:20:02.140 [main] DEBUG nextflow.Session - Executor pool size: 14
+Jun-04 19:20:02.155 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Jun-04 19:20:02.165 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-04 19:20:02.203 [main] DEBUG nextflow.cli.CmdRun - 
   Version: 25.10.3 build 10983
   Created: 22-01-2026 15:34 UTC (10:34 EDT)
   System: Linux 5.15.167.4-microsoft-standard-WSL2
-  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 17.0.15-internal+0-adhoc..src
   Encoding: UTF-8 (UTF-8)
-  Process: 205722@rock1 [127.0.1.1]
-  CPUs: 14 - Mem: 7.8 GB (806.8 MB) - Swap: 2 GB (1.5 GB)
-May-17 22:00:15.375 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
-May-17 22:00:15.376 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
-May-17 22:00:15.384 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
-May-17 22:00:15.393 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
-May-17 22:00:15.395 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
-May-17 22:00:15.451 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
-May-17 22:00:15.461 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
-May-17 22:00:15.543 [main] DEBUG nextflow.Session - Session start
-May-17 22:00:16.078 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
-May-17 22:00:16.862 [main] INFO  nextflow.Nextflow - Running in 'full' mode
-May-17 22:00:16.936 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:16.937 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:16.957 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
-May-17 22:00:16.965 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=14; memory=7.8 GB; capacity=14; pollInterval=100ms; dumpInterval=5m
-May-17 22:00:16.967 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
-May-17 22:00:16.990 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_ALL_BLAST_DBS': maxForks=0; fair=false; array=0
-May-17 22:00:17.059 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:BLAST_SEARCH` matches process BLAST_SEARCH
-May-17 22:00:17.060 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.060 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.061 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BLAST_SEARCH': maxForks=0; fair=false; array=0
-May-17 22:00:17.070 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.070 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.071 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'PARSE_BLAST': maxForks=0; fair=false; array=0
-May-17 22:00:17.082 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.082 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.084 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_BLAST': maxForks=0; fair=false; array=0
-May-17 22:00:17.089 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.089 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.090 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTRACT_DNA': maxForks=0; fair=false; array=0
-May-17 22:00:17.093 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.093 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.094 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CSV_TO_FASTA': maxForks=0; fair=false; array=0
-May-17 22:00:17.101 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.101 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.102 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_10': maxForks=0; fair=false; array=0
-May-17 22:00:17.106 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.107 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.107 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTEND_SEQUENCES': maxForks=0; fair=false; array=0
-May-17 22:00:17.113 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.113 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.114 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_20': maxForks=0; fair=false; array=0
-May-17 22:00:17.119 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.120 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.121 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_STANDARD': maxForks=0; fair=false; array=0
-May-17 22:00:17.124 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.124 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.125 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'TRANSLATE': maxForks=0; fair=false; array=0
-May-17 22:00:17.128 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.128 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.129 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_SELF_REF': maxForks=0; fair=false; array=0
-May-17 22:00:17.137 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.137 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.137 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_FOR_CONSENSUS': maxForks=0; fair=false; array=0
-May-17 22:00:17.140 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.140 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.141 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COMPUTE_CONSENSUS': maxForks=0; fair=false; array=0
-May-17 22:00:17.153 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.153 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.155 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_CONSENSUS_REF': maxForks=0; fair=false; array=0
-May-17 22:00:17.160 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.160 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.161 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_ALLELES': maxForks=0; fair=false; array=0
-May-17 22:00:17.169 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.169 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.170 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALIGNMENT_FIGURE_REF': maxForks=0; fair=false; array=0
-May-17 22:00:17.173 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MAFFT_ALIGN` matches process MAFFT_ALIGN
-May-17 22:00:17.173 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.173 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.174 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_ALIGN': maxForks=0; fair=false; array=0
-May-17 22:00:17.176 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-May-17 22:00:17.177 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-May-17 22:00:17.178 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'WEBLOGO': maxForks=0; fair=false; array=0
-May-17 22:00:17.180 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: ALIGNMENT_FIGURE_REF, FILTER_BLAST_DNA, BLAST_SEARCH, FILTER_ALLELES, MAFFT_DNA, FILTER_BLAST, COLLECT_ALL_BLAST_DBS, ALLELE_SELF_REF, EXTRACT_DNA, PARSE_BLAST, CODON_CHECK_10, PARSE_BLAST_DNA, WEBLOGO, ALIGNMENT_FIGURE, CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, COLLECT_STANDARD, BLAST_SEARCH_DNA, MAFFT_FOR_CONSENSUS, MAFFT_ALIGN, ALLELE_CONSENSUS_REF, TRANSLATE, DNA_CONSERVATION_FIGURE, COMPUTE_CONSENSUS, CODON_CHECK_20
-May-17 22:00:17.184 [main] DEBUG nextflow.Session - Igniting dataflow network (22)
-May-17 22:00:17.192 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/xinruoz/Document/Hiller/Rgg-SHP144/results/distribution_alleles/SHP_queries/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
-May-17 22:00:17.194 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_ALL_BLAST_DBS
-May-17 22:00:17.194 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > BLAST_SEARCH
-May-17 22:00:17.195 [PathVisitor-2] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/xinruoz/Document/Hiller/mitis/data/MitisCollectionPubMLST_Fasta/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > PARSE_BLAST
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_BLAST
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > EXTRACT_DNA
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CSV_TO_FASTA
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_10
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > EXTEND_SEQUENCES
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_20
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_STANDARD
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > TRANSLATE
-May-17 22:00:17.195 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_SELF_REF
-May-17 22:00:17.196 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_FOR_CONSENSUS
-May-17 22:00:17.196 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COMPUTE_CONSENSUS
-May-17 22:00:17.196 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_CONSENSUS_REF
-May-17 22:00:17.197 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_ALLELES
-May-17 22:00:17.197 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALIGNMENT_FIGURE_REF
-May-17 22:00:17.197 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_ALIGN
-May-17 22:00:17.198 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > WEBLOGO
-May-17 22:00:17.198 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
-  Script_ef64cefeb215874a: /home/xinruoz/Document/Hiller/allele_search/modules/blast.nf
+  Process: 416092@rock1 [127.0.1.1]
+  CPUs: 14 - Mem: 7.8 GB (897.3 MB) - Swap: 2 GB (1.1 GB)
+Jun-04 19:20:02.237 [main] DEBUG nextflow.Session - Work-dir: /home/xinruoz/Document/Hiller/allele_search/work [ext2/ext3]
+Jun-04 19:20:02.238 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xinruoz/Document/Hiller/allele_search/bin
+Jun-04 19:20:02.253 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jun-04 19:20:02.282 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Jun-04 19:20:02.287 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Jun-04 19:20:02.352 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Jun-04 19:20:02.363 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 15; maxThreads: 1000
+Jun-04 19:20:02.470 [main] DEBUG nextflow.Session - Session start
+Jun-04 19:20:03.360 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jun-04 19:20:04.631 [main] INFO  nextflow.Nextflow - Running in 'full' mode
+Jun-04 19:20:04.737 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.737 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.751 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jun-04 19:20:04.759 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=14; memory=7.8 GB; capacity=14; pollInterval=100ms; dumpInterval=5m
+Jun-04 19:20:04.763 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Jun-04 19:20:04.816 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_ALL_BLAST_DBS': maxForks=0; fair=false; array=0
+Jun-04 19:20:04.937 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:BLAST_SEARCH` matches process BLAST_SEARCH
+Jun-04 19:20:04.939 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.939 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.940 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BLAST_SEARCH': maxForks=0; fair=false; array=0
+Jun-04 19:20:04.956 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.956 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.957 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'PARSE_BLAST': maxForks=0; fair=false; array=0
+Jun-04 19:20:04.973 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.974 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.975 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_BLAST': maxForks=0; fair=false; array=0
+Jun-04 19:20:04.982 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.983 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.984 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CSV_TO_FASTA': maxForks=0; fair=false; array=0
+Jun-04 19:20:04.994 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:04.994 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:04.995 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_10': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.004 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.005 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.006 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'EXTEND_SEQUENCES': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.016 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.017 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.018 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CODON_CHECK_20': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.029 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.030 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.031 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COLLECT_STANDARD': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.036 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.036 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.037 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'TRANSLATE': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.043 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.043 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.044 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_SELF_REF': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.055 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.055 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.056 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_FOR_CONSENSUS': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.062 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.062 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.063 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'COMPUTE_CONSENSUS': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.073 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.074 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.074 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALLELE_CONSENSUS_REF': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.083 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.083 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.084 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FILTER_ALLELES': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.093 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.094 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.096 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'ALIGNMENT_FIGURE_REF': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.100 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MAFFT_ALIGN` matches process MAFFT_ALIGN
+Jun-04 19:20:05.101 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.102 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.103 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MAFFT_ALIGN': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.111 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-04 19:20:05.112 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-04 19:20:05.113 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'WEBLOGO': maxForks=0; fair=false; array=0
+Jun-04 19:20:05.116 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: ALIGNMENT_FIGURE_REF, FILTER_BLAST_DNA, BLAST_SEARCH, FILTER_ALLELES, MAFFT_DNA, FILTER_BLAST, COLLECT_ALL_BLAST_DBS, ALLELE_SELF_REF, EXTRACT_DNA, PARSE_BLAST, CODON_CHECK_10, PARSE_BLAST_DNA, WEBLOGO, ALIGNMENT_FIGURE, CSV_TO_FASTA, CODON_CHECK, EXTEND_SEQUENCES, COLLECT_STANDARD, BLAST_SEARCH_DNA, MAFFT_FOR_CONSENSUS, MAFFT_ALIGN, ALLELE_CONSENSUS_REF, TRANSLATE, DNA_CONSERVATION_FIGURE, COMPUTE_CONSENSUS, CODON_CHECK_20
+Jun-04 19:20:05.121 [main] DEBUG nextflow.Session - Igniting dataflow network (21)
+Jun-04 19:20:05.131 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_ALL_BLAST_DBS
+Jun-04 19:20:05.132 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > BLAST_SEARCH
+Jun-04 19:20:05.132 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > PARSE_BLAST
+Jun-04 19:20:05.132 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_BLAST
+Jun-04 19:20:05.132 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: ../mitis/data/MitisCollectionPubMLST_Fasta/; pattern: *.{fasta,fa,fna,ffn}; options: [:]
+Jun-04 19:20:05.133 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CSV_TO_FASTA
+Jun-04 19:20:05.133 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_10
+Jun-04 19:20:05.133 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > EXTEND_SEQUENCES
+Jun-04 19:20:05.133 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CODON_CHECK_20
+Jun-04 19:20:05.133 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COLLECT_STANDARD
+Jun-04 19:20:05.134 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > TRANSLATE
+Jun-04 19:20:05.134 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_SELF_REF
+Jun-04 19:20:05.134 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_FOR_CONSENSUS
+Jun-04 19:20:05.134 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > COMPUTE_CONSENSUS
+Jun-04 19:20:05.134 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALLELE_CONSENSUS_REF
+Jun-04 19:20:05.135 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_ALLELES
+Jun-04 19:20:05.135 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ALIGNMENT_FIGURE_REF
+Jun-04 19:20:05.135 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MAFFT_ALIGN
+Jun-04 19:20:05.136 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > WEBLOGO
+Jun-04 19:20:05.136 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
   Script_1a867705d376e4aa: /home/xinruoz/Document/Hiller/allele_search/modules/orf.nf
   Script_b7ee15f4583a0882: /home/xinruoz/Document/Hiller/allele_search/modules/translate.nf
   Script_8767ae17641f9cac: /home/xinruoz/Document/Hiller/allele_search/modules/quality.nf
   Script_05940fd499dd4216: /home/xinruoz/Document/Hiller/allele_search/modules/allele.nf
   Script_e76dd4f63d44811e: /home/xinruoz/Document/Hiller/allele_search/modules/filter.nf
   Script_efbb05738c11cf47: /home/xinruoz/Document/Hiller/allele_search/modules/dna_variation.nf
-  Script_0848d765a219cf7e: /home/xinruoz/Document/Hiller/allele_search/main.nf
-May-17 22:00:17.198 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
-May-17 22:00:17.198 [main] DEBUG nextflow.Session - Session await
-May-17 22:00:17.315 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.318 [Task submitter] INFO  nextflow.Session - [96/1c3e27] Submitted process > COLLECT_ALL_BLAST_DBS (all_genomes)
-May-17 22:00:17.475 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: COLLECT_ALL_BLAST_DBS (all_genomes); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/96/1c3e27bde2930b761391767d4fcb07]
-May-17 22:00:17.475 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-May-17 22:00:17.539 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.540 [Task submitter] INFO  nextflow.Session - [d3/19be89] Submitted process > BLAST_SEARCH (5_3_batch)
-May-17 22:00:17.573 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.574 [Task submitter] INFO  nextflow.Session - [75/602da9] Submitted process > BLAST_SEARCH (7_2_batch)
-May-17 22:00:17.579 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.579 [Task submitter] INFO  nextflow.Session - [f8/b2bb5e] Submitted process > BLAST_SEARCH (9_1_batch)
-May-17 22:00:17.584 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.585 [Task submitter] INFO  nextflow.Session - [39/783378] Submitted process > BLAST_SEARCH (2_23_batch)
-May-17 22:00:17.589 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.590 [Task submitter] INFO  nextflow.Session - [21/0594e2] Submitted process > BLAST_SEARCH (6_2_batch)
-May-17 22:00:17.595 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.598 [Task submitter] INFO  nextflow.Session - [45/0c708b] Submitted process > BLAST_SEARCH (12_1_batch)
-May-17 22:00:17.609 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:17.610 [Task submitter] INFO  nextflow.Session - [72/3f8ccc] Submitted process > BLAST_SEARCH (11_1_batch)
-May-17 22:00:26.174 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: BLAST_SEARCH (2_23_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/39/7833781bb1374ca20882178d48039d]
-May-17 22:00:26.180 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.181 [Task submitter] INFO  nextflow.Session - [c6/7c4e8d] Submitted process > BLAST_SEARCH (1_38_batch)
-May-17 22:00:26.212 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: BLAST_SEARCH (9_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f8/b2bb5e8f80544418e8cea34d147c7d]
-May-17 22:00:26.216 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.229 [Task submitter] INFO  nextflow.Session - [4f/fad574] Submitted process > BLAST_SEARCH (3_4_batch)
-May-17 22:00:26.239 [TaskFinalizer-2] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
-May-17 22:00:26.279 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: BLAST_SEARCH (11_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/72/3f8ccc7d04378b79238f65be39019c]
-May-17 22:00:26.288 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.289 [Task submitter] INFO  nextflow.Session - [15/9b04ef] Submitted process > BLAST_SEARCH (6_2_batch)
-May-17 22:00:26.300 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: BLAST_SEARCH (12_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/45/0c708b90d15e4338fb8aa0e8015c80]
-May-17 22:00:26.306 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.307 [Task submitter] INFO  nextflow.Session - [0f/1f1862] Submitted process > BLAST_SEARCH (10_1_batch)
-May-17 22:00:26.336 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: BLAST_SEARCH (6_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/21/0594e28dabecaa1af60a9a4d0abaeb]
-May-17 22:00:26.341 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.344 [Task submitter] INFO  nextflow.Session - [45/1bd707] Submitted process > BLAST_SEARCH (8_1_batch)
-May-17 22:00:26.364 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: BLAST_SEARCH (5_3_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d3/19be89003ca28b7f0d921176b565ba]
-May-17 22:00:26.367 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:26.368 [Task submitter] INFO  nextflow.Session - [30/dd94be] Submitted process > BLAST_SEARCH (4_4_batch)
-May-17 22:00:27.189 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: BLAST_SEARCH (7_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/75/602da9f5bf7b23a77410bf34e0da88]
-May-17 22:00:27.193 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:27.194 [Task submitter] INFO  nextflow.Session - [cb/3b048f] Submitted process > BLAST_SEARCH (12_1_batch)
-May-17 22:00:35.122 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: BLAST_SEARCH (6_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/15/9b04ef54a09f0ccdb18aaa83e64081]
-May-17 22:00:35.129 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:35.130 [Task submitter] INFO  nextflow.Session - [32/8b3bad] Submitted process > BLAST_SEARCH (10_1_batch)
-May-17 22:00:35.158 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: BLAST_SEARCH (10_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0f/1f18626f64b70271738d477d8d0926]
-May-17 22:00:35.166 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:35.167 [Task submitter] INFO  nextflow.Session - [ae/91e09d] Submitted process > BLAST_SEARCH (1_38_batch)
-May-17 22:00:35.950 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: BLAST_SEARCH (1_38_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c6/7c4e8d20212033ce52c6ce831303db]
-May-17 22:00:35.954 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:35.955 [Task submitter] INFO  nextflow.Session - [f4/c8ab05] Submitted process > BLAST_SEARCH (2_23_batch)
-May-17 22:00:36.005 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: BLAST_SEARCH (12_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/cb/3b048fe858e38a2085b04ce76e39ac]
-May-17 22:00:36.013 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:36.014 [Task submitter] INFO  nextflow.Session - [97/b96f95] Submitted process > BLAST_SEARCH (3_4_batch)
-May-17 22:00:36.152 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: BLAST_SEARCH (3_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4f/fad57405d5d949cba000d1af00fa3b]
-May-17 22:00:36.171 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:36.171 [Task submitter] INFO  nextflow.Session - [36/f097ad] Submitted process > BLAST_SEARCH (6_2_batch)
-May-17 22:00:36.223 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: BLAST_SEARCH (8_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/45/1bd707e5d08d1b77251c50a6f095af]
-May-17 22:00:36.224 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: BLAST_SEARCH (4_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/30/dd94be599f59be2d0c366f8a1bd347]
-May-17 22:00:36.231 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:36.232 [Task submitter] INFO  nextflow.Session - [4d/cf237a] Submitted process > BLAST_SEARCH (8_1_batch)
-May-17 22:00:36.241 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:36.241 [Task submitter] INFO  nextflow.Session - [67/b4c228] Submitted process > BLAST_SEARCH (11_1_batch)
-May-17 22:00:43.937 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: BLAST_SEARCH (10_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/32/8b3bad0a39d9214ec3a9050ade8d8c]
-May-17 22:00:43.941 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:43.941 [Task submitter] INFO  nextflow.Session - [93/7f12dd] Submitted process > BLAST_SEARCH (4_4_batch)
-May-17 22:00:44.901 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: BLAST_SEARCH (1_38_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ae/91e09d8b2ff7840e2a0d259012a4ec]
-May-17 22:00:44.905 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:44.905 [Task submitter] INFO  nextflow.Session - [22/9a78a1] Submitted process > BLAST_SEARCH (7_2_batch)
-May-17 22:00:44.911 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: BLAST_SEARCH (2_23_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f4/c8ab050ae357782ff5800b80cd90c0]
-May-17 22:00:44.917 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:44.918 [Task submitter] INFO  nextflow.Session - [4d/c32313] Submitted process > BLAST_SEARCH (5_3_batch)
-May-17 22:00:45.160 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 31; name: BLAST_SEARCH (6_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/36/f097adb15d839c1ae3ffce86e000c6]
-May-17 22:00:45.168 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:45.168 [Task submitter] INFO  nextflow.Session - [21/993dab] Submitted process > BLAST_SEARCH (9_1_batch)
-May-17 22:00:45.238 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: BLAST_SEARCH (11_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/67/b4c2282399f14bc830dce88683b420]
-May-17 22:00:45.244 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:45.245 [Task submitter] INFO  nextflow.Session - [dd/ceffab] Submitted process > BLAST_SEARCH (12_1_batch)
-May-17 22:00:45.650 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: BLAST_SEARCH (3_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/97/b96f952999e25165ad6ba899397631]
-May-17 22:00:45.657 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:45.658 [Task submitter] INFO  nextflow.Session - [38/c128f5] Submitted process > BLAST_SEARCH (10_1_batch)
-May-17 22:00:45.781 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: BLAST_SEARCH (8_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4d/cf237a9c1bfca52d688a81cccf32c3]
-May-17 22:00:45.786 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:45.786 [Task submitter] INFO  nextflow.Session - [50/b9cba7] Submitted process > BLAST_SEARCH (11_1_batch)
-May-17 22:00:53.880 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: BLAST_SEARCH (4_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/93/7f12dd1d7f68a646798a6f9865e91b]
-May-17 22:00:53.886 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:53.887 [Task submitter] INFO  nextflow.Session - [f0/0e8e3f] Submitted process > BLAST_SEARCH (1_38_batch)
-May-17 22:00:54.052 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: BLAST_SEARCH (5_3_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4d/c32313c0839ba9250c3ced7f0e6da1]
-May-17 22:00:54.061 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:54.061 [Task submitter] INFO  nextflow.Session - [42/315031] Submitted process > BLAST_SEARCH (2_23_batch)
-May-17 22:00:54.380 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 26; name: BLAST_SEARCH (12_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/dd/ceffabfab0393ca667414a18547752]
-May-17 22:00:54.385 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:54.386 [Task submitter] INFO  nextflow.Session - [44/24eaac] Submitted process > BLAST_SEARCH (12_1_batch)
-May-17 22:00:54.411 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 25; name: BLAST_SEARCH (9_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/21/993dab4a72c50d815b1b22ad822b83]
-May-17 22:00:54.415 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:54.416 [Task submitter] INFO  nextflow.Session - [d4/edf302] Submitted process > BLAST_SEARCH (3_4_batch)
-May-17 22:00:54.897 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 34; name: BLAST_SEARCH (11_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/50/b9cba7904e50f01e4813a088c93cdd]
-May-17 22:00:54.901 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:54.901 [Task submitter] INFO  nextflow.Session - [38/8ae150] Submitted process > BLAST_SEARCH (8_1_batch)
-May-17 22:00:55.017 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: BLAST_SEARCH (7_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/22/9a78a18c4785227db6c1fc8c302413]
-May-17 22:00:55.024 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:55.025 [Task submitter] INFO  nextflow.Session - [95/12cad5] Submitted process > BLAST_SEARCH (4_4_batch)
-May-17 22:00:55.083 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 27; name: BLAST_SEARCH (10_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/38/c128f515eee82a3d3a9d6ed02b5ebc]
-May-17 22:00:55.086 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:55.087 [Task submitter] INFO  nextflow.Session - [81/0a89b1] Submitted process > BLAST_SEARCH (7_2_batch)
-May-17 22:00:55.874 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 38; name: BLAST_SEARCH (12_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/44/24eaac4369217318171c43a5bb5b43]
-May-17 22:00:55.884 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:55.885 [Task submitter] INFO  nextflow.Session - [ac/9f9cc4] Submitted process > BLAST_SEARCH (1_38_batch)
-May-17 22:00:57.267 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 40; name: BLAST_SEARCH (1_38_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ac/9f9cc4c7d7bf8479638f22a54eeff6]
-May-17 22:00:57.273 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:57.274 [Task submitter] INFO  nextflow.Session - [b5/58d260] Submitted process > BLAST_SEARCH (10_1_batch)
-May-17 22:00:58.511 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 39; name: BLAST_SEARCH (10_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b5/58d260d8f0b34437158b764eace517]
-May-17 22:00:58.514 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:00:58.515 [Task submitter] INFO  nextflow.Session - [09/b5c464] Submitted process > BLAST_SEARCH (5_3_batch)
-May-17 22:01:04.139 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 29; name: BLAST_SEARCH (2_23_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/42/3150315323fe1ddae6eda7d40fb880]
-May-17 22:01:04.143 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:04.143 [Task submitter] INFO  nextflow.Session - [50/b5b4a7] Submitted process > BLAST_SEARCH (3_4_batch)
-May-17 22:01:04.512 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 28; name: BLAST_SEARCH (1_38_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f0/0e8e3f74d13322fbb05a6b9f625176]
-May-17 22:01:04.516 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:04.516 [Task submitter] INFO  nextflow.Session - [32/81603b] Submitted process > BLAST_SEARCH (2_23_batch)
-May-17 22:01:04.923 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 30; name: BLAST_SEARCH (3_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d4/edf302602c9b6de70d98496b95e227]
-May-17 22:01:04.942 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:04.942 [Task submitter] INFO  nextflow.Session - [9c/db6d99] Submitted process > BLAST_SEARCH (9_1_batch)
-May-17 22:01:05.323 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 42; name: BLAST_SEARCH (3_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/50/b5b4a777094d8871d80f9bc0b257f8]
-May-17 22:01:05.329 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:05.330 [Task submitter] INFO  nextflow.Session - [70/5ec5a5] Submitted process > BLAST_SEARCH (6_2_batch)
-May-17 22:01:05.374 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 32; name: BLAST_SEARCH (8_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/38/8ae1500a96b4e977cb88c5d6b22f8a]
-May-17 22:01:05.380 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:05.381 [Task submitter] INFO  nextflow.Session - [b3/0a40ca] Submitted process > BLAST_SEARCH (8_1_batch)
-May-17 22:01:05.425 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 36; name: BLAST_SEARCH (4_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/95/12cad59177d31aac7f680dc7f9bb9b]
-May-17 22:01:05.430 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:05.430 [Task submitter] INFO  nextflow.Session - [c9/3b081d] Submitted process > BLAST_SEARCH (4_4_batch)
-May-17 22:01:05.620 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 35; name: BLAST_SEARCH (7_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/81/0a89b1c5cb682145718f5b0de44293]
-May-17 22:01:05.623 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:05.623 [Task submitter] INFO  nextflow.Session - [ab/5da047] Submitted process > BLAST_SEARCH (11_1_batch)
-May-17 22:01:05.697 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 41; name: BLAST_SEARCH (2_23_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/32/81603bdb3393fc0895c6ec02efc5e2]
-May-17 22:01:05.705 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:05.706 [Task submitter] INFO  nextflow.Session - [08/992148] Submitted process > BLAST_SEARCH (9_1_batch)
-May-17 22:01:06.428 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 43; name: BLAST_SEARCH (6_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/70/5ec5a5b62ceb60eefddf0eaa0bf4b2]
-May-17 22:01:06.435 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:06.435 [Task submitter] INFO  nextflow.Session - [aa/8b837d] Submitted process > BLAST_SEARCH (5_3_batch)
-May-17 22:01:06.593 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 44; name: BLAST_SEARCH (8_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b3/0a40ca408a57a31bd4acc0dd2c6d06]
-May-17 22:01:06.600 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:06.600 [Task submitter] INFO  nextflow.Session - [9e/382771] Submitted process > BLAST_SEARCH (7_2_batch)
-May-17 22:01:06.608 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 48; name: BLAST_SEARCH (4_4_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c9/3b081d413bdb3c32f9d23fa15a0192]
-May-17 22:01:06.785 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 46; name: BLAST_SEARCH (11_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ab/5da0470537db132979de3ba602f11e]
-May-17 22:01:06.801 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 49; name: BLAST_SEARCH (9_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/08/9921482e894c80d1e27472d71a2ed4]
-May-17 22:01:07.459 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 45; name: BLAST_SEARCH (5_3_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/aa/8b837d1ee5f770b1109a3a3b85a469]
-May-17 22:01:07.608 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 47; name: BLAST_SEARCH (7_2_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9e/382771898448768d14030a7848bf96]
-May-17 22:01:07.703 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 33; name: BLAST_SEARCH (5_3_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/09/b5c464a93ab30f8de0afa9e530560b]
-May-17 22:01:13.304 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 37; name: BLAST_SEARCH (9_1_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9c/db6d99d552f00c3e2933656f3a45a0]
-May-17 22:01:13.383 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.383 [Task submitter] INFO  nextflow.Session - [7c/413d8e] Submitted process > PARSE_BLAST (7_2)
-May-17 22:01:13.397 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.397 [Task submitter] INFO  nextflow.Session - [0e/ef76f6] Submitted process > PARSE_BLAST (9_1)
-May-17 22:01:13.405 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.406 [Task submitter] INFO  nextflow.Session - [80/a9d98c] Submitted process > PARSE_BLAST (5_3)
-May-17 22:01:13.418 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.419 [Task submitter] INFO  nextflow.Session - [19/9a74eb] Submitted process > PARSE_BLAST (12_1)
-May-17 22:01:13.427 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.427 [Task submitter] INFO  nextflow.Session - [aa/b9b68e] Submitted process > PARSE_BLAST (6_2)
-May-17 22:01:13.438 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.439 [Task submitter] INFO  nextflow.Session - [d0/ca40ff] Submitted process > PARSE_BLAST (2_23)
-May-17 22:01:13.450 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.450 [Task submitter] INFO  nextflow.Session - [ae/1f3dc6] Submitted process > PARSE_BLAST (3_4)
-May-17 22:01:13.460 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.460 [Task submitter] INFO  nextflow.Session - [50/2e0ec5] Submitted process > PARSE_BLAST (11_1)
-May-17 22:01:13.469 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.470 [Task submitter] INFO  nextflow.Session - [57/6305d8] Submitted process > PARSE_BLAST (8_1)
-May-17 22:01:13.477 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.477 [Task submitter] INFO  nextflow.Session - [68/a9ab09] Submitted process > PARSE_BLAST (4_4)
-May-17 22:01:13.486 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.486 [Task submitter] INFO  nextflow.Session - [d1/1aabf1] Submitted process > PARSE_BLAST (1_38)
-May-17 22:01:13.504 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.504 [Task submitter] INFO  nextflow.Session - [bf/1e3569] Submitted process > PARSE_BLAST (10_1)
-May-17 22:01:13.940 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 56; name: PARSE_BLAST (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7c/413d8ec45f7e008718338dc19ccb1e]
-May-17 22:01:13.974 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:13.974 [Task submitter] INFO  nextflow.Session - [12/fc9ef1] Submitted process > FILTER_BLAST (7_2)
-May-17 22:01:13.980 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 51; name: PARSE_BLAST (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0e/ef76f640cac7fcc1c8e1d7a2d65216]
-May-17 22:01:13.998 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.003 [Task submitter] INFO  nextflow.Session - [70/61aacd] Submitted process > FILTER_BLAST (9_1)
-May-17 22:01:14.027 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 53; name: PARSE_BLAST (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/19/9a74eb212f8271c7618618ae7f1e7c]
-May-17 22:01:14.053 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 54; name: PARSE_BLAST (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/aa/b9b68e1bc6cace9db0cb5c33bcf44c]
-May-17 22:01:14.055 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.058 [Task submitter] INFO  nextflow.Session - [9a/759669] Submitted process > FILTER_BLAST (12_1)
-May-17 22:01:14.063 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 55; name: PARSE_BLAST (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/80/a9d98ce95a992381ccc245425d2f0d]
-May-17 22:01:14.075 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.075 [Task submitter] INFO  nextflow.Session - [c8/ab923a] Submitted process > FILTER_BLAST (6_2)
-May-17 22:01:14.080 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.080 [Task submitter] INFO  nextflow.Session - [f2/1f3072] Submitted process > FILTER_BLAST (5_3)
-May-17 22:01:14.134 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 59; name: PARSE_BLAST (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ae/1f3dc6a2332f5390111f69f371641a]
-May-17 22:01:14.146 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.147 [Task submitter] INFO  nextflow.Session - [ed/6e94e6] Submitted process > FILTER_BLAST (3_4)
-May-17 22:01:14.162 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 61; name: PARSE_BLAST (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/57/6305d88b54e3d53e2fcfaae2507e80]
-May-17 22:01:14.174 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.174 [Task submitter] INFO  nextflow.Session - [e2/a4b885] Submitted process > FILTER_BLAST (8_1)
-May-17 22:01:14.177 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 50; name: PARSE_BLAST (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d0/ca40ff0126fd0e7fb5a515f5877ffb]
-May-17 22:01:14.195 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 52; name: PARSE_BLAST (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/50/2e0ec5de14d4afda8ac4d208381013]
-May-17 22:01:14.206 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.206 [Task submitter] INFO  nextflow.Session - [95/9e9a3b] Submitted process > FILTER_BLAST (11_1)
-May-17 22:01:14.216 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.216 [Task submitter] INFO  nextflow.Session - [d1/568425] Submitted process > FILTER_BLAST (2_23)
-May-17 22:01:14.325 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 58; name: PARSE_BLAST (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d1/1aabf1e8877df59a3bf18b8cccdef3]
-May-17 22:01:14.347 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.348 [Task submitter] INFO  nextflow.Session - [14/9a7643] Submitted process > FILTER_BLAST (1_38)
-May-17 22:01:14.422 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 60; name: PARSE_BLAST (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/68/a9ab09564899712006d8ca887c4d61]
-May-17 22:01:14.431 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.431 [Task submitter] INFO  nextflow.Session - [f7/be9536] Submitted process > FILTER_BLAST (4_4)
-May-17 22:01:14.448 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 57; name: PARSE_BLAST (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/bf/1e35692f03683304b09ae56a380890]
-May-17 22:01:14.472 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.473 [Task submitter] INFO  nextflow.Session - [34/50a57d] Submitted process > FILTER_BLAST (10_1)
-May-17 22:01:14.512 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 62; name: FILTER_BLAST (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/12/fc9ef16e6155ce471ab39c56d47a24]
-May-17 22:01:14.540 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.540 [Task submitter] INFO  nextflow.Session - [fd/f47f0b] Submitted process > EXTRACT_DNA (7_2)
-May-17 22:01:14.571 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 64; name: FILTER_BLAST (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9a/75966954982875a31a1bef1cdea784]
-May-17 22:01:14.588 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.591 [Task submitter] INFO  nextflow.Session - [04/8be7cd] Submitted process > EXTRACT_DNA (12_1)
-May-17 22:01:14.622 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 63; name: FILTER_BLAST (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/70/61aacd34b92f69a44d4bf7183a4425]
-May-17 22:01:14.630 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.630 [Task submitter] INFO  nextflow.Session - [3b/a4bcfc] Submitted process > EXTRACT_DNA (9_1)
-May-17 22:01:14.726 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 66; name: FILTER_BLAST (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f2/1f30728f3d70db89a6b41331dc571c]
-May-17 22:01:14.733 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 65; name: FILTER_BLAST (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c8/ab923a5ec0da80d2c5c61794ac6438]
-May-17 22:01:14.741 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.741 [Task submitter] INFO  nextflow.Session - [16/bcf232] Submitted process > EXTRACT_DNA (5_3)
-May-17 22:01:14.746 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.747 [Task submitter] INFO  nextflow.Session - [57/45b51c] Submitted process > EXTRACT_DNA (6_2)
-May-17 22:01:14.862 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 68; name: FILTER_BLAST (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e2/a4b885cbdffdf34c101c82f1d75018]
-May-17 22:01:14.890 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.891 [Task submitter] INFO  nextflow.Session - [a1/9a495e] Submitted process > EXTRACT_DNA (8_1)
-May-17 22:01:14.914 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 67; name: FILTER_BLAST (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ed/6e94e6ad37947b5ccc47f299383fe7]
-May-17 22:01:14.933 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:14.934 [Task submitter] INFO  nextflow.Session - [af/103ced] Submitted process > EXTRACT_DNA (3_4)
-May-17 22:01:15.108 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 69; name: FILTER_BLAST (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d1/5684251da9936ab88302162988437c]
-May-17 22:01:15.132 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.135 [Task submitter] INFO  nextflow.Session - [7e/6c13a9] Submitted process > EXTRACT_DNA (2_23)
-May-17 22:01:15.234 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 72; name: FILTER_BLAST (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f7/be9536c520b97b438818595cb071b5]
-May-17 22:01:15.241 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.242 [Task submitter] INFO  nextflow.Session - [95/361d39] Submitted process > EXTRACT_DNA (4_4)
-May-17 22:01:15.310 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 71; name: FILTER_BLAST (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/14/9a76434da3413f03a29f67af0da976]
-May-17 22:01:15.320 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.320 [Task submitter] INFO  nextflow.Session - [1f/fefd3b] Submitted process > EXTRACT_DNA (1_38)
-May-17 22:01:15.351 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 73; name: FILTER_BLAST (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/34/50a57d5d08339dd101677848fc8006]
-May-17 22:01:15.373 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.374 [Task submitter] INFO  nextflow.Session - [6b/02ae39] Submitted process > EXTRACT_DNA (10_1)
-May-17 22:01:15.402 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 70; name: FILTER_BLAST (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/95/9e9a3bd49503d8cd307045d5a0ebb0]
-May-17 22:01:15.413 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.413 [Task submitter] INFO  nextflow.Session - [8a/efec75] Submitted process > EXTRACT_DNA (11_1)
-May-17 22:01:15.501 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 77; name: EXTRACT_DNA (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/16/bcf232881e3dccf687870d788e62d1]
-May-17 22:01:15.505 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 76; name: EXTRACT_DNA (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/3b/a4bcfc05da74a1ceb68b989e163616]
-May-17 22:01:15.524 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.525 [Task submitter] INFO  nextflow.Session - [10/3ae482] Submitted process > CSV_TO_FASTA (9_1)
-May-17 22:01:15.530 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.531 [Task submitter] INFO  nextflow.Session - [fb/aa2cd5] Submitted process > CSV_TO_FASTA (5_3)
-May-17 22:01:15.549 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 75; name: EXTRACT_DNA (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/04/8be7cde4ed78bbb3a4ef963c728b1c]
-May-17 22:01:15.570 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.571 [Task submitter] INFO  nextflow.Session - [48/4253a0] Submitted process > CSV_TO_FASTA (12_1)
-May-17 22:01:15.631 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 78; name: EXTRACT_DNA (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/57/45b51c12031f5e3c7af36e22d7188e]
-May-17 22:01:15.645 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:15.648 [Task submitter] INFO  nextflow.Session - [1c/972980] Submitted process > CSV_TO_FASTA (6_2)
-May-17 22:01:16.093 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 81; name: EXTRACT_DNA (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7e/6c13a965bae24d2402f43ac4d9a8e2]
-May-17 22:01:16.104 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.104 [Task submitter] INFO  nextflow.Session - [33/8d8cec] Submitted process > CSV_TO_FASTA (2_23)
-May-17 22:01:16.118 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 86; name: CSV_TO_FASTA (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/fb/aa2cd54fad0a42d283840ad3182cad]
-May-17 22:01:16.137 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 88; name: CSV_TO_FASTA (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/48/4253a05b8adca7a2222b0a5f5ea997]
-May-17 22:01:16.139 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.139 [Task submitter] INFO  nextflow.Session - [88/47647d] Submitted process > CODON_CHECK_10 (5_3_10codon)
-May-17 22:01:16.141 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 85; name: EXTRACT_DNA (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/8a/efec75a8c277430ae1fc955e64d19a]
-May-17 22:01:16.151 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.152 [Task submitter] INFO  nextflow.Session - [4c/4ed33c] Submitted process > CODON_CHECK_10 (12_1_10codon)
-May-17 22:01:16.156 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.157 [Task submitter] INFO  nextflow.Session - [fc/5ae129] Submitted process > CSV_TO_FASTA (11_1)
-May-17 22:01:16.168 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 89; name: CSV_TO_FASTA (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/1c/9729800290308b53c5eb7715b9ca19]
-May-17 22:01:16.181 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 87; name: CSV_TO_FASTA (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/10/3ae4822c0ab13fd739c4b392c39f0e]
-May-17 22:01:16.184 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.185 [Task submitter] INFO  nextflow.Session - [51/de18e8] Submitted process > CODON_CHECK_10 (6_2_10codon)
-May-17 22:01:16.186 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 84; name: EXTRACT_DNA (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6b/02ae39e2e22208e66da5c41151e10d]
-May-17 22:01:16.197 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.198 [Task submitter] INFO  nextflow.Session - [69/7edc85] Submitted process > CODON_CHECK_10 (9_1_10codon)
-May-17 22:01:16.203 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.204 [Task submitter] INFO  nextflow.Session - [e2/0d0da9] Submitted process > CSV_TO_FASTA (10_1)
-May-17 22:01:16.363 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 90; name: CSV_TO_FASTA (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/33/8d8cec8dac113846a07a4912f53c9b]
-May-17 22:01:16.373 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 93; name: CSV_TO_FASTA (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/fc/5ae12905165991e2d98721afa43f72]
-May-17 22:01:16.385 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.387 [Task submitter] INFO  nextflow.Session - [65/49d604] Submitted process > CODON_CHECK_10 (2_23_10codon)
-May-17 22:01:16.395 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.396 [Task submitter] INFO  nextflow.Session - [07/a6820f] Submitted process > CODON_CHECK_10 (11_1_10codon)
-May-17 22:01:16.402 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 91; name: CODON_CHECK_10 (5_3_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/88/47647df7193c8528e935e066efa2c5]
-May-17 22:01:16.406 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 94; name: CODON_CHECK_10 (6_2_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/51/de18e886bd4b4d7443ca8ecc5b5518]
-May-17 22:01:16.409 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 92; name: CODON_CHECK_10 (12_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4c/4ed33c6207411eba15df631dfb1efb]
-May-17 22:01:16.427 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.427 [Task submitter] INFO  nextflow.Session - [39/d0d3b5] Submitted process > EXTEND_SEQUENCES (12_1)
-May-17 22:01:16.431 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 96; name: CSV_TO_FASTA (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e2/0d0da9f08bd92e93a2b1c8aa9b87bc]
-May-17 22:01:16.434 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.434 [Task submitter] INFO  nextflow.Session - [9b/9c7cbd] Submitted process > EXTEND_SEQUENCES (6_2)
-May-17 22:01:16.438 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 95; name: CODON_CHECK_10 (9_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/69/7edc8595f42bde366b098386a441be]
-May-17 22:01:16.439 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.440 [Task submitter] INFO  nextflow.Session - [36/ccc300] Submitted process > EXTEND_SEQUENCES (5_3)
-May-17 22:01:16.444 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.444 [Task submitter] INFO  nextflow.Session - [d8/641920] Submitted process > CODON_CHECK_10 (10_1_10codon)
-May-17 22:01:16.451 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.451 [Task submitter] INFO  nextflow.Session - [58/e09327] Submitted process > EXTEND_SEQUENCES (9_1)
-May-17 22:01:16.463 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 74; name: EXTRACT_DNA (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/fd/f47f0b488e53929fa6b7660b1b1a20]
-May-17 22:01:16.474 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.475 [Task submitter] INFO  nextflow.Session - [e8/ac0c1e] Submitted process > CSV_TO_FASTA (7_2)
-May-17 22:01:16.590 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 99; name: EXTEND_SEQUENCES (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/36/ccc300f53d47a66085e30f72701c2c]
-May-17 22:01:16.593 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 79; name: EXTRACT_DNA (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a1/9a495e681224f25d85504f570ca282]
-May-17 22:01:16.603 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.603 [Task submitter] INFO  nextflow.Session - [6e/6e89ad] Submitted process > CSV_TO_FASTA (8_1)
-May-17 22:01:16.609 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.609 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 100; name: EXTEND_SEQUENCES (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9b/9c7cbd0ee6a03066f8bdd8e398fb1e]
-May-17 22:01:16.609 [Task submitter] INFO  nextflow.Session - [57/6a613b] Submitted process > CODON_CHECK_20 (5_3_10codon)
-May-17 22:01:16.625 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.625 [Task submitter] INFO  nextflow.Session - [15/e3d0fd] Submitted process > CODON_CHECK_20 (6_2_10codon)
-May-17 22:01:16.628 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 97; name: CODON_CHECK_10 (2_23_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/65/49d604a2eb5105bce99f90163e7d2f]
-May-17 22:01:16.637 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 98; name: CODON_CHECK_10 (11_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/07/a6820fe04ad1a8b40fe57a8dbe3f4b]
-May-17 22:01:16.640 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 101; name: EXTEND_SEQUENCES (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/39/d0d3b55e0ea9180d65e66e048f8215]
-May-17 22:01:16.643 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.643 [Task submitter] INFO  nextflow.Session - [d7/0b5cad] Submitted process > EXTEND_SEQUENCES (2_23)
-May-17 22:01:16.645 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 83; name: EXTRACT_DNA (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/1f/fefd3bb02a01594db4b79b00d992ee]
-May-17 22:01:16.647 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 103; name: EXTEND_SEQUENCES (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/58/e093276f79e6c14982dbb9ff852caf]
-May-17 22:01:16.657 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.657 [Task submitter] INFO  nextflow.Session - [7c/bbca08] Submitted process > CODON_CHECK_20 (12_1_10codon)
-May-17 22:01:16.658 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 104; name: CSV_TO_FASTA (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e8/ac0c1e655b84cadfa85abe25093c36]
-May-17 22:01:16.660 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.661 [Task submitter] INFO  nextflow.Session - [b3/4ca142] Submitted process > EXTEND_SEQUENCES (11_1)
-May-17 22:01:16.663 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.664 [Task submitter] INFO  nextflow.Session - [fc/153125] Submitted process > CODON_CHECK_20 (9_1_10codon)
-May-17 22:01:16.667 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.667 [Task submitter] INFO  nextflow.Session - [43/5669a7] Submitted process > CSV_TO_FASTA (1_38)
-May-17 22:01:16.671 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.672 [Task submitter] INFO  nextflow.Session - [0e/daaef5] Submitted process > CODON_CHECK_10 (7_2_10codon)
-May-17 22:01:16.676 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 102; name: CODON_CHECK_10 (10_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d8/6419207261de6e003493428cd3b569]
-May-17 22:01:16.693 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.694 [Task submitter] INFO  nextflow.Session - [30/1bd5f9] Submitted process > EXTEND_SEQUENCES (10_1)
-May-17 22:01:16.738 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 80; name: EXTRACT_DNA (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/af/103ced4f208032f9a17d1dfbcafc3d]
-May-17 22:01:16.755 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.756 [Task submitter] INFO  nextflow.Session - [e6/4773f8] Submitted process > CSV_TO_FASTA (3_4)
-May-17 22:01:16.763 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 82; name: EXTRACT_DNA (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/95/361d3964bb18d5962657c538b4d494]
-May-17 22:01:16.788 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.791 [Task submitter] INFO  nextflow.Session - [d6/4f0d4c] Submitted process > CSV_TO_FASTA (4_4)
-May-17 22:01:16.808 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 106; name: CSV_TO_FASTA (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6e/6e89adea52eda75c52fc317aab960f]
-May-17 22:01:16.817 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 107; name: CODON_CHECK_20 (6_2_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/15/e3d0fd3ae82337bff97b679e44afbd]
-May-17 22:01:16.822 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 105; name: CODON_CHECK_20 (5_3_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/57/6a613ba489543401d534ca2e7f0818]
-May-17 22:01:16.828 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 109; name: EXTEND_SEQUENCES (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b3/4ca1423303bcaaef6c33210a837108]
-May-17 22:01:16.841 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 108; name: EXTEND_SEQUENCES (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d7/0b5cadcc2b47e37a9235f8064268d2]
-May-17 22:01:16.842 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.842 [Task submitter] INFO  nextflow.Session - [7b/3d5f6d] Submitted process > CODON_CHECK_10 (8_1_10codon)
-May-17 22:01:16.858 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.858 [Task submitter] INFO  nextflow.Session - [60/1e47a7] Submitted process > COLLECT_STANDARD (6_2)
-May-17 22:01:16.868 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.869 [Task submitter] INFO  nextflow.Session - [f2/e01a22] Submitted process > COLLECT_STANDARD (5_3)
-May-17 22:01:16.872 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 111; name: CSV_TO_FASTA (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/43/5669a7bcdf7b885f258abb110ce834]
-May-17 22:01:16.875 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.877 [Task submitter] INFO  nextflow.Session - [2d/b1a702] Submitted process > CODON_CHECK_20 (11_1_10codon)
-May-17 22:01:16.886 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.887 [Task submitter] INFO  nextflow.Session - [b7/3d6dac] Submitted process > CODON_CHECK_20 (2_23_10codon)
-May-17 22:01:16.893 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.893 [Task submitter] INFO  nextflow.Session - [84/30ea92] Submitted process > CODON_CHECK_10 (1_38_10codon)
-May-17 22:01:16.894 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 110; name: CODON_CHECK_20 (12_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7c/bbca08b44e578313a8d5d77c9f7ffc]
-May-17 22:01:16.894 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 114; name: EXTEND_SEQUENCES (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/30/1bd5f9f0e471a9d1138050f0901794]
-May-17 22:01:16.910 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.911 [Task submitter] INFO  nextflow.Session - [ca/78899f] Submitted process > COLLECT_STANDARD (12_1)
-May-17 22:01:16.919 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.919 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 112; name: CODON_CHECK_20 (9_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/fc/1531250c3009397225308f38060775]
-May-17 22:01:16.921 [Task submitter] INFO  nextflow.Session - [6f/582c95] Submitted process > CODON_CHECK_20 (10_1_10codon)
-May-17 22:01:16.930 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 113; name: CODON_CHECK_10 (7_2_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0e/daaef566a68b18bf301f4fc7a6d50e]
-May-17 22:01:16.934 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.934 [Task submitter] INFO  nextflow.Session - [38/30b588] Submitted process > COLLECT_STANDARD (9_1)
-May-17 22:01:16.942 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 115; name: CSV_TO_FASTA (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e6/4773f8427dcfbc2e50ce34ab698654]
-May-17 22:01:16.947 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.947 [Task submitter] INFO  nextflow.Session - [f6/0a1798] Submitted process > EXTEND_SEQUENCES (7_2)
-May-17 22:01:16.965 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:16.965 [Task submitter] INFO  nextflow.Session - [91/00b6e9] Submitted process > CODON_CHECK_10 (3_4_10codon)
-May-17 22:01:16.973 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 116; name: CSV_TO_FASTA (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d6/4f0d4cec73bdb0b2062c92edee0ff6]
-May-17 22:01:17.042 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 117; name: CODON_CHECK_10 (8_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7b/3d5f6d30deed01d74b648efbe4673b]
-May-17 22:01:17.051 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 118; name: COLLECT_STANDARD (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/60/1e47a7d73e89d8e6f7add94b9c411e]
-May-17 22:01:17.072 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.073 [Task submitter] INFO  nextflow.Session - [01/f3e143] Submitted process > CODON_CHECK_10 (4_4_10codon)
-May-17 22:01:17.077 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.077 [Task submitter] INFO  nextflow.Session - [d8/c40791] Submitted process > EXTEND_SEQUENCES (8_1)
-May-17 22:01:17.081 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.081 [Task submitter] INFO  nextflow.Session - [80/5029b5] Submitted process > TRANSLATE (6_2)
-May-17 22:01:17.094 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 123; name: COLLECT_STANDARD (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ca/78899f4b835a056db335f4f73135c8]
-May-17 22:01:17.114 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.114 [Task submitter] INFO  nextflow.Session - [92/30ab1b] Submitted process > TRANSLATE (12_1)
-May-17 22:01:17.118 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 121; name: CODON_CHECK_20 (2_23_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b7/3d6dac3bebf3c5ac424add8b0048c6]
-May-17 22:01:17.133 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.134 [Task submitter] INFO  nextflow.Session - [08/871040] Submitted process > COLLECT_STANDARD (2_23)
-May-17 22:01:17.139 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 122; name: CODON_CHECK_10 (1_38_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/84/30ea925177ce839d2a0b70584f95ff]
-May-17 22:01:17.148 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 125; name: COLLECT_STANDARD (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/38/30b5885f8aab3f39f67532dabb55c0]
-May-17 22:01:17.154 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.154 [Task submitter] INFO  nextflow.Session - [5b/a6085b] Submitted process > EXTEND_SEQUENCES (1_38)
-May-17 22:01:17.155 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 119; name: COLLECT_STANDARD (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f2/e01a22aecd022c42217818b04b549d]
-May-17 22:01:17.157 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 124; name: CODON_CHECK_20 (10_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6f/582c95a97a496d0d525c5d982797c9]
-May-17 22:01:17.172 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 120; name: CODON_CHECK_20 (11_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/2d/b1a7026741c7846868668f09933639]
-May-17 22:01:17.175 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.176 [Task submitter] INFO  nextflow.Session - [a7/907518] Submitted process > COLLECT_STANDARD (10_1)
-May-17 22:01:17.182 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.182 [Task submitter] INFO  nextflow.Session - [37/b0cfac] Submitted process > TRANSLATE (9_1)
-May-17 22:01:17.187 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.188 [Task submitter] INFO  nextflow.Session - [bb/54ad94] Submitted process > TRANSLATE (5_3)
-May-17 22:01:17.192 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.193 [Task submitter] INFO  nextflow.Session - [62/2e4b77] Submitted process > COLLECT_STANDARD (11_1)
-May-17 22:01:17.293 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 127; name: CODON_CHECK_10 (3_4_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/91/00b6e92d75dc91ea4c874704044696]
-May-17 22:01:17.304 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.304 [Task submitter] INFO  nextflow.Session - [ec/6c0583] Submitted process > EXTEND_SEQUENCES (3_4)
-May-17 22:01:17.523 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 128; name: CODON_CHECK_10 (4_4_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/01/f3e1430905abb0388d4932ba28d0e2]
-May-17 22:01:17.535 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.536 [Task submitter] INFO  nextflow.Session - [c5/fdcfd5] Submitted process > EXTEND_SEQUENCES (4_4)
-May-17 22:01:17.605 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 131; name: TRANSLATE (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/92/30ab1b3b73dfc522a91e5d69f897b2]
-May-17 22:01:17.641 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 137; name: COLLECT_STANDARD (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/62/2e4b77065a17550bef5f358de23db6]
-May-17 22:01:17.651 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.652 [Task submitter] INFO  nextflow.Session - [77/c9c741] Submitted process > TRANSLATE (11_1)
-May-17 22:01:17.665 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.665 [Task submitter] INFO  nextflow.Session - [dc/61846e] Submitted process > ALLELE_SELF_REF (12_1)
-May-17 22:01:17.692 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 134; name: COLLECT_STANDARD (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a7/907518638c41698e1aca7383f4f8e0]
-May-17 22:01:17.704 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.704 [Task submitter] INFO  nextflow.Session - [6e/94e658] Submitted process > TRANSLATE (10_1)
-May-17 22:01:17.723 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 130; name: TRANSLATE (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/80/5029b53586cbfe4e058138b98db7b6]
-May-17 22:01:17.739 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.739 [Task submitter] INFO  nextflow.Session - [29/85d6c6] Submitted process > ALLELE_SELF_REF (6_2)
-May-17 22:01:17.772 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 132; name: COLLECT_STANDARD (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/08/871040ebd7ae9e1400654c7801a130]
-May-17 22:01:17.792 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.792 [Task submitter] INFO  nextflow.Session - [1d/ca8736] Submitted process > TRANSLATE (2_23)
-May-17 22:01:17.930 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 135; name: TRANSLATE (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/37/b0cfacdd1a4cbba3a88153aac2ee4f]
-May-17 22:01:17.947 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:17.948 [Task submitter] INFO  nextflow.Session - [28/db11f8] Submitted process > ALLELE_SELF_REF (9_1)
-May-17 22:01:18.002 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 126; name: EXTEND_SEQUENCES (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f6/0a1798074cede67ad91c223d9060f7]
-May-17 22:01:18.017 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.017 [Task submitter] INFO  nextflow.Session - [27/2cdda4] Submitted process > CODON_CHECK_20 (7_2_10codon)
-May-17 22:01:18.035 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 129; name: EXTEND_SEQUENCES (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d8/c407913bc0235328349a899243f64c]
-May-17 22:01:18.048 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 136; name: TRANSLATE (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/bb/54ad94a616f61b8a43b51ba3060a06]
-May-17 22:01:18.049 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.049 [Task submitter] INFO  nextflow.Session - [75/49e8a7] Submitted process > CODON_CHECK_20 (8_1_10codon)
-May-17 22:01:18.062 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.062 [Task submitter] INFO  nextflow.Session - [6b/118151] Submitted process > ALLELE_SELF_REF (5_3)
-May-17 22:01:18.244 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 133; name: EXTEND_SEQUENCES (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/5b/a6085be2bba73fa4cc914ffcded0c3]
-May-17 22:01:18.262 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.262 [Task submitter] INFO  nextflow.Session - [e4/b51cc8] Submitted process > CODON_CHECK_20 (1_38_10codon)
-May-17 22:01:18.421 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 142; name: TRANSLATE (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6e/94e6583fcb7fddd121fcc39adb5744]
-May-17 22:01:18.433 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 141; name: TRANSLATE (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/77/c9c74102d78648f67bf0e14ba4c89b]
-May-17 22:01:18.435 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.436 [Task submitter] INFO  nextflow.Session - [d0/f1f63a] Submitted process > ALLELE_SELF_REF (10_1)
-May-17 22:01:18.453 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.453 [Task submitter] INFO  nextflow.Session - [b7/a35a97] Submitted process > ALLELE_SELF_REF (11_1)
-May-17 22:01:18.469 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 140; name: ALLELE_SELF_REF (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/dc/61846e681099e4389eb899f50c86b7]
-May-17 22:01:18.469 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 143; name: ALLELE_SELF_REF (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/29/85d6c67e1c8f3053ead85ddf8590a1]
-May-17 22:01:18.492 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 138; name: EXTEND_SEQUENCES (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ec/6c0583d83240da1a83acdf536821b6]
-May-17 22:01:18.492 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.493 [Task submitter] INFO  nextflow.Session - [6f/c1e069] Submitted process > FILTER_ALLELES (12_1)
-May-17 22:01:18.496 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.497 [Task submitter] INFO  nextflow.Session - [68/5fa75e] Submitted process > FILTER_ALLELES (6_2)
-May-17 22:01:18.503 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.503 [Task submitter] INFO  nextflow.Session - [02/e9b2d1] Submitted process > CODON_CHECK_20 (3_4_10codon)
-May-17 22:01:18.572 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 144; name: TRANSLATE (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/1d/ca8736a6c4f55f621acb7fd2c7e36a]
-May-17 22:01:18.582 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.582 [Task submitter] INFO  nextflow.Session - [27/9a40d5] Submitted process > ALLELE_SELF_REF (2_23)
-May-17 22:01:18.637 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 139; name: EXTEND_SEQUENCES (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c5/fdcfd51e74ae04efd45f3d1952f7a3]
-May-17 22:01:18.644 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 146; name: CODON_CHECK_20 (7_2_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/27/2cdda4b2f19df80469bd45ebfd7059]
-May-17 22:01:18.647 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.647 [Task submitter] INFO  nextflow.Session - [7f/7364a6] Submitted process > CODON_CHECK_20 (4_4_10codon)
-May-17 22:01:18.658 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.658 [Task submitter] INFO  nextflow.Session - [cd/7208cc] Submitted process > COLLECT_STANDARD (7_2)
-May-17 22:01:18.683 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 147; name: CODON_CHECK_20 (8_1_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/75/49e8a71b7189b5bd2bf13e94ade723]
-May-17 22:01:18.701 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.702 [Task submitter] INFO  nextflow.Session - [b2/556cab] Submitted process > COLLECT_STANDARD (8_1)
-May-17 22:01:18.721 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 148; name: ALLELE_SELF_REF (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6b/1181511918c0765dd96a718f05987e]
-May-17 22:01:18.730 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 145; name: ALLELE_SELF_REF (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/28/db11f85bdc5742b96efaf6679030fb]
-May-17 22:01:18.738 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 152; name: FILTER_ALLELES (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6f/c1e0696bee32598fd1d9919c308137]
-May-17 22:01:18.743 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.753 [Task submitter] INFO  nextflow.Session - [77/8c46f2] Submitted process > FILTER_ALLELES (5_3)
-May-17 22:01:18.754 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 149; name: CODON_CHECK_20 (1_38_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e4/b51cc837693b208702374598df7abc]
-May-17 22:01:18.765 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.766 [Task submitter] INFO  nextflow.Session - [4d/d76614] Submitted process > FILTER_ALLELES (9_1)
-May-17 22:01:18.777 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.778 [Task submitter] INFO  nextflow.Session - [42/9ef376] Submitted process > MAFFT_ALIGN (12_1)
-May-17 22:01:18.784 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.784 [Task submitter] INFO  nextflow.Session - [c6/242499] Submitted process > COLLECT_STANDARD (1_38)
-May-17 22:01:18.830 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 153; name: FILTER_ALLELES (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/68/5fa75e7350754c12a8ed64c5090a47]
-May-17 22:01:18.947 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 154; name: CODON_CHECK_20 (3_4_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/02/e9b2d19b984fd0b807db418965923b]
-May-17 22:01:18.991 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 157; name: COLLECT_STANDARD (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/cd/7208cca1bb1d09adf0ce458d272d8f]
-May-17 22:01:18.992 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 158; name: COLLECT_STANDARD (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b2/556cab993f956930689c0041c9eed3]
-May-17 22:01:18.995 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:18.995 [Task submitter] INFO  nextflow.Session - [ee/0b61a6] Submitted process > COLLECT_STANDARD (3_4)
-May-17 22:01:18.997 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 150; name: ALLELE_SELF_REF (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d0/f1f63a4b113566c059de71b3300008]
-May-17 22:01:19.002 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 155; name: ALLELE_SELF_REF (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/27/9a40d5e6ceeedf5f012a12049e5d8f]
-May-17 22:01:19.018 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 156; name: CODON_CHECK_20 (4_4_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7f/7364a6e3e2329991837822156c407c]
-May-17 22:01:19.028 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 160; name: FILTER_ALLELES (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/4d/d7661467ccc0559ad2c30a8f3dc8de]
-May-17 22:01:19.029 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 161; name: MAFFT_ALIGN (12_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/42/9ef37623bde0aac19a6a42a13d472c]
-May-17 22:01:19.029 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.029 [Task submitter] INFO  nextflow.Session - [44/6e1a9e] Submitted process > TRANSLATE (8_1)
-May-17 22:01:19.030 [TaskFinalizer-8] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (12_1)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/42/9ef37623bde0aac19a6a42a13d472c/12_1_aligned.fasta` (pattern: `12_1_aligned.fasta`)
-May-17 22:01:19.033 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.033 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 159; name: FILTER_ALLELES (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/77/8c46f23c1d4e8e92e0f4fcfa75a679]
-May-17 22:01:19.033 [Task submitter] INFO  nextflow.Session - [a6/1197f9] Submitted process > FILTER_ALLELES (2_23)
-May-17 22:01:19.036 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.039 [Task submitter] INFO  nextflow.Session - [ec/1d205e] Submitted process > TRANSLATE (7_2)
-May-17 22:01:19.046 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.047 [Task submitter] INFO  nextflow.Session - [08/05f2b2] Submitted process > FILTER_ALLELES (10_1)
-May-17 22:01:19.047 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 162; name: COLLECT_STANDARD (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c6/242499cf8e1f4b31122077130c3dca]
-May-17 22:01:19.064 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.064 [Task submitter] INFO  nextflow.Session - [62/619aaf] Submitted process > MAFFT_ALIGN (9_1)
-May-17 22:01:19.070 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 151; name: ALLELE_SELF_REF (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b7/a35a9794d4266562ad6f544979ebbe]
-May-17 22:01:19.072 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.072 [Task submitter] INFO  nextflow.Session - [9f/4f5aa7] Submitted process > COLLECT_STANDARD (4_4)
-May-17 22:01:19.077 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.077 [Task submitter] INFO  nextflow.Session - [6f/98a5d6] Submitted process > TRANSLATE (1_38)
-May-17 22:01:19.111 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 164; name: COLLECT_STANDARD (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ee/0b61a6cf5ac05eca3b2dcbfffe233f]
-May-17 22:01:19.118 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.118 [Task submitter] INFO  nextflow.Session - [80/9bbeaa] Submitted process > FILTER_ALLELES (11_1)
-May-17 22:01:19.149 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 167; name: FILTER_ALLELES (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a6/1197f9cb1df073dc2ad34f90dff392]
-May-17 22:01:19.156 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.157 [Task submitter] INFO  nextflow.Session - [72/49c96e] Submitted process > TRANSLATE (3_4)
-May-17 22:01:19.172 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 169; name: COLLECT_STANDARD (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/9f/4f5aa7e764eb0ccfbd7db58d359f07]
-May-17 22:01:19.176 [TaskFinalizer-8] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:19.178 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 170; name: MAFFT_ALIGN (9_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/62/619aaf5a628f547596a20691cf2bad]
-May-17 22:01:19.180 [TaskFinalizer-5] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (9_1)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/62/619aaf5a628f547596a20691cf2bad/9_1_aligned.fasta` (pattern: `9_1_aligned.fasta`)
-May-17 22:01:19.181 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:19.188 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.188 [Task submitter] INFO  nextflow.Session - [a8/2c7113] Submitted process > MAFFT_ALIGN (6_2)
-May-17 22:01:19.199 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.205 [Task submitter] INFO  nextflow.Session - [7c/d1c318] Submitted process > TRANSLATE (4_4)
-May-17 22:01:19.223 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 173; name: FILTER_ALLELES (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/80/9bbeaa30a62d9450ac088e5dc6b08a]
-May-17 22:01:19.422 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 168; name: FILTER_ALLELES (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/08/05f2b25925a834e5d77d71713b929e]
-May-17 22:01:19.442 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 165; name: TRANSLATE (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ec/1d205e7982f84c9eb7500bdf67bfe9]
-May-17 22:01:19.444 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 163; name: MAFFT_ALIGN (6_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a8/2c7113095724b0eefd87c71380993e]
-May-17 22:01:19.453 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.453 [Task submitter] INFO  nextflow.Session - [80/480ba5] Submitted process > MAFFT_ALIGN (5_3)
-May-17 22:01:19.454 [TaskFinalizer-3] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (6_2)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/a8/2c7113095724b0eefd87c71380993e/6_2_aligned.fasta` (pattern: `6_2_aligned.fasta`)
-May-17 22:01:19.455 [TaskFinalizer-3] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:19.457 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.457 [Task submitter] INFO  nextflow.Session - [43/62f3ed] Submitted process > ALLELE_SELF_REF (7_2)
-May-17 22:01:19.469 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 166; name: TRANSLATE (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/44/6e1a9e7a3065647c610bcba7be32e2]
-May-17 22:01:19.561 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 172; name: TRANSLATE (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6f/98a5d6d183de5004b1d152c72f6ef8]
-May-17 22:01:19.566 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.566 [Task submitter] INFO  nextflow.Session - [f2/d3dfe7] Submitted process > ALLELE_SELF_REF (8_1)
-May-17 22:01:19.573 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.574 [Task submitter] INFO  nextflow.Session - [40/87b20b] Submitted process > ALLELE_SELF_REF (1_38)
-May-17 22:01:19.651 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 174; name: TRANSLATE (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/72/49c96eaf01d336219b83d92f886a51]
-May-17 22:01:19.663 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 176; name: TRANSLATE (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7c/d1c318af63bbfb7aa47825cb4b1a84]
-May-17 22:01:19.669 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 171; name: MAFFT_ALIGN (5_3); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/80/480ba5d93a7f5a2bbd606a3b3e9ef3]
-May-17 22:01:19.669 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.670 [Task submitter] INFO  nextflow.Session - [5f/f55d72] Submitted process > ALLELE_SELF_REF (3_4)
-May-17 22:01:19.671 [TaskFinalizer-5] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (5_3)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/80/480ba5d93a7f5a2bbd606a3b3e9ef3/5_3_aligned.fasta` (pattern: `5_3_aligned.fasta`)
-May-17 22:01:19.671 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:19.676 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.676 [Task submitter] INFO  nextflow.Session - [c0/b254eb] Submitted process > MAFFT_ALIGN (2_23)
-May-17 22:01:19.682 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.683 [Task submitter] INFO  nextflow.Session - [56/313e3e] Submitted process > ALLELE_SELF_REF (4_4)
-May-17 22:01:19.913 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 179; name: ALLELE_SELF_REF (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/43/62f3ed5584449cfd2a265943bef1ac]
-May-17 22:01:19.938 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 175; name: MAFFT_ALIGN (2_23); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c0/b254ebf1bd97c69c5117879bf90008]
-May-17 22:01:19.940 [TaskFinalizer-9] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (2_23)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/c0/b254ebf1bd97c69c5117879bf90008/2_23_aligned.fasta` (pattern: `2_23_aligned.fasta`)
-May-17 22:01:19.941 [TaskFinalizer-9] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:19.943 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.943 [Task submitter] INFO  nextflow.Session - [36/5d3ac5] Submitted process > MAFFT_ALIGN (11_1)
-May-17 22:01:19.948 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.948 [Task submitter] INFO  nextflow.Session - [b2/107f9c] Submitted process > FILTER_ALLELES (7_2)
-May-17 22:01:19.952 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 181; name: ALLELE_SELF_REF (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/40/87b20b06f761f4f517057eda3fd128]
-May-17 22:01:19.953 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:19.953 [Task submitter] INFO  nextflow.Session - [08/81c1ff] Submitted process > MAFFT_FOR_CONSENSUS (7_2)
-May-17 22:01:20.066 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 180; name: ALLELE_SELF_REF (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f2/d3dfe7f255743290f9fd31fa6366c6]
-May-17 22:01:20.070 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.070 [Task submitter] INFO  nextflow.Session - [a4/358468] Submitted process > MAFFT_FOR_CONSENSUS (1_38)
-May-17 22:01:20.072 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 183; name: ALLELE_SELF_REF (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/56/313e3e161b296287c67a05563f59b0]
-May-17 22:01:20.079 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.079 [Task submitter] INFO  nextflow.Session - [3c/ebdc1e] Submitted process > FILTER_ALLELES (1_38)
-May-17 22:01:20.084 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.085 [Task submitter] INFO  nextflow.Session - [20/54a5fd] Submitted process > FILTER_ALLELES (8_1)
-May-17 22:01:20.089 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.089 [Task submitter] INFO  nextflow.Session - [ce/22ec23] Submitted process > MAFFT_FOR_CONSENSUS (8_1)
-May-17 22:01:20.109 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.109 [Task submitter] INFO  nextflow.Session - [aa/729ec8] Submitted process > MAFFT_FOR_CONSENSUS (4_4)
-May-17 22:01:20.115 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.115 [Task submitter] INFO  nextflow.Session - [7c/6dcb3b] Submitted process > FILTER_ALLELES (4_4)
-May-17 22:01:20.131 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 177; name: MAFFT_ALIGN (11_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/36/5d3ac5de11631c0edcee234b36a19a]
-May-17 22:01:20.136 [TaskFinalizer-2] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (11_1)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/36/5d3ac5de11631c0edcee234b36a19a/11_1_aligned.fasta` (pattern: `11_1_aligned.fasta`)
-May-17 22:01:20.137 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.138 [TaskFinalizer-2] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:20.142 [Task submitter] INFO  nextflow.Session - [ff/45a2ef] Submitted process > MAFFT_ALIGN (10_1)
-May-17 22:01:20.187 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 182; name: ALLELE_SELF_REF (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/5f/f55d72bbace09c7a027250b5156f6b]
-May-17 22:01:20.187 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 184; name: FILTER_ALLELES (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/b2/107f9c3c7403f875a516c09a069a2a]
-May-17 22:01:20.188 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 188; name: FILTER_ALLELES (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/20/54a5fd8c81a4974420d0411f9fac90]
-May-17 22:01:20.190 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 187; name: FILTER_ALLELES (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/3c/ebdc1e1018af1c2b93e7e650a75cb4]
-May-17 22:01:20.225 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 190; name: FILTER_ALLELES (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7c/6dcb3bfa01c87251d53e2bff252726]
-May-17 22:01:20.230 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 178; name: MAFFT_ALIGN (10_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ff/45a2efe6bd8f4c5e6f6c012e700fe8]
-May-17 22:01:20.231 [TaskFinalizer-9] DEBUG n.processor.TaskFileCollector - Process `MAFFT_ALIGN (10_1)` is unable to find [UnixPath]: `/home/xinruoz/Document/Hiller/allele_search/work/ff/45a2efe6bd8f4c5e6f6c012e700fe8/10_1_aligned.fasta` (pattern: `10_1_aligned.fasta`)
-May-17 22:01:20.232 [TaskFinalizer-9] DEBUG nextflow.processor.TaskProcessor - Process MAFFT_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
-May-17 22:01:20.233 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.234 [Task submitter] INFO  nextflow.Session - [c9/024d71] Submitted process > MAFFT_FOR_CONSENSUS (3_4)
-May-17 22:01:20.238 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.238 [Task submitter] INFO  nextflow.Session - [15/ba087f] Submitted process > FILTER_ALLELES (3_4)
-May-17 22:01:20.244 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.244 [Task submitter] INFO  nextflow.Session - [2c/132f84] Submitted process > MAFFT_ALIGN (8_1)
-May-17 22:01:20.318 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 194; name: FILTER_ALLELES (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/15/ba087f4d501e6ad6de91c928af4695]
-May-17 22:01:20.322 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 185; name: MAFFT_FOR_CONSENSUS (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/08/81c1ff076f41bfa06e72430665305d]
-May-17 22:01:20.362 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 186; name: MAFFT_FOR_CONSENSUS (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a4/35846858cd7e9e204dcd2d7005b426]
-May-17 22:01:20.369 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.369 [Task submitter] INFO  nextflow.Session - [d5/ffbdec] Submitted process > COMPUTE_CONSENSUS (7_2)
-May-17 22:01:20.377 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.378 [Task submitter] INFO  nextflow.Session - [6b/627ef4] Submitted process > COMPUTE_CONSENSUS (1_38)
-May-17 22:01:20.385 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 189; name: MAFFT_FOR_CONSENSUS (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ce/22ec230309f75fe1f7f6bda40e5bd4]
-May-17 22:01:20.406 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 191; name: MAFFT_FOR_CONSENSUS (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/aa/729ec8196f802b97a32274c2b3f329]
-May-17 22:01:20.411 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.412 [Task submitter] INFO  nextflow.Session - [ee/ff0a5a] Submitted process > COMPUTE_CONSENSUS (8_1)
-May-17 22:01:20.420 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.420 [Task submitter] INFO  nextflow.Session - [44/38af64] Submitted process > COMPUTE_CONSENSUS (4_4)
-May-17 22:01:20.688 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 196; name: MAFFT_ALIGN (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/2c/132f84781411dbae7abd417fbf11e3]
-May-17 22:01:20.693 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.693 [Task submitter] INFO  nextflow.Session - [37/0f278b] Submitted process > MAFFT_ALIGN (1_38)
-May-17 22:01:20.696 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 195; name: MAFFT_FOR_CONSENSUS (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c9/024d71841d74fd4c001073f555ba68]
-May-17 22:01:20.741 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 200; name: COMPUTE_CONSENSUS (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6b/627ef4c927085350879292703e00d9]
-May-17 22:01:20.746 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.747 [Task submitter] INFO  nextflow.Session - [65/df737b] Submitted process > COMPUTE_CONSENSUS (3_4)
-May-17 22:01:20.753 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.753 [Task submitter] INFO  nextflow.Session - [a0/89ca97] Submitted process > WEBLOGO (8_1)
-May-17 22:01:20.762 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.762 [Task submitter] INFO  nextflow.Session - [42/cfe79e] Submitted process > ALLELE_CONSENSUS_REF (1_38)
-May-17 22:01:20.783 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 198; name: COMPUTE_CONSENSUS (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d5/ffbdecd9644a980d08d6b575b05b4f]
-May-17 22:01:20.913 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 201; name: COMPUTE_CONSENSUS (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ee/ff0a5af35905b195ee5c14d1801e48]
-May-17 22:01:20.916 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 202; name: COMPUTE_CONSENSUS (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/44/38af649b365ae5648ea04aef1a4ada]
-May-17 22:01:20.926 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.926 [Task submitter] INFO  nextflow.Session - [04/7c33a7] Submitted process > ALLELE_CONSENSUS_REF (7_2)
-May-17 22:01:20.929 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.929 [Task submitter] INFO  nextflow.Session - [10/b5032f] Submitted process > ALLELE_CONSENSUS_REF (4_4)
-May-17 22:01:20.934 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:20.934 [Task submitter] INFO  nextflow.Session - [3a/4e02f0] Submitted process > ALLELE_CONSENSUS_REF (8_1)
-May-17 22:01:21.053 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 204; name: COMPUTE_CONSENSUS (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/65/df737b7afd4bac949dbff8c4b9b7c0]
-May-17 22:01:21.131 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 205; name: ALLELE_CONSENSUS_REF (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/42/cfe79e2071567c715dc576cf97ab7a]
-May-17 22:01:21.138 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.138 [Task submitter] INFO  nextflow.Session - [c3/c84658] Submitted process > ALLELE_CONSENSUS_REF (3_4)
-May-17 22:01:21.163 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 193; name: MAFFT_ALIGN (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/37/0f278bfa260e78640e54fd3780f2e5]
-May-17 22:01:21.166 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.166 [Task submitter] INFO  nextflow.Session - [62/f66f29] Submitted process > MAFFT_ALIGN (7_2)
-May-17 22:01:21.170 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.170 [Task submitter] INFO  nextflow.Session - [88/0a2d9d] Submitted process > ALIGNMENT_FIGURE_REF (1_38/consensus_reference)
-May-17 22:01:21.378 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 206; name: ALLELE_CONSENSUS_REF (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/04/7c33a73f06157d64f08a5ce7a1386f]
-May-17 22:01:21.383 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.383 [Task submitter] INFO  nextflow.Session - [6d/3fd5d4] Submitted process > WEBLOGO (1_38)
-May-17 22:01:21.390 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 207; name: ALLELE_CONSENSUS_REF (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/3a/4e02f06563810ea99ad5c42c4417ff]
-May-17 22:01:21.394 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.395 [Task submitter] INFO  nextflow.Session - [cf/b77c6f] Submitted process > ALIGNMENT_FIGURE_REF (7_2/consensus_reference)
-May-17 22:01:21.401 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 208; name: ALLELE_CONSENSUS_REF (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/10/b5032fb0ffc1ec212f858576f2879e]
-May-17 22:01:21.404 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.404 [Task submitter] INFO  nextflow.Session - [c4/f09814] Submitted process > ALIGNMENT_FIGURE_REF (8_1/consensus_reference)
-May-17 22:01:21.610 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 209; name: ALLELE_CONSENSUS_REF (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c3/c8465890d5f1762201e22176b78645]
-May-17 22:01:21.615 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.615 [Task submitter] INFO  nextflow.Session - [e2/a64102] Submitted process > ALIGNMENT_FIGURE_REF (4_4/consensus_reference)
-May-17 22:01:21.903 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 192; name: MAFFT_ALIGN (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/62/f66f297e1c24ab056aaba797c53884]
-May-17 22:01:21.907 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.907 [Task submitter] INFO  nextflow.Session - [45/e306bd] Submitted process > MAFFT_ALIGN (4_4)
-May-17 22:01:21.916 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.916 [Task submitter] INFO  nextflow.Session - [77/f7d46b] Submitted process > ALIGNMENT_FIGURE_REF (3_4/consensus_reference)
-May-17 22:01:21.920 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:21.921 [Task submitter] INFO  nextflow.Session - [5e/63e9ca] Submitted process > WEBLOGO (7_2)
-May-17 22:01:22.441 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 203; name: WEBLOGO (8_1); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a0/89ca97f286d59d0c6a7a0523ea6d29]
-May-17 22:01:22.504 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 197; name: MAFFT_ALIGN (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/45/e306bd89d340074e4c94c2852f9edc]
-May-17 22:01:22.511 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:22.511 [Task submitter] INFO  nextflow.Session - [af/4afffd] Submitted process > MAFFT_ALIGN (3_4)
-May-17 22:01:22.517 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:22.518 [Task submitter] INFO  nextflow.Session - [90/41f699] Submitted process > WEBLOGO (4_4)
-May-17 22:01:22.534 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 211; name: WEBLOGO (1_38); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6d/3fd5d4c1f34a8db9d570cc470edb62]
-May-17 22:01:22.852 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 199; name: MAFFT_ALIGN (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/af/4afffd674cf00dc1570a115ba93f7d]
-May-17 22:01:22.866 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-May-17 22:01:22.867 [Task submitter] INFO  nextflow.Session - [92/1bf0db] Submitted process > WEBLOGO (3_4)
-May-17 22:01:23.070 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 216; name: WEBLOGO (7_2); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/5e/63e9caf2ddab206c49f645922778e7]
-May-17 22:01:23.501 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 217; name: WEBLOGO (4_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/90/41f699cd341587c4af97e37868d4cc]
-May-17 22:01:23.883 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 218; name: WEBLOGO (3_4); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/92/1bf0dbb83fe1b39f332c4d365a8b36]
-May-17 22:01:24.387 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 212; name: ALIGNMENT_FIGURE_REF (7_2/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/cf/b77c6f1169c15e1115a5a849734371]
-May-17 22:01:24.459 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 210; name: ALIGNMENT_FIGURE_REF (1_38/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/88/0a2d9dfd2a41457881da61b10f4003]
-May-17 22:01:24.502 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 213; name: ALIGNMENT_FIGURE_REF (8_1/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/c4/f09814d1fd9bcbf596f042476aefd7]
-May-17 22:01:24.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 214; name: ALIGNMENT_FIGURE_REF (4_4/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e2/a641023ba764837228980fa2e725b4]
-May-17 22:01:24.775 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 215; name: ALIGNMENT_FIGURE_REF (3_4/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/77/f7d46b19f3d6ef346c4d17e4c11f42]
-May-17 22:01:24.781 [main] DEBUG nextflow.Session - Session await > all processes finished
-May-17 22:01:24.876 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
-May-17 22:01:24.876 [main] DEBUG nextflow.Session - Session await > all barriers passed
-May-17 22:01:24.883 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
-May-17 22:01:24.884 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
-May-17 22:01:24.900 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=218; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=12m 43s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=12; peakCpus=16; peakMemory=8 GB; ]
-May-17 22:01:24.972 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
-May-17 22:01:25.789 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
-May-17 22:01:25.882 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
-May-17 22:01:25.904 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
-May-17 22:01:25.904 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
+  Script_c81bf35d367a8a06: /home/xinruoz/Document/Hiller/allele_search/modules/blast.nf
+  Script_963aa7bea7c31c1b: /home/xinruoz/Document/Hiller/allele_search/main.nf
+Jun-04 19:20:05.136 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Jun-04 19:20:05.136 [main] DEBUG nextflow.Session - Session await
+Jun-04 19:20:05.352 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:05.355 [Task submitter] INFO  nextflow.Session - [27/a794cc] Submitted process > COLLECT_ALL_BLAST_DBS (all_genomes)
+Jun-04 19:20:05.450 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: COLLECT_ALL_BLAST_DBS (all_genomes); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/27/a794cca9c1976d58011f127d873852]
+Jun-04 19:20:05.452 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-04 19:20:05.530 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:05.531 [Task submitter] INFO  nextflow.Session - [bf/8f6ac6] Submitted process > BLAST_SEARCH (Rgg144_batch)
+Jun-04 19:20:05.544 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:05.544 [Task submitter] INFO  nextflow.Session - [05/295777] Submitted process > BLAST_SEARCH (Rgg144_batch)
+Jun-04 19:20:05.552 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:05.555 [Task submitter] INFO  nextflow.Session - [7e/d9c1d6] Submitted process > BLAST_SEARCH (Rgg144_batch)
+Jun-04 19:20:05.567 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:05.569 [Task submitter] INFO  nextflow.Session - [a8/c9054d] Submitted process > BLAST_SEARCH (Rgg144_batch)
+Jun-04 19:20:08.192 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: BLAST_SEARCH (Rgg144_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7e/d9c1d699bc5e7c599fb3e66230d7c8]
+Jun-04 19:20:08.243 [TaskFinalizer-2] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=42; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-04 19:20:19.252 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: BLAST_SEARCH (Rgg144_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/05/2957776add744d18214cbd5ffdd188]
+Jun-04 19:20:19.678 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: BLAST_SEARCH (Rgg144_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a8/c9054dc8bc4a2ed6ef5a073123a9ee]
+Jun-04 19:20:20.016 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: BLAST_SEARCH (Rgg144_batch); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/bf/8f6ac6c1d73a404ceac371cf160bac]
+Jun-04 19:20:20.097 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:20.098 [Task submitter] INFO  nextflow.Session - [d0/ef785d] Submitted process > PARSE_BLAST (Rgg144)
+Jun-04 19:20:20.536 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: PARSE_BLAST (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d0/ef785df4076a42339ad5f31760353f]
+Jun-04 19:20:20.573 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:20.574 [Task submitter] INFO  nextflow.Session - [f7/254441] Submitted process > FILTER_BLAST (Rgg144)
+Jun-04 19:20:20.881 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: FILTER_BLAST (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/f7/2544412babca91002d09ea1a499223]
+Jun-04 19:20:20.900 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:20.901 [Task submitter] INFO  nextflow.Session - [d2/9455d3] Submitted process > CSV_TO_FASTA (Rgg144)
+Jun-04 19:20:21.029 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: CSV_TO_FASTA (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/d2/9455d3e73fe2f512f723d63202f800]
+Jun-04 19:20:21.045 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:21.046 [Task submitter] INFO  nextflow.Session - [ff/12d8fe] Submitted process > CODON_CHECK_10 (Rgg144_10codon)
+Jun-04 19:20:21.192 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: CODON_CHECK_10 (Rgg144_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/ff/12d8fe7bad252d1cb503eb9f809ea3]
+Jun-04 19:20:21.218 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:21.219 [Task submitter] INFO  nextflow.Session - [6a/dd7715] Submitted process > EXTEND_SEQUENCES (Rgg144)
+Jun-04 19:20:23.284 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: EXTEND_SEQUENCES (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/6a/dd77157ce8e4498806c81fd0c809dc]
+Jun-04 19:20:23.314 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:23.316 [Task submitter] INFO  nextflow.Session - [15/40adf3] Submitted process > CODON_CHECK_20 (Rgg144_10codon)
+Jun-04 19:20:23.449 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: CODON_CHECK_20 (Rgg144_10codon); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/15/40adf3e15ba1c2333af31e86d71a82]
+Jun-04 19:20:23.474 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:23.477 [Task submitter] INFO  nextflow.Session - [aa/446000] Submitted process > COLLECT_STANDARD (Rgg144)
+Jun-04 19:20:23.527 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: COLLECT_STANDARD (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/aa/4460004391365ab425e6ed2c7ce356]
+Jun-04 19:20:23.541 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:23.541 [Task submitter] INFO  nextflow.Session - [37/2037a0] Submitted process > TRANSLATE (Rgg144)
+Jun-04 19:20:23.905 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: TRANSLATE (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/37/2037a0dad26a4dde96c2dd102afb40]
+Jun-04 19:20:23.922 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:23.922 [Task submitter] INFO  nextflow.Session - [0b/bc3ba2] Submitted process > ALLELE_SELF_REF (Rgg144)
+Jun-04 19:20:24.293 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: ALLELE_SELF_REF (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/0b/bc3ba235e12d5a55de256747bb1f8b]
+Jun-04 19:20:24.316 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:24.316 [Task submitter] INFO  nextflow.Session - [a7/9c8f33] Submitted process > FILTER_ALLELES (Rgg144)
+Jun-04 19:20:24.332 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:24.332 [Task submitter] INFO  nextflow.Session - [15/7937e8] Submitted process > MAFFT_FOR_CONSENSUS (Rgg144)
+Jun-04 19:20:24.435 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: FILTER_ALLELES (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/a7/9c8f33da7fe1252398b5ced9d62bda]
+Jun-04 19:20:24.447 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:24.447 [Task submitter] INFO  nextflow.Session - [42/c1bf40] Submitted process > MAFFT_ALIGN (Rgg144)
+Jun-04 19:20:24.739 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: MAFFT_ALIGN (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/42/c1bf40ed6b0090916109f88e46de31]
+Jun-04 19:20:24.765 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:24.765 [Task submitter] INFO  nextflow.Session - [e8/07d6fc] Submitted process > WEBLOGO (Rgg144)
+Jun-04 19:20:25.721 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: WEBLOGO (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/e8/07d6fca0cbac776f1b33d724a735ac]
+Jun-04 19:20:28.184 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: MAFFT_FOR_CONSENSUS (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/15/7937e858b3ea2722acfca2e51e304a]
+Jun-04 19:20:28.206 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:28.208 [Task submitter] INFO  nextflow.Session - [2e/d2fd1d] Submitted process > COMPUTE_CONSENSUS (Rgg144)
+Jun-04 19:20:28.549 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: COMPUTE_CONSENSUS (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/2e/d2fd1dbc9ad60ef340b94f5f7e52f8]
+Jun-04 19:20:28.572 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:28.572 [Task submitter] INFO  nextflow.Session - [db/e22890] Submitted process > ALLELE_CONSENSUS_REF (Rgg144)
+Jun-04 19:20:28.855 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: ALLELE_CONSENSUS_REF (Rgg144); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/db/e228904e5e98756aa278cd1bef0091]
+Jun-04 19:20:28.872 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-04 19:20:28.872 [Task submitter] INFO  nextflow.Session - [7f/d24b54] Submitted process > ALIGNMENT_FIGURE_REF (Rgg144/consensus_reference)
+Jun-04 19:20:32.383 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: ALIGNMENT_FIGURE_REF (Rgg144/consensus_reference); status: COMPLETED; exit: 0; error: -; workDir: /home/xinruoz/Document/Hiller/allele_search/work/7f/d24b547c9e90dc8b952479b68014b2]
+Jun-04 19:20:32.387 [main] DEBUG nextflow.Session - Session await > all processes finished
+Jun-04 19:20:32.483 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Jun-04 19:20:32.484 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jun-04 19:20:32.495 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Jun-04 19:20:32.496 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
+Jun-04 19:20:32.505 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=21; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=1m 42s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=8; peakMemory=4 GB; ]
+Jun-04 19:20:32.580 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Jun-04 19:20:33.193 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Jun-04 19:20:33.258 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Jun-04 19:20:33.280 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Jun-04 19:20:33.281 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
