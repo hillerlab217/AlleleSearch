@@ -30,7 +30,7 @@ def parseDir(directory, querys, blast_type, max_Eval, sequence_identity, min_len
     dataParsed = dict()
     for file in listOfInputs:
         with open(file, "r") as inputFile:
-            inputName = os.path.basename(file).split('.')[0]
+            inputName = os.path.basename(file).rsplit('.', 1)[0]
             inputString = inputFile.readlines()
 
         if querys == 1:

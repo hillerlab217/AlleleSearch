@@ -12,6 +12,7 @@ include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_SELF_REF; ALLELE_CONSENSUS_REF }    from './modules/allele'
 include { MAFFT_FOR_CONSENSUS; COMPUTE_CONSENSUS; FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; ALIGNMENT_FIGURE_REF } from './modules/quality'
 include { BLAST_SEARCH_DNA; PARSE_BLAST_DNA; FILTER_BLAST_DNA; MAFFT_DNA; DNA_CONSERVATION_FIGURE } from './modules/dna_variation'
+include { EXTRACT_NEIGHBOURS }                               from './modules/neighbour'
 
 // ──────────────────────────────────────────────────────────────
 // Resolve step mode
@@ -23,20 +24,21 @@ def resolveStep() {
     if (params.orf)           return 'orf'
     if (params.visual)        return 'visual'
     if (params.dna_variation) return 'dna_variation'
+    if (params.neighbour)     return 'neighbour'
     return 'full'
 }
 
 def run_step = resolveStep()
 
-def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual', 'dna_variation']
+def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual', 'dna_variation', 'neighbour']
 if (!(run_step in valid_steps)) {
     error "ERROR: Invalid --step '${run_step}'. Valid options: ${valid_steps.join(', ')}"
 }
 
 // Check that at most one boolean step flag is set
-def step_count = [params.blast, params.filter, params.orf, params.visual, params.dna_variation].count { it }
+def step_count = [params.blast, params.filter, params.orf, params.visual, params.dna_variation, params.neighbour].count { it }
 if (step_count > 1) {
-    error "ERROR: Only one step mode can be specified at a time. Use --blast, --filter, --orf, or --visual."
+    error "ERROR: Only one step mode can be specified at a time. Use --blast, --filter, --orf, --visual, or --neighbour."
 }
 
 log.info "Running in '${run_step}' mode"
@@ -86,6 +88,13 @@ if (params.help) {
       --weblogo_color_scheme Color scheme: chemistry, hydrophobicity, charge, classic (default: chemistry)
       --weblogo_size         Logo size: small, medium, large (default: medium)
       --weblogo_resolution   Resolution in DPI (default: 96)
+
+    Neighbour extraction (runs after visualization when --upstream or --downstream is given):
+      --neighbour           Standalone step mode: extract neighbours from existing standard_dna_seq/
+      --upstream N          bp upstream of gene to extract (default: 0, 0 = skip)
+      --downstream N        bp downstream of gene to extract (default: 0, 0 = skip)
+      --flank_only          Exclude the gene itself; output flanking regions only (default: include gene)
+      --neighbour_merge     Merge upstream+gene+downstream into one file (requires include_gene; default: split)
     =========================================
     """.stripIndent()
     exit 0
@@ -123,6 +132,24 @@ if (run_step == 'visual') {
     def allele_info_dir = file("${params.outdir}/allele_info")
     if (!allele_info_dir.isDirectory()) {
         error "ERROR: --visual mode requires existing allele info in ${params.outdir}/allele_info/. Run the full pipeline first."
+    }
+}
+
+// Neighbour extraction param validation (applies to both full pipeline and --neighbour step mode)
+if (params.flank_only && params.neighbour_merge) {
+    error "ERROR: --neighbour_merge requires the gene to be included. --flank_only cannot be combined with --neighbour_merge. Use --split (default) instead."
+}
+
+if (run_step == 'neighbour') {
+    if (params.upstream == 0 && params.downstream == 0) {
+        error "ERROR: --neighbour requires at least --upstream N or --downstream N."
+    }
+    if (!params.genome_dir) {
+        error "ERROR: --neighbour requires --genome_dir."
+    }
+    def std_dir = file("${params.outdir}/standard_dna_seq")
+    if (!std_dir.isDirectory()) {
+        error "ERROR: --neighbour mode requires existing sequences in ${params.outdir}/standard_dna_seq/. Run the full pipeline first."
     }
 }
 
@@ -311,6 +338,23 @@ workflow {
         MAFFT_DNA(CSV_TO_FASTA.out)
         DNA_CONSERVATION_FIGURE(MAFFT_DNA.out)
 
+    } else if (run_step == 'neighbour') {
+        // =============================================================
+        // Neighbour-only mode: extract flanking regions from existing standard_dna_seq/
+        // =============================================================
+        log.info """
+        Neighbour extraction:
+          Upstream:   ${params.upstream   > 0 ? params.upstream   + ' bp' : 'not requested (0)'}
+          Downstream: ${params.downstream > 0 ? params.downstream + ' bp' : 'not requested (0)'}
+          Gene:       ${params.flank_only ? 'excluded (--flank_only)' : 'included (default)'}
+          Layout:     ${params.neighbour_merge ? 'merged \u2192 merged.fasta' : 'split \u2192 upstream.fasta / downstream.fasta'}
+        """.stripIndent()
+
+        ch_standard_nb = Channel
+            .fromPath("${params.outdir}/standard_dna_seq/*.fasta")
+            .map { f -> [f.baseName, f] }
+        EXTRACT_NEIGHBOURS(ch_standard_nb, params.genome_dir)
+
     } else {
         // =============================================================
         // Full pipeline (default)
@@ -409,5 +453,18 @@ workflow {
 
         // Step 18: WebLogo
         WEBLOGO(MAFFT_ALIGN.out)
+
+        // Step 19 (optional): Neighbour region extraction
+        if (params.upstream > 0 || params.downstream > 0) {
+            log.info """
+            Neighbour extraction:
+              Upstream:   ${params.upstream   > 0 ? params.upstream   + ' bp' : 'not requested (0)'}
+              Downstream: ${params.downstream > 0 ? params.downstream + ' bp' : 'not requested (0)'}
+              Gene:       ${params.flank_only ? 'excluded (--flank_only)' : 'included (default)'}
+              Layout:     ${params.neighbour_merge ? 'merged \u2192 merged.fasta' : 'split \u2192 upstream.fasta / downstream.fasta'}
+            """.stripIndent()
+
+            EXTRACT_NEIGHBOURS(COLLECT_STANDARD.out, params.genome_dir)
+        }
     }
 }

@@ -145,7 +145,14 @@ def main():
     # Process each strain
     for strain_name, entries in strains.items():
         actual_strain_name = species_from_id(strain_name)
-        genome_filepath = os.path.join(genome_dir, f"{actual_strain_name}.fasta")
+        # Genome files may have version/assembly suffixes (e.g. GCA_001234.2_ASM_genomic.fasta).
+        # Find any file whose name starts with the accession prefix.
+        matches = [f for f in os.listdir(genome_dir)
+                   if f.startswith(actual_strain_name) and f.endswith(".fasta")]
+        if not matches:
+            print(f"Warning: No genome file starting with '{actual_strain_name}' in {genome_dir}. Skipping.")
+            continue
+        genome_filepath = os.path.join(genome_dir, matches[0])
 
         for entry in entries:
             if entry["subject_start"] < 0 or entry["subject_end"] < 0:

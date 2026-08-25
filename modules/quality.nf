@@ -154,10 +154,10 @@ process ALIGNMENT_FIGURE {
 
     python ${params.code_dir}/alignment_figure.py \
         allele_info_no_strain_name.csv \
-        ${query_name}_alignment_gap.pdf \
+        ${query_name}_alignment_full.pdf \
         ${params.species_threshold} \
-        --gap \
-    || echo "Skipping gap figure for ${query_name}" >&2
+        --full \
+    || echo "Skipping full figure for ${query_name}" >&2
     """
 }
 
@@ -181,9 +181,9 @@ process ALIGNMENT_FIGURE_REF {
 
     python ${params.code_dir}/alignment_figure.py \
         allele_info_no_strain_name.csv \
-        ${query_name}_alignment_gap.pdf \
+        ${query_name}_alignment_full.pdf \
         ${params.species_threshold} \
-        --gap \
-    || echo "Skipping gap figure for ${query_name}" >&2
+        --full \
+    || echo "Skipping full figure for ${query_name}" >&2
     """
 }

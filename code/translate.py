@@ -55,6 +55,16 @@ def main():
     for record in SeqIO.parse(args.input_file, "fasta"):
         translates = translate_three_frames(record)
         longest, others = longest_reading_frame(translates)
+        # Check whether the best frame actually contains a valid ORF
+        frame_id, frame_seq = next(iter(longest.items()))
+        best_orf = extract_longest_orf(frame_seq)
+        if not best_orf:
+            print(
+                f"WARNING: Skipping '{record.id}' — no valid ORF (Met→stop) "
+                f"found in any reading frame. Sequence removed from output.",
+                flush=True,
+            )
+            continue
         longest_readings.update(longest)
         other_readings.update(others)
 

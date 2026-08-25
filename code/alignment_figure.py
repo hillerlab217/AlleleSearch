@@ -7,17 +7,17 @@ the allele-info CSV (no Excel intermediate).
 
 Amino acids are coloured by physicochemical group (same palette as
 the original Excel workflow).  Only variant-position columns are
-shown unless ``--gap`` is given, which fills in every position from
-the first to the last variant site.
+shown by default.  ``--full`` shows every position in the full
+sequence, all coloured by amino acid group.
 
 Usage
 -----
-python alignment_figure.py INPUT.csv OUTPUT.{pdf,png,svg} MIN_PERCENTAGE [--gap]
+python alignment_figure.py INPUT.csv OUTPUT.{pdf,png,svg} MIN_PERCENTAGE [--full]
 
 Examples
 --------
 python alignment_figure.py allele_info.csv alignment.pdf 1.0
-python alignment_figure.py allele_info.csv alignment.png 1.0 --gap
+python alignment_figure.py allele_info.csv alignment.png 1.0 --full
 """
 
 import sys
@@ -79,7 +79,7 @@ def extract_positions(variant_str: str) -> list[int]:
 
 
 # ── data extraction ─────────────────────────────────────────────────
-def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
+def build_alignment_data(input_csv: str, min_pct: float, keep_full: bool,
                          reference_seq: Optional[str] = None,
                          reference_label: str = "consensus"):
     """Return (row_labels, col_positions, variant_positions, grid).
@@ -120,8 +120,12 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
     if not variant_positions:
         sys.exit("No variant positions found — nothing to draw.")
 
-    if keep_gaps:
-        columns = list(range(min(variant_positions), max(variant_positions) + 1))
+    if keep_full:
+        seqs_for_len = [str(row[SEQ_COL]) for _, row in df.iterrows()]
+        if not is_mafft_mode:
+            seqs_for_len = [s.rstrip("*") for s in seqs_for_len]
+        max_len = max(len(s) for s in seqs_for_len) if seqs_for_len else 0
+        columns = list(range(1, max_len + 1))
     else:
         columns = sorted(variant_positions)
 
@@ -132,6 +136,9 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
         if not is_mafft_mode:
             seq = seq.rstrip("*")
         cells = [
+            seq[p - 1] if p - 1 < len(seq) else ""
+            for p in columns
+        ] if keep_full else [
             seq[p - 1] if (p in variant_positions and p - 1 < len(seq)) else ""
             for p in columns
         ]
@@ -169,6 +176,9 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
 
     if ref_seq_for_row:
         ref_cells = [
+            ref_seq_for_row[p - 1] if p - 1 < len(ref_seq_for_row) else ""
+            for p in columns
+        ] if keep_full else [
             ref_seq_for_row[p - 1] if (p in variant_positions and p - 1 < len(ref_seq_for_row)) else ""
             for p in columns
         ]
@@ -179,7 +189,7 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_gaps: bool,
 
 
 # ── drawing ─────────────────────────────────────────────────────────
-def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
+def draw_alignment(row_labels, columns, variant_positions, grid, output_path, full_mode=False):
     """Render the alignment grid using imshow for pixel-perfect lines."""
     n_rows = len(row_labels)
     n_cols = len(columns)
@@ -189,19 +199,18 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
     img = np.ones((n_rows, n_cols, 3))
     for i in range(n_rows):
         for j in range(n_cols):
-            if not is_variant[j]:
-                img[i, j] = GAP_RGB
-            else:
-                aa = grid[i][j].upper() if grid[i][j] else ""
+            aa = grid[i][j].upper() if grid[i][j] else ""
+            if full_mode or is_variant[j]:
                 img[i, j] = to_rgb(AA_HEX.get(aa, "#ffffff"))
+            else:
+                img[i, j] = GAP_RGB
 
     # ── figure sizing ───────────────────────────────────────────────
-    # In gap mode, make non-variant columns narrower via column width ratios
-    if any(not v for v in is_variant):
-        # gap mode: variant cols = 1.0, gap cols = 0.2 relative width
-        col_w = [1.0 if v else 0.2 for v in is_variant]
-    else:
+    # In full mode all columns are equal width; otherwise non-variant cols are narrow
+    if full_mode or not any(not v for v in is_variant):
         col_w = [1.0] * n_cols
+    else:
+        col_w = [1.0 if v else 0.2 for v in is_variant]
 
     total_col_units = sum(col_w)
 
@@ -257,7 +266,7 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path):
 
     for i in range(n_rows):
         for j in range(n_cols):
-            if is_variant[j]:
+            if full_mode or is_variant[j]:
                 aa = grid[i][j].upper() if grid[i][j] else ""
                 if aa and aa != '-':
                     ax.text(
@@ -320,8 +329,8 @@ def main():
     parser.add_argument("output", help="Output figure path (.pdf, .png, or .svg)")
     parser.add_argument("min_percentage", type=float,
                         help="Minimum species %% to include")
-    parser.add_argument("--gap", action="store_true",
-                        help="Show all positions between first and last variant")
+    parser.add_argument("--full", action="store_true",
+                        help="Show every position in the full sequence")
     parser.add_argument("--reference_fasta", default=None,
                         help="FASTA file whose sequence is prepended as the first row "
                              "(legacy fallback; consensus row in CSV takes priority)")
@@ -336,9 +345,9 @@ def main():
             reference_label = recs[0].id  # e.g. "murM_consensus"
 
     row_labels, columns, variant_positions, grid = build_alignment_data(
-        args.input_csv, args.min_percentage, args.gap, reference_seq, reference_label,
+        args.input_csv, args.min_percentage, args.full, reference_seq, reference_label,
     )
-    draw_alignment(row_labels, columns, variant_positions, grid, args.output)
+    draw_alignment(row_labels, columns, variant_positions, grid, args.output, full_mode=args.full)
 
 
 if __name__ == "__main__":

@@ -332,9 +332,23 @@ def main():
     #get allele count
     try:
         discovered_seqs = {rec.id: str(rec.seq) for rec in SeqIO.parse(args.discovered, 'fasta')}
+        # Filter out zero-length sequences
+        empty_ids = [sid for sid, seq in discovered_seqs.items() if len(seq) == 0]
+        if empty_ids:
+            print(f"WARNING: Skipping {len(empty_ids)} zero-length sequence(s): {empty_ids}", flush=True)
+            discovered_seqs = {sid: seq for sid, seq in discovered_seqs.items() if len(seq) > 0}
+        if not discovered_seqs:
+            print("WARNING: No valid sequences to analyse — writing empty output files.", flush=True)
+            output_dir = Path(args.output)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            for fname in ("allele_info_with_strain_name.csv", "allele_info_no_strain_name.csv"):
+                with open(output_dir / fname, "w", newline="") as f:
+                    f.write("allele_name,species_count,species_percentage,variant_position_count,variant_percentage,variant_positions(position:reference→changed),allele_sequence\n")
+            return
         allele_dict = allele_types(discovered_seqs, args.allele_suffix)
     except Exception as e:
         print(f"Error during analysis: {e}")
+        sys.exit(1)
 
     # Read sequences
     effective_mafft = args.mafft_alignment  # may be set to None in empty-FASTA fallback
@@ -384,6 +398,7 @@ def main():
 
     except Exception as e:
         print(f"Error during analysis: {e}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
