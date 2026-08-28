@@ -42,6 +42,17 @@ process BLAST_SEARCH {
 
     script:
     def blast_cmd = params.blast_type ?: 'blastn'
+    def shared_args = [
+        params.blast_word_size != null ? "-word_size ${params.blast_word_size}" : '',
+        params.blast_gapopen   != null ? "-gapopen ${params.blast_gapopen}"     : '',
+        params.blast_gapextend != null ? "-gapextend ${params.blast_gapextend}" : '',
+    ].findAll { it }.join(' ')
+    def tblastn_args = (blast_cmd == 'tblastn') ? [
+        params.tblastn_matrix     ? "-matrix ${params.tblastn_matrix}"                        : '',
+        params.tblastn_threshold  != null ? "-threshold ${params.tblastn_threshold}"          : '',
+        params.tblastn_comp_based != null ? "-comp_based_stats ${params.tblastn_comp_based}"  : '',
+        params.tblastn_seg        ? "-seg ${params.tblastn_seg}"                              : '',
+    ].findAll { it }.join(' ') : ''
     """
     for gname in \$(echo '${genome_names_csv}' | tr ',' ' '); do
         genome="${genome_dir}/\${gname}"
@@ -63,12 +74,14 @@ process BLAST_SEARCH {
                 -db \${DB_PREFIX} \
                 -out ${query.baseName}_vs_\${base}.out \
                 -evalue ${params.max_evalue} \
+                ${shared_args} ${tblastn_args} \
                 -num_threads ${task.cpus}
         else
             ${blast_cmd} -query ${query} \
                 -subject \${genome} \
                 -out ${query.baseName}_vs_\${base}.out \
-                -evalue ${params.max_evalue}
+                -evalue ${params.max_evalue} \
+                ${shared_args} ${tblastn_args}
         fi
     done
     """

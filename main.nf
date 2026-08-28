@@ -79,6 +79,18 @@ if (params.help) {
       --species_threshold  Min species % for filtering (default: 1)
       --make_blastdb    Build missing BLAST databases before searching (default: false).
                         When false and no DB exists, uses -subject <genome_file> directly.
+
+    BLAST tuning — shared (blastn + tblastn):
+      --blast_word_size N       Word size for seeding (default: BLAST default)
+      --blast_gapopen N         Gap open penalty (default: BLAST default)
+      --blast_gapextend N       Gap extend penalty (default: BLAST default)
+
+    BLAST tuning — tblastn only (ignored when --blast_type blastn):
+      --tblastn_matrix NAME     Substitution matrix, e.g. PAM30, BLOSUM45 (default: BLOSUM62)
+      --tblastn_threshold N     Minimum word score threshold (default: BLAST default)
+      --tblastn_comp_based N    Composition-based stats: 0=off, 1, 2 (default: BLAST default)
+      --tblastn_seg VALUE       SEG low-complexity filter: yes or no (default: BLAST default)
+
       --self_reference_figures  Also generate self-reference alignment figures (default: false)
       --dna_variation_figure_format  Output format for conservation figure: pdf, png, svg (default: pdf)
 

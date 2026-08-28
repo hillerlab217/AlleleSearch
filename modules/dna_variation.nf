@@ -12,6 +12,11 @@ process BLAST_SEARCH_DNA {
     tuple val("${query.baseName}"), path("*.out")
 
     script:
+    def shared_args = [
+        params.blast_word_size != null ? "-word_size ${params.blast_word_size}" : '',
+        params.blast_gapopen   != null ? "-gapopen ${params.blast_gapopen}"     : '',
+        params.blast_gapextend != null ? "-gapextend ${params.blast_gapextend}" : '',
+    ].findAll { it }.join(' ')
     """
     for gname in \$(echo '${genome_names_csv}' | tr ',' ' '); do
         genome="${genome_dir}/\${gname}"
@@ -28,6 +33,7 @@ process BLAST_SEARCH_DNA {
             -db \${DB_PREFIX} \
             -out ${query.baseName}_vs_\${base}.out \
             -evalue ${params.max_evalue} \
+            ${shared_args} \
             -num_threads ${task.cpus}
     done
     """

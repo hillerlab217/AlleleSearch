@@ -140,6 +140,55 @@ nextflow run main.nf --help
 | `--dna_variation_figure_format` | `pdf` | Output format for the DNA conservation figure: `pdf`, `png`, `svg`, `eps`, `jpeg` |
 | `--blast_batch_size` | `100` | Number of genomes processed per BLAST task |
 
+### BLAST Tuning Parameters
+
+These parameters are passed directly to the BLAST command. All default to unset (BLAST uses its own defaults).
+
+**Shared — apply to both `blastn` and `tblastn`:**
+
+| Parameter | Description |
+|---|---|
+| `--blast_word_size` | Word size for seeding (`-word_size`). Min 4 for blastn, min 2 for tblastn |
+| `--blast_gapopen` | Gap open penalty (`-gapopen`) |
+| `--blast_gapextend` | Gap extend penalty (`-gapextend`) |
+
+**tblastn only — ignored when `--blast_type blastn`:**
+
+| Parameter | Description |
+|---|---|
+| `--tblastn_matrix` | Substitution matrix (`-matrix`), e.g. `PAM30`, `BLOSUM45` (default: `BLOSUM62`) |
+| `--tblastn_threshold` | Minimum word score threshold (`-threshold`) |
+| `--tblastn_comp_based` | Composition-based statistics (`-comp_based_stats`): `0`=off, `1`, `2` (default) |
+| `--tblastn_seg` | SEG low-complexity filter (`-seg`): `yes` or `no` |
+
+**Example — tblastn tuned for short/divergent peptide queries:**
+
+```bash
+nextflow run main.nf \
+  --query_dir ./queries \
+  --genome_dir ./genomes \
+  --outdir ./results/my_analysis \
+  --blast_type tblastn \
+  --max_evalue 200000 \
+  --tblastn_matrix PAM30 \
+  --blast_word_size 2 \
+  --blast_gapopen 9 \
+  --blast_gapextend 1 \
+  --tblastn_threshold 16 \
+  --tblastn_comp_based 0 \
+  --tblastn_seg no \
+  -resume
+```
+
+This reproduces the equivalent of:
+```
+tblastn -query peptide.fasta -db nucl_db \
+  -matrix PAM30 -word_size 2 \
+  -gapopen 9 -gapextend 1 \
+  -threshold 16 -evalue 200000 \
+  -comp_based_stats 0 -seg no
+```
+
 ### Step Modes
 
 Run a specific stage of the pipeline instead of the full workflow. Useful for re-running parts with different parameters or resuming from intermediate results.
@@ -197,7 +246,7 @@ results/
 ├── standard_dna_seq/           # DNA sequences with valid start/stop codons
 ├── protein_seq/
 │   ├── inframe/                # Longest ORF protein sequences
-│   └── others/                 # Alternative reading frames
+│   └── others/                 # Alternative reading frames (for blastn)
 ├── allele_info/                # KEY OUTPUT: per-query allele variant analysis
 │   └── <query_name>/
 │       ├── consensus_reference/  # Variants compared to the majority-vote consensus sequence
@@ -205,7 +254,7 @@ results/
 │       │   ├── allele_info_no_strain_name.csv
 │       │   ├── allele_sequence_output.fasta
 │       │   └── <query_name>_consensus.fasta
-│       └── self_reference/     # Variants compared to the most abundant allele found
+│       └── self_reference/     # Variants compared to the query
 │           ├── allele_info_with_strain_name.csv
 │           ├── allele_info_no_strain_name.csv
 │           └── allele_sequence_output.fasta

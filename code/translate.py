@@ -38,9 +38,18 @@ def extract_longest_orf(protein_seq):
     return max(orfs, key=len, default="")
 
 def longest_reading_frame(translates):
-    orfs = {frame: extract_longest_orf(seq) for frame, seq in translates.items()}
-    sorted_orfs = sorted(orfs.items(), key=lambda x: len(x[1]), reverse=True)
-    return {sorted_orfs[0][0]: translates[sorted_orfs[0][0]]}, {k: v for k, v in translates.items() if k != sorted_orfs[0][0]}
+    def frame_score(seq):
+        m_orf = extract_longest_orf(seq)
+        if m_orf:
+            return len(m_orf)
+        # No M-ORF: score by content length before first stop (handles GTG/TTG starts)
+        seq_str = str(seq)
+        stop_idx = seq_str.find('*')
+        return stop_idx if stop_idx != -1 else len(seq_str)
+
+    sorted_frames = sorted(translates.items(), key=lambda x: frame_score(x[1]), reverse=True)
+    best_id = sorted_frames[0][0]
+    return {best_id: translates[best_id]}, {k: v for k, v in translates.items() if k != best_id}
 
 def main():
     parser = argparse.ArgumentParser(description="Translate DNA to protein and extract ORFs")
@@ -55,17 +64,23 @@ def main():
     for record in SeqIO.parse(args.input_file, "fasta"):
         translates = translate_three_frames(record)
         longest, others = longest_reading_frame(translates)
-        # Check whether the best frame actually contains a valid ORF
         frame_id, frame_seq = next(iter(longest.items()))
         best_orf = extract_longest_orf(frame_seq)
         if not best_orf:
-            print(
-                f"WARNING: Skipping '{record.id}' — no valid ORF (Met→stop) "
-                f"found in any reading frame. Sequence removed from output.",
-                flush=True,
-            )
-            continue
-        longest_readings.update(longest)
+            # No M-started ORF. Could be an alternative start codon (GTG/TTG) or
+            # a DNA sequence too short to produce any protein.
+            # Use content up to the first stop codon (preserves the actual codon translation).
+            frame_str = str(frame_seq)
+            stop_idx = frame_str.find('*')
+            best_orf = frame_str[:stop_idx] if stop_idx != -1 else frame_str
+            if not best_orf:
+                print(
+                    f"WARNING: Skipping '{record.id}' — no protein sequence could be "
+                    f"extracted in any reading frame. Sequence removed from output.",
+                    flush=True,
+                )
+                continue
+        longest_readings[frame_id] = best_orf  # store clean ORF, not full frame_seq
         other_readings.update(others)
 
     # Write outputs

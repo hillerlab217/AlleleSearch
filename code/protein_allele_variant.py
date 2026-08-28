@@ -344,6 +344,7 @@ def main():
             for fname in ("allele_info_with_strain_name.csv", "allele_info_no_strain_name.csv"):
                 with open(output_dir / fname, "w", newline="") as f:
                     f.write("allele_name,species_count,species_percentage,variant_position_count,variant_percentage,variant_positions(position:reference→changed),allele_sequence\n")
+            open(output_dir / "allele_sequence_output.fasta", "w").close()
             return
         allele_dict = allele_types(discovered_seqs, args.allele_suffix)
     except Exception as e:

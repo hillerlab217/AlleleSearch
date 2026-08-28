@@ -1,31 +1,23 @@
-# Nextflow work directory and logs
-work/
-.nextflow/
-.nextflow.log*
+# Ignore everything by default
+*
 
-# Pipeline results/output directories
-results/
-murM/
-murM_2/
-cooccurrence_out/
-golden_promoter_region/
-data/
-Rgg144/
+# Pipeline core
+!.gitignore
+!main.nf
+!nextflow.config
+!environment.yml
 
-# Test data
-test_query/
-queries
+# Modules
+!modules/
+!modules/*.nf
 
-# Run logs
-run_command.log
+# Python scripts
+!code/
+!code/*.py
 
-# Python cache
-__pycache__/
-*.pyc
-
-# Binary/large files
-*.pptx
-*.pub
-
-# Local skills reference (skills live in ~/.claude/skills/, not in repo)
-SKILLS.md
+# Documentation
+!README.md
+!CLAUDE.md
+!task.md
+!run_example.txt
+!flowchart.mermaid
