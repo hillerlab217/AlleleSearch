@@ -76,6 +76,10 @@ if (params.help) {
       --sequence_identity  Sequence identity % cutoff (default: 80)
       --length_percentage  Length % cutoff (default: 80)
       --extension_codons   Codons to extend (default: 10)
+      --start_codons       Comma-separated valid start codons (default: ATG,GTG,TTG)
+      --stop_codons        Comma-separated valid stop codons  (default: TAA,TGA,TAG)
+                           Note: non-ATG starts (e.g. GTG, TTG) use a length-based
+                           heuristic in translation since protein M-detection won't apply.
       --species_threshold  Min species % for filtering (default: 1)
       --make_blastdb    Build missing BLAST databases before searching (default: false).
                         When false and no DB exists, uses -subject <genome_file> directly.
@@ -249,12 +253,12 @@ workflow {
 
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1"] }
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
         CODON_CHECK_10(ch_codon10_in)
 
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2"] }
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
         CODON_CHECK_20(ch_codon20_in)
 
         ch_standard = CODON_CHECK_10.out.standard
@@ -412,14 +416,14 @@ workflow {
         CSV_TO_FASTA(ch_csv_for_fasta)
 
         // Step 7: Check start/stop codons
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1"] }
+        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
         CODON_CHECK_10(ch_codon10_in)
 
         // Step 8: Extend sequences from genome
         EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
         // Step 9: Re-check with same codon window on extended sequences
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2"] }
+        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
         CODON_CHECK_20(ch_codon20_in)
 
         // Step 10: Collect standard sequences from both rounds

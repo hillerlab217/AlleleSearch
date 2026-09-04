@@ -34,7 +34,7 @@ process CODON_CHECK {
     tag "${query_name}_${codon_range}codon"
 
     input:
-    tuple val(query_name), path(fasta_file), val(codon_range), val(direction), val(round_label)
+    tuple val(query_name), path(fasta_file), val(codon_range), val(direction), val(round_label), val(start_codons), val(stop_codons)
 
     output:
     tuple val(query_name), val(codon_range), path("codon_out/*"), emit: classified
@@ -47,7 +47,9 @@ process CODON_CHECK {
         ${fasta_file} \
         codon_out \
         --codon_range ${codon_range} \
-        --start_search_direction ${direction}
+        --start_search_direction ${direction} \
+        --start_codons "${start_codons}" \
+        --stop_codons "${stop_codons}"
     # Ensure standard.fasta exists even if empty
     touch codon_out/standard.fasta
     cp codon_out/standard.fasta standard_${round_label}.fasta

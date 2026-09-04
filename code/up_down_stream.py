@@ -4,70 +4,59 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from header_utils import parse_header, build_header, species_from_id
 
-def find_extended_sequence(mode, genome_filepath, contig_name, start_position, end_position, downstream_length):
+def find_extended_sequence(mode, genome_index, contig_name, start_position, end_position, downstream_length):
     """
-    Return the extended sequence from the specified contig_name
-    (e.g. 'NZ_NCVE01000027.1') within the given genome file,
-    from start_position to end_position plus the downstream_length.
+    Return the extended sequence from the specified contig_name within the
+    pre-loaded genome_index (dict[contig_id, SeqRecord]), from start_position
+    to end_position plus the downstream_length.
     """
 
-    if not os.path.exists(genome_filepath):
-        print(f"Warning: Genome file {genome_filepath} not found. Skipping.")
-        return None, None, None  # Return empty string instead of raising an error
+    genome_record = genome_index.get(contig_name)
+    if genome_record is None:
+        # Fallback: partial match (contig_name contained in record ID)
+        matches = [r for rid, r in genome_index.items() if contig_name in rid]
+        genome_record = matches[0] if matches else None
+    if genome_record is None:
+        print(f"Warning: Contig '{contig_name}' not found in genome index.")
+        return None, None, None
 
-    # Read each contig (record) in the file
-    with open(genome_filepath, "r") as genome_handle:
-        for genome_record in SeqIO.parse(genome_handle, "fasta"):
-            # Check if this record has the contig we want:
-            # Some FASTA headers might have complicated IDs, so you can compare in various ways.
-            # 1) Exactly matches genome_record.id
-            # 2) If the contig_name is contained in the record.id or record.description
-            if contig_name == genome_record.id or contig_name in genome_record.id:
-                # We found the contig; extract the extended region
-                genome_sequence = str(genome_record.seq)
-                genome_length = len(genome_sequence)
+    genome_sequence = str(genome_record.seq)
+    genome_length = len(genome_sequence)
 
-                if start_position < end_position:  # Forward strand
-                    if mode == 'down_stream':
-                        seq_start = start_position - 1  # 0 based
-                        seq_end = min(end_position + downstream_length, genome_length)
-                    elif mode == 'up_stream':
-                        seq_start = max(start_position -1 - downstream_length, 0)
-                        seq_end = end_position
-                    elif mode == 'up_down_stream':
-                        seq_start = max(start_position -1 - downstream_length, 0)
-                        seq_end = min(end_position + downstream_length, genome_length)
-                    else:
-                        raise ValueError("Mode not included, choose mode of program: down_stream, up_stream, up_down_stream")
-                    
-                    extended_seq = genome_sequence[seq_start:seq_end]
-                    seq_start = seq_start + 1
-                    
-                else:  # Reverse strand
-                    if mode == 'down_stream':
-                        seq_start = start_position # 0 based
-                        seq_end = max(0, end_position - 1 - downstream_length) 
-                    elif mode == 'up_stream':
-                        seq_start = min(genome_length, start_position + downstream_length)
-                        seq_end = end_position-1
-                    elif mode == 'up_down_stream':
-                        seq_start = min(genome_length, start_position + downstream_length)
-                        seq_end = max(0, end_position - 1 - downstream_length)
-                        
-                    else:
-                        raise ValueError("Mode not included, choose mode of program: down_stream, up_stream, up_down_stream")
-                    
-                    fragment = genome_sequence[seq_end:seq_start]
-                    extended_seq = str(Seq(fragment).reverse_complement())
-                    seq_end = seq_end +1
+    if start_position < end_position:  # Forward strand
+        if mode == 'down_stream':
+            seq_start = start_position - 1  # 0 based
+            seq_end = min(end_position + downstream_length, genome_length)
+        elif mode == 'up_stream':
+            seq_start = max(start_position - 1 - downstream_length, 0)
+            seq_end = end_position
+        elif mode == 'up_down_stream':
+            seq_start = max(start_position - 1 - downstream_length, 0)
+            seq_end = min(end_position + downstream_length, genome_length)
+        else:
+            raise ValueError("Mode not included, choose mode of program: down_stream, up_stream, up_down_stream")
 
+        extended_seq = genome_sequence[seq_start:seq_end]
+        seq_start = seq_start + 1
 
-                # Return immediately after finding it
-                return extended_seq, seq_start, seq_end
+    else:  # Reverse strand
+        if mode == 'down_stream':
+            seq_start = start_position  # 0 based
+            seq_end = max(0, end_position - 1 - downstream_length)
+        elif mode == 'up_stream':
+            seq_start = min(genome_length, start_position + downstream_length)
+            seq_end = end_position - 1
+        elif mode == 'up_down_stream':
+            seq_start = min(genome_length, start_position + downstream_length)
+            seq_end = max(0, end_position - 1 - downstream_length)
+        else:
+            raise ValueError("Mode not included, choose mode of program: down_stream, up_stream, up_down_stream")
 
-    # If we reach here, it means we didn't find any matching contig
-    print(f"Warning: Contig '{contig_name}' not found in {genome_filepath}.")
-    return None, None, None
+        fragment = genome_sequence[seq_end:seq_start]
+        extended_seq = str(Seq(fragment).reverse_complement())
+        seq_end = seq_end + 1
+
+    return extended_seq, seq_start, seq_end
 def format_fasta_sequence(sequence, line_length=60):
     """Formats a sequence so that it wraps every `line_length` characters."""
     return "\n".join(sequence[i:i+line_length] for i in range(0, len(sequence), line_length))
@@ -106,6 +95,7 @@ def main():
     parser.add_argument("--seq_file", required=True, help="Path to the protein FASTA file.")
     parser.add_argument("--genome_dir", required=True, help="Directory containing genome FASTA files.")
     parser.add_argument("--length", type=int, required=True, help="Length of upstream/downstream sequence to extract.")
+    parser.add_argument("--min_aa_length", type=int, default=5, help="Minimum amino acid length to keep a sequence (default: 5).")
     parser.add_argument("--output_fasta", type=str, required=True, help="Output FASTA file path.")
     args = parser.parse_args()
 
@@ -113,6 +103,7 @@ def main():
     seq_filepath = args.seq_file
     genome_dir = args.genome_dir
     downstream_length = args.length
+    min_aa_length = args.min_aa_length
     output_filepath = args.output_fasta
 
     strains = {}
@@ -154,6 +145,9 @@ def main():
             continue
         genome_filepath = os.path.join(genome_dir, matches[0])
 
+        # Parse genome once per strain and index by contig ID
+        genome_index = SeqIO.to_dict(SeqIO.parse(genome_filepath, "fasta"))
+
         for entry in entries:
             if entry["subject_start"] < 0 or entry["subject_end"] < 0:
                 print(f"Warning: Negative positions for {strain_name}. Skipping.")
@@ -161,7 +155,7 @@ def main():
 
             result = find_extended_sequence(
                 mode,
-                genome_filepath,
+                genome_index,
                 entry["contig"],
                 entry["subject_start"],
                 entry["subject_end"],
@@ -173,6 +167,11 @@ def main():
                 continue
 
             extended_seq, new_start, new_end = result
+
+            if len(extended_seq) < min_aa_length * 3:
+                print(f"Skipping sequence (length {len(extended_seq)} bp < {min_aa_length} aa minimum): {entry['header']}")
+                continue
+
             entry["extended_seq"] = extended_seq
 
             updated_header = update_header(

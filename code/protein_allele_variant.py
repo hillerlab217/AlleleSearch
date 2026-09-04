@@ -323,8 +323,6 @@ def main():
                              'columns as positions and records insertions/deletions explicitly')
     args = parser.parse_args()
 
-    from translate import translate_three_frames, longest_reading_frame
-
     # Create output directory if it doesn't exist
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -359,9 +357,9 @@ def main():
             ref_rec = recs[0]
             ref_seq = str(ref_rec.seq)
             if is_dna(ref_seq):
-                translates = translate_three_frames(ref_rec)
-                ref_seq, _ = longest_reading_frame(translates)
-                ref_seq = str(list(ref_seq.values())[0])
+                seq_str = ref_seq.upper().replace('-', '').replace('N', '')
+                seq_str = seq_str[:len(seq_str) - (len(seq_str) % 3)]
+                ref_seq = str(Seq(seq_str).translate(to_stop=True))
         else:
             print(
                 f"WARNING: Consensus FASTA '{args.reference}' is empty. "

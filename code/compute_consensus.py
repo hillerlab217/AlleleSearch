@@ -1,29 +1,33 @@
 """
 Compute a consensus sequence from a MAFFT-aligned FASTA file.
-At each alignment column, picks the most common residue (ignoring gaps).
+Uses BioPython's SummaryInfo.dumb_consensus: at each alignment column picks
+the most common non-gap residue if it appears in >=50% of sequences, else 'X'.
+All-gap columns produce '-'.
 """
 from Bio import AlignIO
-from collections import Counter
+from Bio.Align import MultipleSeqAlignment, AlignInfo
 import argparse
 
 
 def compute_gapped_consensus_from_records(records):
-    """Return a gapped consensus string of length == alignment_len.
-    Each position is the plurality non-gap AA, or '-' when all chars are gaps.
-    Importable by other scripts for shared consensus computation."""
-    alignment_len = len(records[0].seq)
-    result = []
-    for i in range(alignment_len):
-        col = [str(rec.seq[i]) for rec in records]
-        non_gap = [aa for aa in col if aa != '-']
-        result.append(Counter(non_gap).most_common(1)[0][0] if non_gap else '-')
+    """Return a gapped consensus string of length == alignment_len using
+    BioPython's dumb_consensus (threshold=0.5, gaps excluded from vote).
+    All-gap columns produce '-'. Importable by other scripts."""
+    alignment = MultipleSeqAlignment(records)
+    summary = AlignInfo.SummaryInfo(alignment)
+    consensus = str(summary.dumb_consensus(threshold=0.5, ambiguous='X'))
+    # Replace 'X' with '-' for purely all-gap columns
+    result = list(consensus)
+    for i in range(alignment.get_alignment_length()):
+        if all(str(rec.seq[i]) == '-' for rec in alignment):
+            result[i] = '-'
     return ''.join(result)
 
 
 def compute_consensus(aligned_fasta, name, output_fasta):
     try:
         records = list(AlignIO.read(aligned_fasta, "fasta"))
-    except ValueError:
+    except (ValueError, FileNotFoundError):
         records = []
 
     if len(records) == 0:

@@ -22,32 +22,38 @@ from collections import OrderedDict
 from Bio.Seq import Seq
 from header_utils import parse_header, build_header
 
-# Define codon sets
-common_start_codons = {'ATG'}
-rare_start_codons   = {'GTG', 'TTG'}
-common_stop_codons  = {'TAA', 'TGA'}
-rare_stop_codons    = {'TAG'}
+_VALID_BASES = set("ATGC")
 
-def find_all_start_codons(dna_seq, codon_range=10, direction="down"):
+def parse_and_validate_codons(codon_str, label):
+    """Parse a comma-separated codon string, validate each codon, return frozenset.
+
+    Exits with an error message if the set is empty or any codon is invalid.
+    """
+    codons = [c.strip().upper() for c in codon_str.split(",") if c.strip()]
+    if not codons:
+        print(f"ERROR: --{label} must not be empty.", file=sys.stderr)
+        sys.exit(1)
+    for codon in codons:
+        if len(codon) != 3:
+            print(f"ERROR: Invalid codon '{codon}' in --{label}: codons must be exactly 3 bases.", file=sys.stderr)
+            sys.exit(1)
+        if not set(codon).issubset(_VALID_BASES):
+            print(f"ERROR: Invalid codon '{codon}' in --{label}: only A, T, G, C are allowed.", file=sys.stderr)
+            sys.exit(1)
+    return frozenset(codons)
+
+
+def find_all_start_codons(dna_seq, codon_range, direction, start_codons):
     """Return all valid start positions in the first `codon_range` codons.
-
-    Searches common start codons (ATG) first; falls back to rare (GTG, TTG)
-    only if no common codon is found in the window.
 
     Returned list is sorted so that index 0 is the primary (closest to gene body):
     - direction="down": ascending (earliest position first)
     - direction="up":   descending (latest position first, closest to gene body)
     """
-    def _scan(codon_set):
-        positions = []
-        for i in range(min(codon_range, len(dna_seq) // 3)):
-            if dna_seq[i*3:(i+1)*3] in codon_set:
-                positions.append(i*3)
-        return positions
-
-    positions = _scan(common_start_codons)
-    if not positions:
-        positions = _scan(rare_start_codons)
+    positions = []
+    for i in range(min(codon_range, len(dna_seq) // 3)):
+        if dna_seq[i*3:(i+1)*3] in start_codons:
+            positions.append(i*3)
 
     if direction == "down":
         return sorted(positions)
@@ -57,51 +63,42 @@ def find_all_start_codons(dna_seq, codon_range=10, direction="down"):
         raise ValueError("direction must be either 'down' or 'up'")
 
 
-def find_all_stop_codons(dna_seq, codon_range=10):
+def find_all_stop_codons(dna_seq, codon_range, stop_codons):
     """Return all valid stop END positions in the last `codon_range` codons.
-
-    Searches common stop codons (TAA, TGA) first; falls back to rare (TAG)
-    only if no common codon is found in the window.
 
     Returned list is sorted ascending so that index 0 is the primary (earliest
     end-position = closest to gene body = tightest ORF boundary).
     """
-    def _scan(codon_set):
-        seq_len = len(dna_seq)
-        left_over = seq_len % 3
-        positions = []
-        for i in range(1, min(codon_range, seq_len // 3) + 1):
-            codon = dna_seq[seq_len - left_over - i*3 : seq_len - left_over - (i-1)*3]
-            if codon in codon_set:
-                positions.append(seq_len - left_over - (i-1)*3)
-        return positions
-
-    positions = _scan(common_stop_codons)
-    if not positions:
-        positions = _scan(rare_stop_codons)
+    seq_len = len(dna_seq)
+    left_over = seq_len % 3
+    positions = []
+    for i in range(1, min(codon_range, seq_len // 3) + 1):
+        codon = dna_seq[seq_len - left_over - i*3 : seq_len - left_over - (i-1)*3]
+        if codon in stop_codons:
+            positions.append(seq_len - left_over - (i-1)*3)
     return sorted(positions)
 
-def count_stop_codons(dna_seq, codon_range=10):
+def count_stop_codons(dna_seq, codon_range, stop_codons):
     """Count in-frame stop codons (excluding trailing partial codons)."""
     seq_len = len(dna_seq)
     count = 0
     # Search everything except the terminal codon_range window
     search_end = max(0, seq_len - (seq_len % 3) - codon_range * 3)
     for i in range(0, max(0, search_end), 3):
-        if dna_seq[i:i+3] in common_stop_codons | rare_stop_codons:
+        if dna_seq[i:i+3] in stop_codons:
             count += 1
     return count
 
-def classify_sequence(dna_seq, codon_range=10, direction="down"):
+def classify_sequence(dna_seq, codon_range, direction, start_codons, stop_codons):
     """Classify sequence based on start/stop codon presence.
 
     Returns (status, start_pos, stop_pos, alt_starts, alt_stops).
     Primary start/stop are the first elements of each list (closest to gene body).
     alt_starts / alt_stops are the remaining candidates.
     """
-    start_positions = find_all_start_codons(dna_seq, codon_range, direction)
-    stop_positions  = find_all_stop_codons(dna_seq, codon_range)
-    stop_count      = count_stop_codons(dna_seq, codon_range)
+    start_positions = find_all_start_codons(dna_seq, codon_range, direction, start_codons)
+    stop_positions  = find_all_stop_codons(dna_seq, codon_range, stop_codons)
+    stop_count      = count_stop_codons(dna_seq, codon_range, stop_codons)
 
     has_start = len(start_positions) > 0
     has_stop  = len(stop_positions) > 0
@@ -134,7 +131,7 @@ def classify_sequence(dna_seq, codon_range=10, direction="down"):
     # Default case (shouldn't normally reach here)
     return "no_stop_no_start", 0, len(dna_seq), alt_starts, alt_stops
 
-def check_stop_start_codon_dna(dna_string, codon_range=10, direction="down"):
+def check_stop_start_codon_dna(dna_string, codon_range, direction, start_codons, stop_codons):
     dna_string = dna_string.replace('-', '')
 
     status_que = {
@@ -155,7 +152,7 @@ def check_stop_start_codon_dna(dna_string, codon_range=10, direction="down"):
     for i in range(3):
         dna_seq = dna_string[i:]
         status_temp, start_pos, stop_pos, alt_starts, alt_stops = classify_sequence(
-            dna_seq, codon_range, direction
+            dna_seq, codon_range, direction, start_codons, stop_codons
         )
         if status_que[status] > status_que[status_temp]:
             status = status_temp
@@ -202,7 +199,7 @@ def add_offset_fields(header, start_offset, stop_offset):
     return build_header(seq_id, metadata)
 
 
-def process_fasta(input_file, output_dir, codon_range=10, direction="down"):
+def process_fasta(input_file, output_dir, codon_range, direction, start_codons, stop_codons):
     """Classify and trim sequences from input FASTA."""
     os.makedirs(output_dir, exist_ok=True)
     sequences = {status: [] for status in [
@@ -216,13 +213,13 @@ def process_fasta(input_file, output_dir, codon_range=10, direction="down"):
         for line in f:
             if line.startswith('>'):
                 if current_id:
-                    process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction)
+                    process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction, start_codons, stop_codons)
                 current_id = line.strip()
                 current_seq = []
             else:
                 current_seq.append(line.strip())
         if current_id:
-            process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction)
+            process_sequence(current_id, ''.join(current_seq), sequences, codon_range, direction, start_codons, stop_codons)
 
     # Write output files
     for status, seqs in sequences.items():
@@ -233,7 +230,7 @@ def process_fasta(input_file, output_dir, codon_range=10, direction="down"):
                     for i in range(0, len(seq), 60):
                         f.write(f"{seq[i:i+60]}\n")
 
-def process_sequence(header, dna_seq, sequences, codon_range, direction="down"):
+def process_sequence(header, dna_seq, sequences, codon_range, direction, start_codons, stop_codons):
     """Classify, trim, and record a single sequence with offset metadata.
 
     Offset fields (codon units, relative to original BLAST hit boundary):
@@ -252,7 +249,7 @@ def process_sequence(header, dna_seq, sequences, codon_range, direction="down"):
             file=sys.stderr,
         )
     status, start_pos, end_pos, alt_starts, alt_stops = check_stop_start_codon_dna(
-        dna_seq, codon_range, direction
+        dna_seq, codon_range, direction, start_codons, stop_codons
     )
 
     _, metadata = parse_header(header)
@@ -301,8 +298,24 @@ def main():
                        help="Number of codons to check for start/stop (default: 10)")
     parser.add_argument("--start_search_direction", type=str, default="down",
                        help="direction must be either 'down' or 'up'(default: down)")
+    parser.add_argument("--start_codons", type=str, default="ATG,GTG,TTG",
+                       help="Comma-separated valid start codons (default: ATG,GTG,TTG)")
+    parser.add_argument("--stop_codons", type=str, default="TAA,TGA,TAG",
+                       help="Comma-separated valid stop codons (default: TAA,TGA,TAG)")
     args = parser.parse_args()
-    process_fasta(args.input_fasta, args.output_dir, args.codon_range, args.start_search_direction)
+
+    start_codons = parse_and_validate_codons(args.start_codons, "start_codons")
+    stop_codons  = parse_and_validate_codons(args.stop_codons,  "stop_codons")
+
+    overlap = start_codons & stop_codons
+    if overlap:
+        print(
+            f"WARNING: The following codons appear in both --start_codons and --stop_codons: "
+            f"{', '.join(sorted(overlap))}. This may produce unexpected classifications.",
+            file=sys.stderr,
+        )
+
+    process_fasta(args.input_fasta, args.output_dir, args.codon_range, args.start_search_direction, start_codons, stop_codons)
 
 if __name__ == "__main__":
     main()

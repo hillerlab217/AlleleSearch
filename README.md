@@ -14,7 +14,7 @@ Query sequences + Genomes
    ORF Finding ──► Check start/stop codons ──► Extend incomplete sequences
         │
         ▼
-   Translation ──► All 3 reading frames, keep longest ORF
+   Translation ──► Frame 0 translation, M-start enforced
         │
         ▼
    Allele Alignment ──► Group identical proteins, identify variants
@@ -71,8 +71,8 @@ You should see a help message listing all available options.
 
 1. **BLAST Search** — Runs each query against each genome (blastn or tblastn). Parses results to CSV.
 2. **Filtering** — Keeps hits passing e-value, sequence identity %, and alignment length thresholds.
-3. **ORF Finding** — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window.
-4. **Translation** — Translates DNA to protein in all 3 frames. The longest ORF (M to stop) is kept.
+3. **ORF Finding** — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window. Extended sequences shorter than 5 amino acids are discarded.
+4. **Translation** — Translates the validated reading frame (Frame 0) to protein. The start codon is replaced with ATG, so all output proteins begin with Met regardless of the original start codon (ATG, GTG, or TTG).
 5. **Allele Identification** — Groups identical protein sequences into alleles. Variant positions are identified by aligning each allele to a reference using BLOSUM62.
 6. **Quality & Visualization** — Filters alleles by species representation, generates coloured variant alignment figures, MAFFT alignments, and WebLogo sequence logos.
 
@@ -111,6 +111,19 @@ nextflow run main.nf \
   --species_threshold 5
 ```
 
+ATG-only starts (stricter), exclude TAG as stop codon:
+
+```bash
+# ATG-only starts (stricter), exclude TAG as stop codon
+nextflow run main.nf --query_dir ./data --genome_dir /genomes --outdir ./results \
+  --start_codons ATG \
+  --stop_codons TAA,TGA
+```
+
+> **Note:** When using non-ATG start codons (e.g. `GTG`, `TTG`), the start codon is
+> translated as Met (M) in the output protein, which reflects the biological reality of
+> fMet initiation at all start codons.
+
 Show all options:
 
 ```bash
@@ -135,6 +148,8 @@ nextflow run main.nf --help
 | `--sequence_identity` | `80` | Minimum sequence identity percentage |
 | `--length_percentage` | `80` | Minimum alignment length as percentage of query length |
 | `--extension_codons` | `10` | Number of codons to extend incomplete sequences |
+| `--start_codons` | `ATG,GTG,TTG` | Comma-separated valid start codons |
+| `--stop_codons` | `TAA,TGA,TAG` | Comma-separated valid stop codons |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
 | `--self_reference_figures` | `false` | Also generate self-reference alignment figures; by default only consensus-reference figures are generated |
 | `--dna_variation_figure_format` | `pdf` | Output format for the DNA conservation figure: `pdf`, `png`, `svg`, `eps`, `jpeg` |
