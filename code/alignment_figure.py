@@ -36,6 +36,23 @@ import matplotlib.patches as mpatches
 from matplotlib.colors import to_rgb
 
 
+# ── nucleotide colour palette ────────────────────────────────────────
+DNA_HEX = {
+    'A': '#4caf50',  # green
+    'T': '#e53935',  # red
+    'G': '#fdd835',  # yellow
+    'C': '#1e88e5',  # blue
+    'U': '#e53935',  # red (same as T)
+    '-': '#eeeeee',
+}
+
+DNA_LEGEND_GROUPS = {
+    'A': '#4caf50',
+    'T': '#e53935',
+    'G': '#fdd835',
+    'C': '#1e88e5',
+}
+
 # ── amino-acid colour palette (physicochemical groups) ──────────────
 AA_HEX = {
     # Hydrophobic / aliphatic
@@ -189,19 +206,20 @@ def build_alignment_data(input_csv: str, min_pct: float, keep_full: bool,
 
 
 # ── drawing ─────────────────────────────────────────────────────────
-def draw_alignment(row_labels, columns, variant_positions, grid, output_path, full_mode=False):
+def draw_alignment(row_labels, columns, variant_positions, grid, output_path, full_mode=False, sequence_type='protein'):
     """Render the alignment grid using imshow for pixel-perfect lines."""
     n_rows = len(row_labels)
     n_cols = len(columns)
     is_variant = [c in variant_positions for c in columns]
 
     # Build RGB colour matrix  (n_rows × n_cols × 3)
+    color_map = DNA_HEX if sequence_type == 'dna' else AA_HEX
     img = np.ones((n_rows, n_cols, 3))
     for i in range(n_rows):
         for j in range(n_cols):
             aa = grid[i][j].upper() if grid[i][j] else ""
             if full_mode or is_variant[j]:
-                img[i, j] = to_rgb(AA_HEX.get(aa, "#ffffff"))
+                img[i, j] = to_rgb(color_map.get(aa, "#ffffff"))
             else:
                 img[i, j] = GAP_RGB
 
@@ -299,9 +317,10 @@ def draw_alignment(row_labels, columns, variant_positions, grid, output_path, fu
         spine.set_visible(False)
 
     # ── legend above the axes ───────────────────────────────────────
+    active_legend = DNA_LEGEND_GROUPS if sequence_type == 'dna' else LEGEND_GROUPS
     legend_handles = [
         mpatches.Patch(facecolor=c, edgecolor="grey", linewidth=0.5, label=lab)
-        for lab, c in LEGEND_GROUPS.items()
+        for lab, c in active_legend.items()
     ]
     fig.legend(
         handles=legend_handles,
@@ -334,6 +353,8 @@ def main():
     parser.add_argument("--reference_fasta", default=None,
                         help="FASTA file whose sequence is prepended as the first row "
                              "(legacy fallback; consensus row in CSV takes priority)")
+    parser.add_argument("--sequence_type", choices=["protein", "dna"], default="protein",
+                        help="Sequence type: protein (default, amino-acid colours) or dna (nucleotide colours)")
     args = parser.parse_args()
 
     reference_seq = None
@@ -347,7 +368,8 @@ def main():
     row_labels, columns, variant_positions, grid = build_alignment_data(
         args.input_csv, args.min_percentage, args.full, reference_seq, reference_label,
     )
-    draw_alignment(row_labels, columns, variant_positions, grid, args.output, full_mode=args.full)
+    draw_alignment(row_labels, columns, variant_positions, grid, args.output, full_mode=args.full,
+                   sequence_type=args.sequence_type)
 
 
 if __name__ == "__main__":

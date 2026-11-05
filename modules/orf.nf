@@ -116,3 +116,19 @@ process COLLECT_STANDARD {
     fi
     """
 }
+
+process COLLECT_DNA {
+    tag "${query_name}"
+    publishDir "${params.outdir}/standard_dna_seq", mode: 'copy'
+
+    input:
+    tuple val(query_name), path(fasta)
+
+    output:
+    tuple val(query_name), path("${query_name}.fasta")
+
+    script:
+    """
+    [ "${fasta}" = "${query_name}.fasta" ] || cp ${fasta} ${query_name}.fasta
+    """
+}

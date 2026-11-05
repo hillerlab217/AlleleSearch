@@ -8,16 +8,18 @@ A Nextflow pipeline for identifying protein allele variants from genomic sequenc
 Query sequences + Genomes
         │
         ▼
-   BLAST Search ──► Blast, Parse Filter hits
+   BLAST Search ──► Blast, Parse, Filter hits
         │
-        ▼
-   ORF Finding ──► Check start/stop codons ──► Extend incomplete sequences
-        │
-        ▼
-   Translation ──► Frame 0 translation, M-start enforced
-        │
-        ▼
-   Allele Alignment ──► Group identical proteins, identify variants
+        ├── [--mode protein (default)] ──────────────────────────────┐
+        │    ORF Finding ──► Check start/stop codons                 │
+        │         │                                                  │
+        │         ▼                                                  │
+        │    Translation ──► Frame 0 protein, M-start enforced       │
+        │         │                                                  │
+        └── [--mode dna] ──► (ORF + translation skipped) ──────────►─┘
+                                                                     │
+        ▼                                                            │
+   Allele Analysis ──► Group identical sequences, call variants ◄───┘
         │
         ▼
    Visualization ──► Alignment Figures, WebLogo
@@ -25,7 +27,12 @@ Query sequences + Genomes
 
 ## Core outputs
 
-
+| Path | Description |
+|---|---|
+| `allele_info/<query>/consensus_reference/allele_info_no_strain_name.csv` | Alleles ranked by frequency; variants called vs. a majority-vote consensus sequence |
+| `allele_info/<query>/self_reference/allele_info_no_strain_name.csv` | Same, with variants called vs. the most abundant allele |
+| `alignment_figures/<query>/consensus_reference/` | Coloured variant alignment PDFs (consensus reference) |
+| `logo/<query>_logo.<format>` | WebLogo sequence logo weighted by strain frequency |
 
 ## Installation
 
@@ -71,9 +78,9 @@ You should see a help message listing all available options.
 
 1. **BLAST Search** — Runs each query against each genome (blastn or tblastn). Parses results to CSV.
 2. **Filtering** — Keeps hits passing e-value, sequence identity %, and alignment length thresholds.
-3. **ORF Finding** — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window. Extended sequences shorter than 5 amino acids are discarded.
-4. **Translation** — Translates the validated reading frame (Frame 0) to protein. The start codon is replaced with ATG, so all output proteins begin with Met regardless of the original start codon (ATG, GTG, or TTG).
-5. **Allele Identification** — Groups identical protein sequences into alleles. Variant positions are identified by aligning each allele to a reference using BLOSUM62.
+3. **ORF Finding** *(protein mode only)* — Checks for start/stop codons in a 10-codon window. Sequences missing codons are extended using the reference genome, then re-checked with a 20-codon window. Extended sequences shorter than 5 amino acids are discarded.
+4. **Translation** *(protein mode only)* — Translates the validated reading frame (Frame 0) to protein. The start codon is replaced with ATG, so all output proteins begin with Met regardless of the original start codon (ATG, GTG, or TTG).
+5. **Allele Identification** — Groups identical sequences into alleles. In protein mode, variant positions are identified using BLOSUM62 alignment. In DNA mode, nucleotide-level variants are called (e.g. `90:A→T`).
 6. **Quality & Visualization** — Filters alleles by species representation, generates coloured variant alignment figures, MAFFT alignments, and WebLogo sequence logos.
 
 ## Requirements
@@ -142,6 +149,7 @@ nextflow run main.nf --help
 | Parameter | Default | Description |
 |---|---|---|
 | `--outdir` | `./results` | Output directory |
+| `--mode` | `protein` | Sequence mode: `protein` (default) or `dna`. In `dna` mode, ORF finding and translation are skipped; BLAST hits are grouped and annotated directly as nucleotide alleles |
 | `--blast_type` | `blastn` | BLAST program (`blastn` or `tblastn`) |
 | `--make_blastdb` | `false` | Build new BLAST databases. If `false`, uses existing `.n*` DB files |
 | `--max_evalue` | `0.00001` | E-value threshold |
@@ -152,8 +160,18 @@ nextflow run main.nf --help
 | `--stop_codons` | `TAA,TGA,TAG` | Comma-separated valid stop codons |
 | `--species_threshold` | `1` | Minimum species percentage to keep an allele |
 | `--self_reference_figures` | `false` | Also generate self-reference alignment figures; by default only consensus-reference figures are generated |
-| `--dna_variation_figure_format` | `pdf` | Output format for the DNA conservation figure: `pdf`, `png`, `svg`, `eps`, `jpeg` |
 | `--blast_batch_size` | `100` | Number of genomes processed per BLAST task |
+
+### Neighbour Extraction Parameters
+
+Extract flanking sequence (upstream/downstream of the gene) from the reference genomes. These can be used standalone with `--neighbour` or added to a full run.
+
+| Parameter | Default | Description |
+|---|---|---|
+| `--upstream` | `0` | bp upstream of gene to extract (0 = skip) |
+| `--downstream` | `0` | bp downstream of gene to extract (0 = skip) |
+| `--flank_only` | `false` | Exclude the gene itself; output flanking regions only |
+| `--neighbour_merge` | `false` | Merge upstream + gene + downstream into one FASTA (requires gene to be included) |
 
 ### BLAST Tuning Parameters
 
@@ -212,10 +230,10 @@ Run a specific stage of the pipeline instead of the full workflow. Useful for re
 |---|---|
 | `--blast` | Run BLAST search + parse + filter only |
 | `--filter` | Re-filter existing BLAST results (requires prior `--blast` run) |
-| `--orf` | Run ORF finding + translation on existing filtered results |
+| `--orf` | Run ORF finding + translation on existing filtered results. With `--mode dna`, skips codon checking and translation and writes hits directly to `standard_dna_seq/` |
 | `--visual` | Run visualization (MAFFT, WebLogo, alignment figures) on existing allele results |
-| `--dna_variation` | Run DNA conservation figure from existing filtered BLAST results (requires prior `--blast` run with `--blast_type blastn`) |
-| `--step <name>` | Alternative syntax: `blast`, `filter`, `orf`, `visual`, `dna_variation` |
+| `--neighbour` | Extract flanking sequence from existing `standard_dna_seq/` (requires `--upstream` and/or `--downstream`) |
+| `--step <name>` | Alternative syntax: `blast`, `filter`, `orf`, `visual`, `neighbour` |
 
 Examples:
 
@@ -229,14 +247,36 @@ nextflow run main.nf --filter --query_dir ./queries --outdir ./results --sequenc
 # Re-run visualization with different WebLogo settings
 nextflow run main.nf --visual --outdir ./results --weblogo_format png --weblogo_units bits
 
-# DNA conservation figure from existing BLAST results (blastn only)
-nextflow run main.nf --dna_variation --outdir ./results -resume
-
-# DNA conservation figure with PNG output
-nextflow run main.nf --dna_variation --outdir ./results --dna_variation_figure_format png -resume
 ```
 
 **Note:** Step modes require that previous stages have already been run with the same `--outdir`. Each step reads intermediate files from the output directory.
+
+### DNA Mode
+
+By default the pipeline translates BLAST hits to protein before allele analysis (`--mode protein`). Set `--mode dna` to skip ORF finding and translation and work at the nucleotide level instead.
+
+**When to use `--mode dna`:**
+- Your query sequences are non-coding DNA (e.g. promoter regions, intergenic elements)
+- Your sequences are pre-validated ORFs that do not need start/stop codon checking
+- You want to group and compare alleles as DNA sequences rather than proteins
+
+**What changes in `dna` mode:**
+- Steps 3–4 (ORF finding + translation) are skipped entirely
+- BLAST hits are used directly as allele sequences (no codon validation)
+- Variant positions are called as nucleotide substitutions (e.g. `90:A→T`)
+- Alignment figures use nucleotide colours (A = green, T = red, G = yellow, C = blue)
+- WebLogo automatically uses the `nucleotide` color scheme
+
+**Example:**
+```bash
+nextflow run main.nf \
+  --query_dir ./queries \
+  --genome_dir ./genomes \
+  --outdir ./results \
+  --mode dna
+```
+
+> **Note:** `--genome_dir` is still required in `dna` mode when `--blast_type tblastn` is used (needed to extract DNA coordinates). It is not required for `blastn` + `--mode dna`.
 
 ### WebLogo Parameters
 
@@ -269,13 +309,10 @@ results/
 │       │   ├── allele_info_no_strain_name.csv
 │       │   ├── allele_sequence_output.fasta
 │       │   └── <query_name>_consensus.fasta
-│       └── self_reference/     # Variants compared to the query
+│       └── self_reference/     # Variants compared to the most abundant allele
 │           ├── allele_info_with_strain_name.csv
 │           ├── allele_info_no_strain_name.csv
 │           └── allele_sequence_output.fasta
-├── dna_variation/               # DNA conservation figures (--dna_variation mode)
-│   ├── mafft/                  #   MAFFT-aligned DNA sequences per query
-│   └── figures/                #   Conservation score line plots per query
 ├── alignment_figures/           # Coloured variant alignment figures (PDF)
 │   └── <query_name>/
 │       ├── consensus_reference/    # Figures using consensus sequence as reference (always generated)
@@ -297,13 +334,13 @@ Each CSV row represents one allele (a group of identical protein sequences) and 
 | `allele_name` | Allele ID, numbered by frequency (1 = most common) |
 | `species_count` | Number of species carrying this allele |
 | `species_percentage` | Percentage of all searched species with this allele |
-| `variant_position_count` | Number of amino acid positions differing from reference |
+| `variant_position_count` | Number of positions differing from reference |
 | `variant_percentage` | Percentage of positions that are variants |
-| `variant_positions` | Specific amino acid changes, e.g. `90:K→T; 93:Q→K` |
-| `allele_sequence` | Full protein sequence of the allele |
+| `variant_positions` | Specific changes, e.g. `90:K→T; 93:Q→K` (protein) or `90:A→T` (DNA) |
+| `allele_sequence` | Full sequence of the allele (protein or DNA depending on `--mode`) |
 | `strain_names` | Strain list (only in `_with_strain_name.csv`) |
 
-- **`consensus_reference/`** uses a majority-vote consensus sequence (computed from all alleles) as the reference for variant calling. The consensus row in alignment figures is labeled `<query_name>_consensus`. Alignment figures are always generated.
+- **`consensus_reference/`** uses a majority-vote consensus sequence (computed from all alleles) as the reference for variant calling. The CSV contains one row per allele **plus** an additional `<query_name>_consensus` reference row (with empty `species_count`). The consensus row is labeled `<query_name>_consensus` in alignment figures. Alignment figures are always generated.
 - **`self_reference/`** uses the most abundant allele found as the reference. Alignment figures are generated only when `--self_reference_figures` is passed.
 - **`allele_sequence_output.fasta`** contains the protein sequence of each allele, with species count in the header.
 

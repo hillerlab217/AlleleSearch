@@ -7,11 +7,10 @@ nextflow.enable.dsl=2
 
 include { COLLECT_ALL_BLAST_DBS; BLAST_SEARCH; PARSE_BLAST } from './modules/blast'
 include { FILTER_BLAST }                             from './modules/filter'
-include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD } from './modules/orf'
+include { EXTRACT_DNA; CSV_TO_FASTA; CODON_CHECK as CODON_CHECK_10; CODON_CHECK as CODON_CHECK_20; EXTEND_SEQUENCES; COLLECT_STANDARD; COLLECT_DNA } from './modules/orf'
 include { TRANSLATE }                                from './modules/translate'
 include { ALLELE_SELF_REF; ALLELE_CONSENSUS_REF }    from './modules/allele'
 include { MAFFT_FOR_CONSENSUS; COMPUTE_CONSENSUS; FILTER_ALLELES; MAFFT_ALIGN; WEBLOGO; ALIGNMENT_FIGURE; ALIGNMENT_FIGURE_REF } from './modules/quality'
-include { BLAST_SEARCH_DNA; PARSE_BLAST_DNA; FILTER_BLAST_DNA; MAFFT_DNA; DNA_CONSERVATION_FIGURE } from './modules/dna_variation'
 include { EXTRACT_NEIGHBOURS }                               from './modules/neighbour'
 
 // ──────────────────────────────────────────────────────────────
@@ -23,22 +22,25 @@ def resolveStep() {
     if (params.filter)        return 'filter'
     if (params.orf)           return 'orf'
     if (params.visual)        return 'visual'
-    if (params.dna_variation) return 'dna_variation'
     if (params.neighbour)     return 'neighbour'
     return 'full'
 }
 
 def run_step = resolveStep()
 
-def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual', 'dna_variation', 'neighbour']
+def valid_steps = ['full', 'blast', 'filter', 'orf', 'visual', 'neighbour']
 if (!(run_step in valid_steps)) {
     error "ERROR: Invalid --step '${run_step}'. Valid options: ${valid_steps.join(', ')}"
 }
 
 // Check that at most one boolean step flag is set
-def step_count = [params.blast, params.filter, params.orf, params.visual, params.dna_variation, params.neighbour].count { it }
+def step_count = [params.blast, params.filter, params.orf, params.visual, params.neighbour].count { it }
 if (step_count > 1) {
     error "ERROR: Only one step mode can be specified at a time. Use --blast, --filter, --orf, --visual, or --neighbour."
+}
+
+if (params.mode !in ['protein', 'dna']) {
+    error "ERROR: --mode must be 'protein' or 'dna', got '${params.mode}'"
 }
 
 log.info "Running in '${run_step}' mode"
@@ -63,14 +65,14 @@ if (params.help) {
       --filter          Re-filter existing BLAST results (requires prior --blast run)
       --orf             Run ORF finding + translation on existing filtered results
       --visual          Run visualization on existing allele results
-      --dna_variation   Run DNA conservation figure (always uses blastn).
-                        With --query_dir and --genome_dir: runs BLAST automatically.
-                        Without them: reuses existing dna_variation/blast_summary_filtered/ CSVs.
-      --step <name>     Alternative syntax: blast, filter, orf, visual, dna_variation
+      --step <name>     Alternative syntax: blast, filter, orf, visual
 
     Optional:
       --code_dir        Path to code/ scripts (default: ./code)
       --outdir          Output directory (default: ./results)
+      --mode            Sequence mode: protein (default) or dna.
+                        dna mode skips ORF finding and translation;
+                        BLAST hits are fed directly into allele analysis.
       --blast_type      blastn or tblastn (default: blastn)
       --max_evalue      E-value cutoff (default: 0.00001)
       --sequence_identity  Sequence identity % cutoff (default: 80)
@@ -96,7 +98,6 @@ if (params.help) {
       --tblastn_seg VALUE       SEG low-complexity filter: yes or no (default: BLAST default)
 
       --self_reference_figures  Also generate self-reference alignment figures (default: false)
-      --dna_variation_figure_format  Output format for conservation figure: pdf, png, svg (default: pdf)
 
     WebLogo:
       --weblogo_format       Output format: eps, png, pdf, svg, jpeg (default: eps)
@@ -137,7 +138,9 @@ if (run_step == 'orf') {
     if (!filtered_dir.isDirectory()) {
         error "ERROR: --orf mode requires existing filtered results in ${params.outdir}/blast_summary_filtered/. Run --blast or --filter first."
     }
-    if (!params.genome_dir) { error "ERROR: --genome_dir is required for 'orf' mode (needed for sequence extension)" }
+    if (!params.genome_dir && (params.mode != 'dna' || params.blast_type == 'tblastn')) {
+        error "ERROR: --genome_dir is required for 'orf' mode (needed for sequence extension / tblastn DNA extraction)"
+    }
 }
 
 if (run_step == 'visual') {
@@ -166,21 +169,6 @@ if (run_step == 'neighbour') {
     def std_dir = file("${params.outdir}/standard_dna_seq")
     if (!std_dir.isDirectory()) {
         error "ERROR: --neighbour mode requires existing sequences in ${params.outdir}/standard_dna_seq/. Run the full pipeline first."
-    }
-}
-
-if (run_step == 'dna_variation') {
-    def has_inputs = params.query_dir && params.genome_dir
-    if (!has_inputs) {
-        // Reuse-only mode: prior filtered results must exist
-        def filtered_dir = file("${params.outdir}/dna_variation/blast_summary_filtered")
-        if (!filtered_dir.isDirectory()) {
-            error "ERROR: --dna_variation without --query_dir/--genome_dir requires existing filtered results in ${params.outdir}/dna_variation/blast_summary_filtered/. Provide --query_dir and --genome_dir to run BLAST, or run --blast first."
-        }
-    }
-    // blast_type is ignored — dna_variation always uses blastn internally
-    if (params.blast_type == 'tblastn') {
-        log.warn "WARNING: --blast_type tblastn is ignored for --dna_variation; blastn will be used."
     }
 }
 
@@ -237,15 +225,15 @@ workflow {
     } else if (run_step == 'orf') {
         // =============================================================
         // ORF-only mode: ORF finding + translation from existing filtered CSVs
+        // In --mode dna: skip codon check and translation; publish directly
         // =============================================================
-        ch_genome_ref = Channel.fromPath(params.genome_dir)
-
         ch_csv_input = Channel
             .fromPath("${params.outdir}/blast_summary_filtered/*.csv")
             .map { f -> [f.baseName, f] }
 
         if (params.blast_type == 'tblastn') {
-            EXTRACT_DNA(ch_csv_input, ch_genome_ref.first())
+            ch_genome_ref_orf = Channel.fromPath(params.genome_dir)
+            EXTRACT_DNA(ch_csv_input, ch_genome_ref_orf.first())
             ch_csv_for_fasta = EXTRACT_DNA.out
         } else {
             ch_csv_for_fasta = ch_csv_input
@@ -253,19 +241,27 @@ workflow {
 
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
-        CODON_CHECK_10(ch_codon10_in)
+        if (params.mode == 'dna') {
+            // DNA mode: skip ORF finding and translation; write hits to standard_dna_seq/
+            COLLECT_DNA(CSV_TO_FASTA.out)
+        } else {
+            // protein mode: full codon check + extension + translation
+            ch_genome_ref_orf_ext = Channel.fromPath(params.genome_dir)
 
-        EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
+            ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
+            CODON_CHECK_10(ch_codon10_in)
 
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
-        CODON_CHECK_20(ch_codon20_in)
+            EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref_orf_ext.first())
 
-        ch_standard = CODON_CHECK_10.out.standard
-            .join(CODON_CHECK_20.out.standard)
-        COLLECT_STANDARD(ch_standard)
+            ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
+            CODON_CHECK_20(ch_codon20_in)
 
-        TRANSLATE(COLLECT_STANDARD.out)
+            ch_standard = CODON_CHECK_10.out.standard
+                .join(CODON_CHECK_20.out.standard)
+            COLLECT_STANDARD(ch_standard)
+
+            TRANSLATE(COLLECT_STANDARD.out)
+        }
 
     } else if (run_step == 'visual') {
         // =============================================================
@@ -306,53 +302,6 @@ workflow {
             .map { name, csvs -> [name, "consensus_reference", csvs] }
 
         ALIGNMENT_FIGURE_REF(ch_consensus_csvs)
-
-    } else if (run_step == 'dna_variation') {
-        // =============================================================
-        // DNA variation mode: BLAST (blastn) + filter + MAFFT + conservation figure
-        // If --query_dir and --genome_dir are provided: run BLAST automatically.
-        // Otherwise: reuse existing dna_variation/blast_summary_filtered/ CSVs.
-        // =============================================================
-
-        if (params.query_dir && params.genome_dir) {
-            // ── Run BLAST (always blastn) ──────────────────────────────
-            ch_queries_dv = file(params.query_dir).isFile()
-                ? Channel.fromPath(params.query_dir)
-                : Channel.fromPath("${params.query_dir}/*.{fasta,fa,fna,ffn}")
-            ch_genome_dir_dv = Channel.fromPath(params.genome_dir)
-
-            COLLECT_ALL_BLAST_DBS(ch_genome_dir_dv)
-
-            ch_genome_batches_dv = Channel
-                .fromPath("${params.genome_dir}/*.{fasta,fa,fna,ffn}")
-                .map { it.name }
-                .collate(params.blast_batch_size)
-                .map { batch -> batch.join(',') }
-
-            ch_blast_input_dv = ch_queries_dv
-                .combine(ch_genome_batches_dv)
-                .combine(COLLECT_ALL_BLAST_DBS.out)
-            BLAST_SEARCH_DNA(ch_blast_input_dv)
-
-            ch_grouped_dv = BLAST_SEARCH_DNA.out.groupTuple().map { name, files -> [name, files.flatten()] }
-            PARSE_BLAST_DNA(ch_grouped_dv)
-
-            ch_query_map_dv = ch_queries_dv.map { q -> [q.baseName, q] }
-            ch_filter_input_dv = PARSE_BLAST_DNA.out.join(ch_query_map_dv)
-            FILTER_BLAST_DNA(ch_filter_input_dv)
-
-            ch_filtered_dv = FILTER_BLAST_DNA.out
-
-        } else {
-            // ── Reuse existing filtered results ────────────────────────
-            ch_filtered_dv = Channel
-                .fromPath("${params.outdir}/dna_variation/blast_summary_filtered/*.csv")
-                .map { f -> [f.baseName, f] }
-        }
-
-        CSV_TO_FASTA(ch_filtered_dv)
-        MAFFT_DNA(CSV_TO_FASTA.out)
-        DNA_CONSERVATION_FIGURE(MAFFT_DNA.out)
 
     } else if (run_step == 'neighbour') {
         // =============================================================
@@ -415,37 +364,50 @@ workflow {
         // Step 6: CSV to FASTA
         CSV_TO_FASTA(ch_csv_for_fasta)
 
-        // Step 7: Check start/stop codons
-        ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
-        CODON_CHECK_10(ch_codon10_in)
+        // Steps 7-11: ORF finding and translation (protein mode only)
+        if (params.mode == 'protein') {
+            // Step 7: Check start/stop codons
+            ch_codon10_in = CSV_TO_FASTA.out.map { name, fasta -> [name, fasta, params.extension_codons, "down", "r1", params.start_codons, params.stop_codons] }
+            CODON_CHECK_10(ch_codon10_in)
 
-        // Step 8: Extend sequences from genome
-        EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
+            // Step 8: Extend sequences from genome
+            EXTEND_SEQUENCES(CODON_CHECK_10.out.classified, ch_genome_ref.first())
 
-        // Step 9: Re-check with same codon window on extended sequences
-        ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
-        CODON_CHECK_20(ch_codon20_in)
+            // Step 9: Re-check with same codon window on extended sequences
+            ch_codon20_in = EXTEND_SEQUENCES.out.map { name, fasta -> [name, fasta, params.extension_codons, "up", "r2", params.start_codons, params.stop_codons] }
+            CODON_CHECK_20(ch_codon20_in)
 
-        // Step 10: Collect standard sequences from both rounds
-        ch_standard = CODON_CHECK_10.out.standard
-            .join(CODON_CHECK_20.out.standard)
-        COLLECT_STANDARD(ch_standard)
+            // Step 10: Collect standard sequences from both rounds
+            ch_standard = CODON_CHECK_10.out.standard
+                .join(CODON_CHECK_20.out.standard)
+            COLLECT_STANDARD(ch_standard)
 
-        // Step 11: Translate DNA to protein
-        TRANSLATE(COLLECT_STANDARD.out)
+            // Step 11: Translate DNA to protein
+            TRANSLATE(COLLECT_STANDARD.out)
+
+            ch_for_allele = TRANSLATE.out.inframe
+            ch_dna_seqs   = COLLECT_STANDARD.out
+        } else {
+            // DNA mode: skip ORF finding and translation
+            COLLECT_DNA(CSV_TO_FASTA.out)
+            ch_for_allele = COLLECT_DNA.out
+            ch_dna_seqs   = COLLECT_DNA.out
+        }
 
         // Step 12: Allele analysis - self reference
-        ALLELE_SELF_REF(TRANSLATE.out.inframe)
+        ALLELE_SELF_REF(ch_for_allele)
 
-        // Step 13: MAFFT on all alleles → consensus sequence
-        ch_allele_fasta_nonempty = ALLELE_SELF_REF.out.results
-            .map { name, csv, fasta -> [name, fasta] }
+        // Step 13: MAFFT on all strains → consensus sequence
+        // Uses ch_for_allele (one entry per strain) so allele voting is
+        // weighted by strain frequency rather than treating each unique
+        // allele equally.
+        ch_allele_fasta_nonempty = ch_for_allele
             .filter { name, fasta -> fasta.text.contains('>') }
         MAFFT_FOR_CONSENSUS(ch_allele_fasta_nonempty)
         COMPUTE_CONSENSUS(MAFFT_FOR_CONSENSUS.out)
 
         // Step 14: Allele analysis - consensus reference (uses MAFFT alignment for indel-aware variant calling)
-        ch_allele_cref = TRANSLATE.out.inframe
+        ch_allele_cref = ch_for_allele
             .join(COMPUTE_CONSENSUS.out)
             .join(MAFFT_FOR_CONSENSUS.out)
         ALLELE_CONSENSUS_REF(ch_allele_cref)
@@ -480,7 +442,7 @@ workflow {
               Layout:     ${params.neighbour_merge ? 'merged \u2192 merged.fasta' : 'split \u2192 upstream.fasta / downstream.fasta'}
             """.stripIndent()
 
-            EXTRACT_NEIGHBOURS(COLLECT_STANDARD.out, params.genome_dir)
+            EXTRACT_NEIGHBOURS(ch_dna_seqs, params.genome_dir)
         }
     }
 }

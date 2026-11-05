@@ -13,7 +13,8 @@ process ALLELE_SELF_REF {
     python ${params.code_dir}/protein_allele_variant.py \
         ${protein_fasta} \
         -o . \
-        -s ${query_name}
+        -s ${query_name} \
+        --sequence_type ${params.mode}
     """
 }
 
@@ -34,7 +35,8 @@ process ALLELE_CONSENSUS_REF {
         ${protein_fasta} \
         -o . \
         -s ${query_name} \
-        --mafft_alignment ${mafft_aligned}
+        --mafft_alignment ${mafft_aligned} \
+        --sequence_type ${params.mode}
 
     cp consensus_ref.fasta ${query_name}_consensus.fasta
     """

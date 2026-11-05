@@ -149,14 +149,19 @@ def is_dna(sequence):
 
 
 # Find variation position
-def variat_position(ref_seq, allele_dict):
+def variat_position(ref_seq, allele_dict, sequence_type='protein'):
     aligner = PairwiseAligner()
     aligner.mode = 'global'
-    aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
-    aligner.open_gap_score = -10
-    aligner.extend_gap_score = -1
-    
-    
+    if sequence_type == 'dna':
+        aligner.match_score = 1
+        aligner.mismatch_score = -1
+        aligner.open_gap_score = -5
+        aligner.extend_gap_score = -1
+    else:
+        aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
+        aligner.open_gap_score = -10
+        aligner.extend_gap_score = -1
+
     for seq, info in allele_dict.items():
         variants = defaultdict(list)
         ref_pos = 0
@@ -178,7 +183,7 @@ def variat_position(ref_seq, allele_dict):
             if ref_aa != '-':
                 ref_pos += 1
 
-            if ref_aa != seq_aa and seq_aa != '-':
+            if ref_aa != seq_aa and ref_aa != '-':
                 num_diff += 1
                 variants[ref_pos] = [ref_aa, seq_aa]
 
@@ -222,10 +227,11 @@ def variat_position_from_mafft(mafft_fasta, allele_dict):
     ref_len = sum(1 for aa in gapped_consensus if aa != '-')
 
     # Map ungapped protein sequence → gapped aligned sequence
+    # Keys are uppercase to handle MAFFT lowercasing DNA sequences
     seq_to_gapped = {}
     for rec in records:
         gapped = str(rec.seq)
-        ungapped = gapped.replace('-', '')
+        ungapped = gapped.replace('-', '').upper()
         seq_to_gapped[ungapped] = gapped
 
     gapped_seqs = {}   # ungapped_seq → gapped_seq, returned to caller
@@ -234,10 +240,10 @@ def variat_position_from_mafft(mafft_fasta, allele_dict):
         variants = defaultdict(list)
         num_diff = 0
 
-        gapped_seq = seq_to_gapped.get(seq)
+        gapped_seq = seq_to_gapped.get(seq.upper())
         if gapped_seq is None:
             # Try stripping trailing stop codons
-            stripped = seq.rstrip('*')
+            stripped = seq.rstrip('*').upper()
             for ug, g in seq_to_gapped.items():
                 if ug.rstrip('*') == stripped:
                     gapped_seq = g
@@ -311,6 +317,34 @@ def write_allele_sequences_fasta(allele_dict, output_dir):
     print(f"Allele sequences written to: {output_path}")
 
 
+def write_upset_csv(allele_dict, output_dir):
+    """Write a genome × allele binary presence/absence matrix for upset plots."""
+    def extract_allele_number(info):
+        match = re.search(r"_(\d+)$", info[0])
+        return int(match.group(1)) if match else float('inf')
+
+    sorted_alleles = sorted(allele_dict.items(), key=lambda x: extract_allele_number(x[1]))
+    all_allele_names = [info[0] for _, info in sorted_alleles]
+
+    # Map each genome name to the set of alleles it carries
+    genome_to_alleles = defaultdict(set)
+    for (_, info), allele_name in zip(sorted_alleles, all_allele_names):
+        for genome in info[6]:
+            genome_to_alleles[genome].add(allele_name)
+
+    output_path = Path(output_dir) / "upset_plot.csv"
+    with open(output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["genome_name"] + all_allele_names)
+        writer.writeheader()
+        for genome in sorted(genome_to_alleles.keys()):
+            row = {"genome_name": genome}
+            for allele_name in all_allele_names:
+                row[allele_name] = 1 if allele_name in genome_to_alleles[genome] else 0
+            writer.writerow(row)
+
+    print(f"Upset plot matrix written to: {output_path}")
+
+
 def main():
     parser = argparse.ArgumentParser(description='Protein sequence variant analysis')
     parser.add_argument('-r', '--reference', default=None, help='Reference query FASTA file location, protein or dna sequence, '
@@ -321,6 +355,8 @@ def main():
     parser.add_argument('--mafft_alignment', default=None,
                         help='MAFFT-aligned FASTA of alleles; when provided, uses alignment '
                              'columns as positions and records insertions/deletions explicitly')
+    parser.add_argument('--sequence_type', choices=['protein', 'dna'], default='protein',
+                        help='Sequence type: protein (default, uses BLOSUM62) or dna (uses nucleotide scoring)')
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
@@ -343,6 +379,8 @@ def main():
                 with open(output_dir / fname, "w", newline="") as f:
                     f.write("allele_name,species_count,species_percentage,variant_position_count,variant_percentage,variant_positions(position:reference→changed),allele_sequence\n")
             open(output_dir / "allele_sequence_output.fasta", "w").close()
+            with open(output_dir / "upset_plot.csv", "w", newline="") as f:
+                f.write("genome_name\n")
             return
         allele_dict = allele_types(discovered_seqs, args.allele_suffix)
     except Exception as e:
@@ -356,7 +394,7 @@ def main():
         if recs:
             ref_rec = recs[0]
             ref_seq = str(ref_rec.seq)
-            if is_dna(ref_seq):
+            if is_dna(ref_seq) and args.sequence_type == 'protein':
                 seq_str = ref_seq.upper().replace('-', '').replace('N', '')
                 seq_str = seq_str[:len(seq_str) - (len(seq_str) % 3)]
                 ref_seq = str(Seq(seq_str).translate(to_stop=True))
@@ -376,7 +414,7 @@ def main():
         if effective_mafft:
             allele_dict, gapped_seqs, gapped_consensus_str = variat_position_from_mafft(effective_mafft, allele_dict)
         else:
-            allele_dict = variat_position(ref_seq, allele_dict)
+            allele_dict = variat_position(ref_seq, allele_dict, sequence_type=args.sequence_type)
             gapped_seqs = {}
             gapped_consensus_str = None
 
@@ -392,6 +430,7 @@ def main():
         write_csv(allele_dict, output_with_strain, with_strain_name=True, gapped_seqs=gapped_seqs)
         write_csv(allele_dict, output_no_strain, with_strain_name=False, gapped_seqs=gapped_seqs,
                   consensus_row=(consensus_label, gapped_consensus_str) if consensus_label else None)
+        write_upset_csv(allele_dict, output_dir)
 
         print(f"Analysis complete. Results saved to: {output_dir}")
 

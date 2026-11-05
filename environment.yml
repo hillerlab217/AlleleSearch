@@ -5,12 +5,14 @@ channels:
   - defaults
 dependencies:
   # Python
-  - python=3.9
+  - python=3.12
   - pip
+  - setuptools
   - git
 
   # Core bioinformatics tools
   - blast=2.16.0
+  - mafft
   - weblogo=3.7.9
 
   # Core Python libraries
@@ -27,3 +29,8 @@ dependencies:
 
   # nextflow
   - bioconda::nextflow=24.10.2
+
+  # Testing
+  - pytest
+  - pytest-cov
+  - ruff

@@ -17,6 +17,11 @@ process MAFFT_FOR_CONSENSUS {
         cp ${allele_fasta} ${query_name}_all_aligned.fasta
     fi
     """
+
+    stub:
+    """
+    cp ${allele_fasta} ${query_name}_all_aligned.fasta
+    """
 }
 
 process COMPUTE_CONSENSUS {
@@ -85,6 +90,11 @@ process MAFFT_ALIGN {
         echo "Skipping MAFFT: only \$seq_cnt sequence(s)" >&2
     fi
     """
+
+    stub:
+    """
+    cp ${filtered_fasta} ${query_name}_aligned.fasta
+    """
 }
 
 process WEBLOGO {
@@ -121,6 +131,8 @@ process WEBLOGO {
         }
     ' ${aligned_fasta} > expanded.fasta
 
+    wl_color="${params.mode == 'dna' ? 'classic' : params.weblogo_color_scheme}"
+
     weblogo \
         --fin expanded.fasta \
         --fout ${query_name}_logo.${params.weblogo_format} \
@@ -128,9 +140,14 @@ process WEBLOGO {
         --datatype fasta \
         --title "${query_name}" \
         --units ${params.weblogo_units} \
-        --color-scheme ${params.weblogo_color_scheme} \
+        --color-scheme \$wl_color \
         --size ${params.weblogo_size} \
         --resolution ${params.weblogo_resolution}
+    """
+
+    stub:
+    """
+    touch ${query_name}_logo.${params.weblogo_format}
     """
 }
 
@@ -150,6 +167,7 @@ process ALIGNMENT_FIGURE {
         allele_info_no_strain_name.csv \
         ${query_name}_alignment.pdf \
         ${params.species_threshold} \
+        --sequence_type ${params.mode} \
     || echo "Skipping no-gap figure for ${query_name}" >&2
 
     python ${params.code_dir}/alignment_figure.py \
@@ -157,7 +175,13 @@ process ALIGNMENT_FIGURE {
         ${query_name}_alignment_full.pdf \
         ${params.species_threshold} \
         --full \
+        --sequence_type ${params.mode} \
     || echo "Skipping full figure for ${query_name}" >&2
+    """
+
+    stub:
+    """
+    touch ${query_name}_alignment.pdf
     """
 }
 
@@ -177,6 +201,7 @@ process ALIGNMENT_FIGURE_REF {
         allele_info_no_strain_name.csv \
         ${query_name}_alignment.pdf \
         ${params.species_threshold} \
+        --sequence_type ${params.mode} \
     || echo "Skipping no-gap figure for ${query_name}" >&2
 
     python ${params.code_dir}/alignment_figure.py \
@@ -184,6 +209,12 @@ process ALIGNMENT_FIGURE_REF {
         ${query_name}_alignment_full.pdf \
         ${params.species_threshold} \
         --full \
+        --sequence_type ${params.mode} \
     || echo "Skipping full figure for ${query_name}" >&2
+    """
+
+    stub:
+    """
+    touch ${query_name}_alignment.pdf
     """
 }

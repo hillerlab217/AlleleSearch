@@ -18,11 +18,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Nextflow workflow report for run id [scruffy_joliot]">
+  <meta name="description" content="Nextflow workflow report for run id [fabulous_jepsen]">
   <meta name="author" content="Paolo Di Tommaso, Phil Ewels">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
 
-  <title>[scruffy_joliot] Nextflow Workflow Report</title>
+  <title>[fabulous_jepsen] Nextflow Workflow Report</title>
 
   <style type="text/css">
   /*!
@@ -137,7 +137,7 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
       </ul>
       <span class="navbar-text">
-        [scruffy_joliot]
+        [fabulous_jepsen]
       </span>
     </div>
   </nav>
@@ -146,7 +146,7 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
     <div class="container">
 
       <h1 class="display-3">Nextflow workflow report</h1>
-      <h2 class="text-muted mb-4"><samp>[scruffy_joliot]</samp> </h2>
+      <h2 class="text-muted mb-4"><samp>[fabulous_jepsen]</samp> </h2>
 
       
           <div class="alert alert-success mb-4">
@@ -157,8 +157,8 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">02-Apr-2026 17:04:48</span> - <span id="workflow_complete">02-Apr-2026 17:04:50</span>
-          (<span id="completed_fromnow"></span>duration: <strong>2.1s</strong>)
+          <span id="workflow_start">05-Nov-2026 00:09:14</span> - <span id="workflow_complete">05-Nov-2026 00:09:17</span>
+          (<span id="completed_fromnow"></span>duration: <strong>3s</strong>)
         </dd>
 
         <dl>
@@ -171,7 +171,7 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
         </dl>
 
         <dt>Nextflow command</dt>
-        <dd><pre class="nfcommand"><code>nextflow run /home/xinruoz/Document/Hiller/allele_search/main.nf --filter --query_dir /home/xinruoz/Document/Hiller/allele_search/test_query --outdir /home/xinruoz/Document/Hiller/allele_search/test/test_output/filter --sequence_identity 80 --length_percentage 80 -ansi-log false</code></pre></dd>
+        <dd><pre class="nfcommand"><code>nextflow run /home/xinruoz/Document/Hiller/allele_search/main.nf --filter --query_dir /home/xinruoz/Document/Hiller/allele_search/test_query --outdir /home/xinruoz/Document/Hiller/allele_search/test/test_output/filter --sequence_identity 80 --length_percentage 30 -ansi-log false</code></pre></dd>
       </dl>
 
       <dl class="row small">
@@ -194,11 +194,11 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
 
         
           <dt class="col-sm-3">Script ID</dt>
-          <dd class="col-sm-9"><code>3aacd39e6aac2ff6a1eb7e4c90ecdf35</code></dd>
+          <dd class="col-sm-9"><code>def0eb79bfa5bbe598c18d98504a5b0c</code></dd>
         
 
         <dt class="col-sm-3">Workflow session</dt>
-        <dd class="col-sm-9"><code>68b07ce5-87cd-4b47-823e-bc799bc7e9c6</code></dd>
+        <dd class="col-sm-9"><code>04f234b0-bf45-49c8-88f6-7b4ca9b27e99</code></dd>
 
         
 
@@ -1032,7 +1032,7 @@ $(function() {
 
   // Nextflow report data
   window.data = { "trace":[
-{"task_id":"1","hash":"b8\/1cd4f6","native_id":"51501","process":"FILTER_BLAST","module":"-","container":"-","tag":"murM","name":"FILTER_BLAST (murM)","status":"COMPLETED","exit":"0","submit":"1775163889722","start":"1775163889794","complete":"1775163889974","duration":"252","realtime":"211","%cpu":"623.2","%mem":"0.1","rss":"12849152","vmem":"17469440","peak_rss":"12849152","peak_vmem":"17469440","rchar":"5142665","wchar":"111946","syscr":"788","syscw":"27","read_bytes":"0","write_bytes":"114688","attempt":"1","workdir":"\/home\/xinruoz\/Document\/Hiller\/allele_search\/work\/b8\/1cd4f6b8252409ac7e63395ee0f45c","script":"\n    python \/home\/xinruoz\/Document\/Hiller\/allele_search\/code\/filter_blast.py         --input input.csv         --output murM.csv         --max_evalue 0.00001         --sequence_identity 80         --query_fasta murM.fa         --length_percentage 80\n    ","scratch":"-","queue":"-","cpus":"1","memory":"-","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"1","inv_ctxt":"0","hostname":"-","cpu_model":"13th Gen Intel(R) Core(TM) i9-13900H"}], "summary":[{"cpuUsage":{"mean":623.2,"min":623.2,"q1":623.2,"q2":623.2,"q3":623.2,"max":623.2,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"process":"FILTER_BLAST","mem":{"mean":12849152,"min":12849152,"q1":12849152,"q2":12849152,"q3":12849152,"max":12849152,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"memUsage":null,"timeUsage":null,"vmem":{"mean":17469440,"min":17469440,"q1":17469440,"q2":17469440,"q3":17469440,"max":17469440,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"reads":{"mean":5142665,"min":5142665,"q1":5142665,"q2":5142665,"q3":5142665,"max":5142665,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"cpu":{"mean":623.2,"min":623.2,"q1":623.2,"q2":623.2,"q3":623.2,"max":623.2,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"time":{"mean":211,"min":211,"q1":211,"q2":211,"q3":211,"max":211,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"writes":{"mean":111946,"min":111946,"q1":111946,"q2":111946,"q3":111946,"max":111946,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"}}] };
+{"task_id":"1","hash":"f1\/b6406c","native_id":"139846","process":"FILTER_BLAST","module":"-","container":"-","tag":"murM","name":"FILTER_BLAST (murM)","status":"COMPLETED","exit":"0","submit":"1793855357159","start":"1793855357199","complete":"1793855357450","duration":"291","realtime":"234","%cpu":"455.6","%mem":"0.2","rss":"20611072","vmem":"65867776","peak_rss":"20611072","peak_vmem":"65867776","rchar":"6641828","wchar":"111949","syscr":"756","syscw":"26","read_bytes":"0","write_bytes":"114688","attempt":"1","workdir":"\/home\/xinruoz\/Document\/Hiller\/allele_search\/work\/f1\/b6406cfe555cd2c5f9f128ea4fcd4e","script":"\n    python \/home\/xinruoz\/Document\/Hiller\/allele_search\/code\/filter_blast.py         --input input.csv         --output murM.csv         --max_evalue 0.00001         --sequence_identity 80         --query_fasta murM.fa         --length_percentage 30\n    ","scratch":"-","queue":"-","cpus":"1","memory":"-","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"1","inv_ctxt":"0","hostname":"-","cpu_model":"13th Gen Intel(R) Core(TM) i9-13900H"}], "summary":[{"cpuUsage":{"mean":455.6,"min":455.6,"q1":455.6,"q2":455.6,"q3":455.6,"max":455.6,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"process":"FILTER_BLAST","mem":{"mean":20611072,"min":20611072,"q1":20611072,"q2":20611072,"q3":20611072,"max":20611072,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"memUsage":null,"timeUsage":null,"vmem":{"mean":65867776,"min":65867776,"q1":65867776,"q2":65867776,"q3":65867776,"max":65867776,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"reads":{"mean":6641828,"min":6641828,"q1":6641828,"q2":6641828,"q3":6641828,"max":6641828,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"cpu":{"mean":455.6,"min":455.6,"q1":455.6,"q2":455.6,"q3":455.6,"max":455.6,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"time":{"mean":234,"min":234,"q1":234,"q2":234,"q3":234,"max":234,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"},"writes":{"mean":111949,"min":111949,"q1":111949,"q2":111949,"q3":111949,"max":111949,"minLabel":"FILTER_BLAST (murM)","maxLabel":"FILTER_BLAST (murM)","q1Label":"FILTER_BLAST (murM)","q2Label":"FILTER_BLAST (murM)","q3Label":"FILTER_BLAST (murM)"}}] };
 
   </script>
 

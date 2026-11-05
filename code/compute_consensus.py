@@ -1,7 +1,10 @@
 """
 Compute a consensus sequence from a MAFFT-aligned FASTA file.
-Uses BioPython's SummaryInfo.dumb_consensus: at each alignment column picks
-the most common non-gap residue if it appears in >=50% of sequences, else 'X'.
+Uses BioPython's SummaryInfo.gap_consensus: at each alignment column picks
+the most common character (including gaps) if it appears in >=50% of all
+sequences; gaps count in both the vote and the denominator, so a position
+where the majority of sequences have '-' yields '-' in the consensus.
+Ambiguous positions (no character reaches 50%) produce 'X'.
 All-gap columns produce '-'.
 """
 from Bio import AlignIO
@@ -11,12 +14,14 @@ import argparse
 
 def compute_gapped_consensus_from_records(records):
     """Return a gapped consensus string of length == alignment_len using
-    BioPython's dumb_consensus (threshold=0.5, gaps excluded from vote).
+    BioPython's gap_consensus (threshold=0.5, gaps included in vote).
+    Positions where no character reaches 50% produce 'X'.
     All-gap columns produce '-'. Importable by other scripts."""
     alignment = MultipleSeqAlignment(records)
     summary = AlignInfo.SummaryInfo(alignment)
-    consensus = str(summary.dumb_consensus(threshold=0.5, ambiguous='X'))
-    # Replace 'X' with '-' for purely all-gap columns
+    consensus = str(summary.gap_consensus(threshold=0.5, ambiguous='X'))
+    # Replace 'X' with '-' for purely all-gap columns (already '-' via
+    # gap_consensus, but kept as a safety net)
     result = list(consensus)
     for i in range(alignment.get_alignment_length()):
         if all(str(rec.seq[i]) == '-' for rec in alignment):

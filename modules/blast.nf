@@ -85,6 +85,11 @@ process BLAST_SEARCH {
         fi
     done
     """
+
+    stub:
+    """
+    touch ${query.baseName}_vs_stub.out
+    """
 }
 
 process PARSE_BLAST {
@@ -109,5 +114,10 @@ process PARSE_BLAST {
         --sequence_identity 0 \
         --min_length 0 \
         --file_name ${query_name}
+    """
+
+    stub:
+    """
+    echo "ID,Contig,E-value,Alignment Length,Sequence Identity,Query Start,Subject Start,Subject End,Sequence" > ${query_name}.csv
     """
 }
